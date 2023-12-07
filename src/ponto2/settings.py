@@ -47,8 +47,11 @@ ALLOWED_HOSTS = [
     'in.tussor.com.br',
     # server dev na tussor, acesso interno e externo
     'intra.tussor.com.br',
+    # fly.io
+    '.fly.dev',
 ]
 
+CSRF_TRUSTED_ORIGINS = ['https://*.fly.dev']
 
 # Application definition
 
@@ -58,6 +61,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
 
     'rest_framework',
@@ -71,6 +75,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -169,6 +174,9 @@ SPECTACULAR_SETTINGS = {
         'name': 'BSD License',
     },
 }
+
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 
 # Internationalization
