@@ -1,5 +1,4 @@
 # ponto2 specific
-src/ponto2/*settings_secrets.py
 docs
 /static
 

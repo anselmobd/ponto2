@@ -16,8 +16,6 @@ from pathlib import Path
 
 from django.core.management.utils import get_random_secret_key
 
-from . import settings_secrets as ss
-
 env = environ.Env(
     DEBUG=(bool, False),
 )
@@ -110,16 +108,7 @@ WSGI_APPLICATION = 'ponto2.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        # 'ENGINE': 'django.db.backends.sqlite3',
-        # 'NAME': BASE_DIR / 'db.sqlite3',
-        'ENGINE': ss.DB_DEV_ENGINE,
-        'NAME': ss.DB_DEV_NAME,
-        'USER': ss.DB_DEV_USER,
-        'PASSWORD': ss.DB_DEV_PASSWORD,
-        'HOST': ss.DB_DEV_HOST,
-        'PORT': ss.DB_DEV_PORT,
-    }
+    'default': env.db(),
 }
 
 
@@ -159,7 +148,7 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 
     "ALGORITHM": "HS256",
-    "SIGNING_KEY": ss.SIGNING_KEY,
+    "SIGNING_KEY": env.str('SIMPLE_JWT_SIGNING_KEY'),
 }
 
 
