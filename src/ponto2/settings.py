@@ -14,6 +14,8 @@ import environ
 from datetime import timedelta
 from pathlib import Path
 
+from django.core.management.utils import get_random_secret_key
+
 from . import settings_secrets as ss
 
 env = environ.Env(
@@ -32,8 +34,8 @@ ROOT_DIR = BASE_DIR.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = 'django-insecure-r&@825bn+^!pom6^q64n^te=#^oo=3w#m#=xi9cr!c!4a9qdbv'
-SECRET_KEY = ss.SECRET_KEY
+# Esse default não deve ser utilizado em produção
+SECRET_KEY = env.str('SECRET_KEY', default=get_random_secret_key())
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
