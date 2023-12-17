@@ -48,10 +48,10 @@ ALLOWED_HOSTS = [
     # server dev na tussor, acesso interno e externo
     'intra.tussor.com.br',
     # fly.io
-    '.fly.dev',
+    'ponto2.fly.dev',
 ]
 
-CSRF_TRUSTED_ORIGINS = ['https://*.fly.dev']
+CSRF_TRUSTED_ORIGINS = ['https://ponto2.fly.dev']
 
 # Application definition
 
