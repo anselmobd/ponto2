@@ -41,8 +41,8 @@ DEBUG = env('DEBUG')
 ALLOWED_HOSTS = [
     # local dev
     '127.0.0.1', 'localhost', 'tt.o2',
-    # local network dev
-    '192.168.1.0',
+    # local network prod
+    '192.168.1.64',
     # server dev na tussor, acesso interno
     'intra.t',
     # server dev na tussor, acesso externo
