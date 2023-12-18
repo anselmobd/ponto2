@@ -160,17 +160,17 @@ SIMPLE_JWT = {
 }
 
 
-CORS_ALLOW_ALL_ORIGINS: True
-CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_HEADERS = "*"
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://localhost:88",
-]
-CORS_ALLOWED_ORIGIN_REGEXES = [
-    "http://localhost:5173",
-    "http://localhost:88",
-]
+CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ALLOW_CREDENTIALS = True
+# CORS_ALLOW_HEADERS = "*"
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:5173",
+#     "http://localhost:88",
+# ]
+# CORS_ALLOWED_ORIGIN_REGEXES = [
+#     "http://localhost:5173",
+#     "http://localhost:88",
+# ]
 
 
 SPECTACULAR_SETTINGS = {
