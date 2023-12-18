@@ -69,7 +69,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'rest_framework_simplejwt',
-    'corsheaders',
+    # 'corsheaders',
     'drf_spectacular',
 
     'bordado',
@@ -79,7 +79,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
+    # 'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -159,11 +159,12 @@ SIMPLE_JWT = {
 }
 
 
+CORS_ALLOW_HEADERS = "*"
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://localhost:88",
 ]
-CORS_ALLOW_ALL_ORIGINS: True
+# CORS_ALLOW_ALL_ORIGINS: True
 
 
 SPECTACULAR_SETTINGS = {
