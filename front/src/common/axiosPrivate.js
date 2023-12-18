@@ -4,7 +4,7 @@ import { mountAuthHeader } from '../services/authHeader.js'
 import { refreshAccessToken } from '../services/refreshToken.js';
 
 export const axiosPrivate = axios.create({
-  baseURL: "http://tt.o2:8902",
+  baseURL: import.meta.env.VITE_API_ENDPOINT,
   headers: {
     "Content-Type": "application/json",
   },
