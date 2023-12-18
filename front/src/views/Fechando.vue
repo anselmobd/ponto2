@@ -12,6 +12,9 @@ import { floatRound } from "../utils/number.js";
 
 const route = useRoute();
 
+const fechando_id = ref(route.params.id);
+console.log('fechando_id', fechando_id);
+
 // valores recebidos de DB
 
 const pedido_item = ref('')
@@ -64,7 +67,7 @@ function cbPedidoItem(data, error) {
 
 function doGetPedidoItem() {
   getPedidoItem({
-    id: route.params.id,
+    id: fechando_id.value,
     callBack: cbPedidoItem
   });
 }
@@ -88,7 +91,7 @@ function doSaveFechamento() {
     valor_unitario?.value
   ) {
     saveFechamento({
-      id: route.params.id,
+      id: fechando_id.value,
       data_entrega: data_entrega.value,
       quantidade: quantidade.value,
       valor_unitario: valor_unitario.value,
@@ -107,7 +110,7 @@ function cbDelFechamento(data, error) {
 
 function doDelFechamento() {
   delFechamento({
-    id: route.params.id,
+    id: fechando_id.value,
     callBack: cbDelFechamento,
   });
 }
@@ -225,7 +228,7 @@ function calcAjuste() {
 <template>
   <div>
     <section id="titulo" class="flex pt-4 place-content-between">
-      <h2 class="inline font-bold text-xl">Fechando pedido <span class="text-indigo-700">{{ route.params.id }}</span></h2>
+      <h2 class="inline font-bold text-xl">Fechando pedido <span class="text-indigo-700">{{ fechando_id }}</span></h2>
       <a title="Voltar" class="button text-xl cursor-pointer" @click.prevent="router.go(-1)">&#x2190;</a>
     </section>
 
@@ -383,12 +386,12 @@ function calcAjuste() {
         </thead>
         <tbody>
           <tr
-            :class="{ 'font-bold': pedido_item_bord.id == route.params.id }"
+            :class="{ 'font-bold': pedido_item_bord.id == fechando_id }"
             v-for="pedido_item_bord in pedido_itens_bordado"
             :key="pedido_item_bord.id"
           >
             <td
-              :class="{ 'text-indigo-700': pedido_item_bord.id == route.params.id }"
+              :class="{ 'text-indigo-700': pedido_item_bord.id == fechando_id }"
             >{{ pedido_item_bord.id }}</td>
             <td>{{ inputStrDate2PtBrDate(pedido_item_bord.pedido.entrega, empty='-') }}</td>
             <td>{{ pedido_item_bord.quantidade }}</td>
