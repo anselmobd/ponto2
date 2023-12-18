@@ -463,6 +463,7 @@ function calcAjuste() {
             <th>Ajuste</th>
             <th>Valor final</th>
             <th>Cobrado</th>
+            <th>Ação</th>
           </tr>
         </thead>
         <tbody>
@@ -484,6 +485,14 @@ function calcAjuste() {
             ) }}</td>
             <td>
               {{ pedido_item_clie.cobrancas.length ? 'Sim' : ( pedido_item_clie.pedido.entrega ? 'Não' : '-' ) }}
+            </td>
+            <td>
+              <button
+                class="button-text-shadow"
+                :value="pedido_item_clie.id"
+                @click="handleFechandoClick"
+                title="Fechamento"
+              >🪡</button>
             </td>
           </tr>
         </tbody>
