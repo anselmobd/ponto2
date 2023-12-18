@@ -279,8 +279,11 @@ function calcAjuste() {
         </tbody>
       </table>
 
-      <h3 class="my-4 font-bold text-lg">Dados do bordado</h3>
-        <form @submit.prevent="formGrava()">
+      <form
+      v-if="!pedido_item.cobrancas.length"
+      @submit.prevent="formGrava()"
+      >
+        <h3 class="my-4 font-bold text-lg">Dados do bordado</h3>
         <table class="w-full">
           <thead>
             <tr>
