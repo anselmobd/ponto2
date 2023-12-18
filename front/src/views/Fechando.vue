@@ -114,10 +114,7 @@ function doDelFechamento() {
 
 function cbGetFirstsPedidoItensBordado(data, error) {
   if (data) {
-    if (data?.results) pedido_itens_bordado.value =
-      data.results.filter((item) => {
-        return item.id != route.params.id
-      });
+    if (data?.results) pedido_itens_bordado.value = data.results;
   }
 }
 
@@ -386,10 +383,13 @@ function calcAjuste() {
         </thead>
         <tbody>
           <tr
+            :class="{ 'font-bold': pedido_item_bord.id == route.params.id }"
             v-for="pedido_item_bord in pedido_itens_bordado"
             :key="pedido_item_bord.id"
           >
-            <td>{{ pedido_item_bord.id }}</td>
+            <td
+              :class="{ 'text-indigo-700': pedido_item_bord.id == route.params.id }"
+            >{{ pedido_item_bord.id }}</td>
             <td>{{ inputStrDate2PtBrDate(pedido_item_bord.pedido.entrega) }}</td>
             <td>{{ pedido_item_bord.quantidade }}</td>
             <td>{{ ptBrCurrencyFormat.format(pedido_item_bord.preco) }}</td>
