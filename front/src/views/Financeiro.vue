@@ -560,7 +560,8 @@ onMounted(() => {
           <tr>
             <th>Data</th>
             <th>Informação</th>
-            <th>Valor</th>
+            <th>Cobrança</th>
+            <th>Lançamento</th>
             <th>Saldo</th>
           </tr>
           <tr v-if="lancamentos_error">
@@ -576,7 +577,10 @@ onMounted(() => {
           >
             <td>{{ inputStrDate2PtBrDate(lancamento.data) }}</td>
             <td>{{ lancamento.informacao }}</td>
-            <td class="!text-right">{{ ptBrCurrencyFormat.format(lancamento.valor) }}</td>
+            <td class="!text-right" v-if="lancamento.cobranca">{{ ptBrCurrencyFormat.format(lancamento.valor) }}</td>
+            <td class="!text-center text-slate-500" v-if="!lancamento.cobranca">—</td>
+            <td class="!text-right" v-if="!lancamento.cobranca">{{ ptBrCurrencyFormat.format(lancamento.valor) }}</td>
+            <td class="!text-center text-slate-500" v-if="lancamento.cobranca">—</td>
             <td class="!text-right">{{ ptBrCurrencyFormat.format(lancamento.saldo_cliente) }}</td>
           </tr>
           <tr v-if="lancamentos_carregando == 1">
