@@ -390,7 +390,7 @@ function calcAjuste() {
             <td
               :class="{ 'text-indigo-700': pedido_item_bord.id == route.params.id }"
             >{{ pedido_item_bord.id }}</td>
-            <td>{{ inputStrDate2PtBrDate(pedido_item_bord.pedido.entrega) }}</td>
+            <td>{{ inputStrDate2PtBrDate(pedido_item_bord.pedido.entrega, empty='-') }}</td>
             <td>{{ pedido_item_bord.quantidade }}</td>
             <td>{{ ptBrCurrencyFormat.format(pedido_item_bord.preco) }}</td>
             <td>{{ ptBrCurrencyFormat.format(pedido_item_bord.quantidade * pedido_item_bord.preco) }}</td>
@@ -428,7 +428,7 @@ function calcAjuste() {
           >
             <td>{{ pedido_item_clie.id }}</td>
             <td>{{ pedido_item_clie.bordado.nome }}</td>
-            <td>{{ inputStrDate2PtBrDate(pedido_item_clie.pedido.entrega) }}</td>
+            <td>{{ inputStrDate2PtBrDate(pedido_item_clie.pedido.entrega, empty='-') }}</td>
             <td>{{ pedido_item_clie.quantidade }}</td>
             <td>{{ ptBrCurrencyFormat.format(pedido_item_clie.preco) }}</td>
             <td>{{ ptBrCurrencyFormat.format(pedido_item_clie.quantidade * pedido_item_clie.preco) }}</td>
