@@ -1,6 +1,6 @@
 <script setup>
 import router from '@/router'
-import { useRoute } from "vue-router";
+import { useRoute, onBeforeRouteUpdate } from "vue-router";
 import { ref, onMounted, watch } from 'vue'
 import { getPedidoItem, saveFechamento, delFechamento, getPedidoItens } from '../api/pedidoItem.js';
 import { dateTime2Text, date2InputText, inputStrDate2PtBrDate } from "../utils/date.js";
@@ -162,11 +162,30 @@ function handleFinanceiroClick(event) {
   router.push({ name: 'financeiro', params: { apelido: apelido } });
 }
 
+function handleFechandoClick(event) {
+  event.preventDefault();
+  const id = event.target.value;
+  console.log(id);
+  router.push({ name: 'fechando', params: { id: id } });
+}
+
 // Lifecycle Hooks
 
 onMounted(() => {
   doGetPedidoItemAndCalc();
 })
+
+// Navigation Guards
+
+onBeforeRouteUpdate(async (to, from, next) => {
+  console.log('onBeforeRouteUpdate');
+  if (to.params.id !== from.params.id) {
+    console.log('next');
+    fechando_id.value = to.params.id;
+    doGetPedidoItemAndCalc();
+    next();
+  }
+});
 
 // watch
 
@@ -382,6 +401,7 @@ function calcAjuste() {
             <th>Programação</th>
             <th>Ajuste</th>
             <th>Valor final</th>
+            <th>Ação</th>
           </tr>
         </thead>
         <tbody>
@@ -399,10 +419,23 @@ function calcAjuste() {
             <td>{{ ptBrCurrencyFormat.format(pedido_item_bord.quantidade * pedido_item_bord.preco) }}</td>
             <td>{{ ptBrCurrencyFormat.format(pedido_item_bord.programacao) }}</td>
             <td>{{ ptBrCurrencyFormat.format(pedido_item_bord.ajuste) }}</td>
-            <td>{{ ptBrCurrencyFormat.format(
-              (pedido_item_bord.quantidade * pedido_item_bord.preco)
-              + parseFloat(pedido_item_bord.programacao) + parseFloat(pedido_item_bord.ajuste)
-            ) }}</td>
+            <td>
+              {{
+                ptBrCurrencyFormat.format(
+                  (pedido_item_bord.quantidade * pedido_item_bord.preco)
+                  + parseFloat(pedido_item_bord.programacao) + parseFloat(pedido_item_bord.ajuste)
+                )
+              }}
+            </td>
+            <td>
+              <button
+                v-if="pedido_item_bord.id != fechando_id"
+                class="button-text-shadow"
+                :value="pedido_item_bord.id"
+                @click="handleFechandoClick"
+                title="Fechamento"
+              >🪡</button>
+            </td>
           </tr>
         </tbody>
       </table>
