@@ -18,11 +18,11 @@ export function date2InputText(date) {
   return `${year}-${month}-${day}`
 }
 
-export function inputStrDate2PtBrDate(str_date) {
+export function inputStrDate2PtBrDate(str_date, empty='') {
   if (str_date) {
     return (new Date(str_date)).toLocaleDateString('pt-BR', { timeZone: 'UTC' });
   } else {
-    return '';
+    return empty;
   }
 }
 
