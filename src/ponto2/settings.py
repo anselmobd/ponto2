@@ -167,7 +167,7 @@ SIMPLE_JWT = {
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://192.168.1.64:88",
-# ]
+]
 # CORS_ALLOWED_ORIGIN_REGEXES = [
 #     "http://localhost:5173",
 #     "http://localhost:88",
