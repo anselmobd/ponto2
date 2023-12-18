@@ -39,18 +39,19 @@ SECRET_KEY = env.str('SECRET_KEY', default=get_random_secret_key())
 DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = [
-    # local dev
-    '127.0.0.1', 'localhost', 'tt.o2',
-    # local network prod
-    '192.168.1.64',
-    # server dev na tussor, acesso interno
-    'intra.t',
-    # server dev na tussor, acesso externo
-    'in.tussor.com.br',
-    # server dev na tussor, acesso interno e externo
-    'intra.tussor.com.br',
-    # fly.io
-    'ponto2.fly.dev',
+    '*',
+    # # local dev
+    # '127.0.0.1', 'localhost', 'tt.o2',
+    # # local network prod
+    # '192.168.1.64',
+    # # server dev na tussor, acesso interno
+    # 'intra.t',
+    # # server dev na tussor, acesso externo
+    # 'in.tussor.com.br',
+    # # server dev na tussor, acesso interno e externo
+    # 'intra.tussor.com.br',
+    # # fly.io
+    # 'ponto2.fly.dev',
 ]
 
 CSRF_TRUSTED_ORIGINS = ['https://ponto2.fly.dev']
