@@ -404,6 +404,7 @@ function calcAjuste() {
             <th>Programação</th>
             <th>Ajuste</th>
             <th>Valor final</th>
+            <th>Cobrado</th>
             <th>Ação</th>
           </tr>
         </thead>
@@ -429,6 +430,9 @@ function calcAjuste() {
                   + parseFloat(pedido_item_bord.programacao) + parseFloat(pedido_item_bord.ajuste)
                 )
               }}
+            </td>
+            <td>
+              {{ pedido_item_bord.cobrancas.length ? 'Sim' : ( pedido_item_bord.pedido.entrega ? 'Não' : '-' ) }}
             </td>
             <td>
               <button
@@ -458,6 +462,7 @@ function calcAjuste() {
             <th>Programação</th>
             <th>Ajuste</th>
             <th>Valor final</th>
+            <th>Cobrado</th>
           </tr>
         </thead>
         <tbody>
@@ -477,6 +482,9 @@ function calcAjuste() {
               (pedido_item_clie.quantidade * pedido_item_clie.preco)
               + parseFloat(pedido_item_clie.programacao) + parseFloat(pedido_item_clie.ajuste)
             ) }}</td>
+            <td>
+              {{ pedido_item_clie.cobrancas.length ? 'Sim' : ( pedido_item_clie.pedido.entrega ? 'Não' : '-' ) }}
+            </td>
           </tr>
         </tbody>
       </table>
