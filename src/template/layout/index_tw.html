@@ -1,0 +1,28 @@
+{% load static %}<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ponto2 . Bordado industrial - © 2023 RPR & Oxigenai</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- css -->
+  <style>
+    .main-body {
+        /* viewport height - footer height - nav/header height */
+        min-height: calc(100vh - 1.5rem - 1px - 2rem - 1px );
+    }
+  </style>
+</head>
+<body>
+  {% block header %}{% endblock %}
+
+  <main class="main-body">
+    {% block content %}{% endblock %}
+  </main>
+
+  {% include 'layout/footer_tw.html' %}
+
+  {% block javascript %}{% endblock %}
+</body>
+</html>
