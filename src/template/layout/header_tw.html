@@ -1,0 +1,64 @@
+<header class="px-4 flex row items-center justify-between border-b border-solid border-slate-800 shadow-[0_2px_2px_-1px] shadow-slate-700">
+  <a class="text-2xl font-bold" href="{% url 'index' %}">
+    RPR - Ponto2(b)
+  </a>
+
+  <div>
+    <a
+      class="px-1 border-l border-sky-600"
+      class="text-sky-600 font-bold"
+      :to="{ name: 'bordado' }"
+    >Bordado</z>
+    <a
+      class="px-1 border-l border-sky-600"
+      :to="{ name: 'sobre' }"
+      :exact-active-class="'text-sky-600 font-bold'"
+    >Sobre</a>
+    <span class="border-l border-sky-600"></span>
+  </div>
+
+
+  <section class="header__section">
+    <ul class="header__section__ul">
+      {% if request.user.is_authenticated %}
+        <li>
+          {% if app_link == 'bordado' %}
+            <span class="destaque">
+          {% else %}
+            <a href="{% url 'bordado:index' %}">
+          {% endif %}
+          Bordado
+          {% if app_link == 'bordado' %}
+            </span>
+          {% else %}
+            </a>
+          {% endif %}
+        </li>
+      {% endif %}
+      {% if app_link == 'sobre' %}
+        <span class="destaque">
+      {% else %}
+        <a href="{% url 'bordado:sobre' %}">
+      {% endif %}
+      Sobre
+      {% if app_link == 'sobre' %}
+        </span>
+      {% else %}
+        </a>
+      {% endif %}
+    </ul>
+  </section>
+
+  <section class="header__section">
+    {% if request.user.is_authenticated %}
+      {{ request.user.username }}
+      <a href="{% url 'encerrar' %}">
+        <button type="button" class="header__section__button">Encerrar</button>
+      </a>
+    {% else %}
+      <a href="{% url 'login' %}?next={% url 'bordado:index' %}">
+        <button type="button" class="header__section__button">Identificar-se</button>
+      </a>
+    {% endif %}
+  </section>
+</header>
