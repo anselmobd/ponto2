@@ -1,20 +1,25 @@
-{% extends 'layout/index.html' %}
+{% extends 'layout/index_tw.html' %}
+{% load static %}
+
 {% block header %}
-  {% include 'layout/header.html' with app_link='sobre' %}
+  {% include 'layout/header_tw.html' with app_link='sobre' %}
 {% endblock %}
+
 {% block content %}
-  <article class="main__article">
-    <h3>RPR Bordados Computadorizados</h3>
-    <address>
-      Rua Conde de Leopoldina, 276<br>
-      São Cristóvão - Rio de Janeiro - RJ<br>
-      CEP 20930-460<br>
-      <a href="tel:+552122014070">(21) 2201-4070</a>
-    </address>
-  </article>
-  <article class="main__article">
-    <h3>Ponto2 . Bordado industrial</h3>
-    <p>Requisitos: Paulo Jorge<br>
-      Análise e desenvolvimento: <a href="mailto:anselmo@oxigenai.com.br">Anselmo</a></p>
-  </article>
+  <div>
+    <article>
+      <h3 class="text-xl my-4 font-bold">RPR Bordados Computadorizados</h3>
+      <address>
+        Rua Conde de Leopoldina, 276<br>
+        São Cristóvão - Rio de Janeiro - RJ<br>
+        CEP 20930-460<br>
+        <a href="tel:+552122014070">(21) 2201-4070</a>
+      </address>
+    </article>
+    <article class="border-t border-solid border-slate-800">
+      <h3 class="text-xl my-4 font-bold">Ponto2 . Bordado industrial</h3>
+      <p>Requisitos: Paulo Jorge<br>
+        Análise e desenvolvimento: <a href="mailto:anselmo@oxigenai.com.br">Anselmo</a></p>
+    </article>
+  </div>
 {% endblock %}
