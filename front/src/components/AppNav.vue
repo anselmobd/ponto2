@@ -34,10 +34,10 @@ const { encerrar } = auth
     <div>
       <span v-if="user.name">{{user.name}}&ThickSpace;</span>
       <router-link
-        class="px-2 py-0.5 rounded-lg bg-sky-700 font-bold text-slate-100"
+        class="px-2 py-0.5 rounded-lg bg-sky-700 font-bold text-slate-100 block"
         v-if="!user.name"
         :to="{ name: 'login' }"
-      >Indentificar-se</router-link>
+      >Identificar-se</router-link>
       <button
         type="button"
         class="px-2 py-0.5 rounded-lg bg-sky-700 font-bold text-slate-100"
