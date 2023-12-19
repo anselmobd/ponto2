@@ -30,16 +30,24 @@
     <span class="border-l border-sky-600"></span>
   </div>
 
-  <section class="header__section">
+  <div class="flex row items-center">
     {% if request.user.is_authenticated %}
-      {{ request.user.username }}
-      <a href="{% url 'encerrar' %}">
-        <button type="button" class="header__section__button">Encerrar</button>
+      <span>{{ request.user.username }}&ThickSpace;</span>
+      <a
+        class="
+        px-2 py-0.5 rounded-lg bg-sky-700 font-bold text-slate-100"
+        href="{% url 'encerrar' %}"
+        type="button">
+        Encerrar
       </a>
     {% else %}
-      <a href="{% url 'login' %}?next={% url 'bordado:index' %}">
-        <button type="button" class="header__section__button">Identificar-se</button>
+      <a
+        class="
+        px-2 py-0.5 rounded-lg bg-sky-700 font-bold text-slate-100"
+        href="{% url 'login' %}?next={% url 'bordado:index' %}"
+        type="button">
+        Identificar-se
       </a>
     {% endif %}
-  </section>
+  </div>
 </header>
