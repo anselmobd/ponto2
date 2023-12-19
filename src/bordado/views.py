@@ -3,7 +3,7 @@ from pprint import pprint
 from django.shortcuts import redirect, render
 
 
-__all__ = ['index', 'sobre']
+__all__ = ['index', 'sobre', 'menu']
 
 
 def index(request):
@@ -13,6 +13,9 @@ def index(request):
         return redirect('bordado:sobre')
 
 
-
 def sobre(request):
     return render(request, 'bordado/sobre.html', {})
+
+
+def menu(request):
+    return render(request, 'bordado/menu.html', {})

@@ -21,6 +21,7 @@ router.register(r'apontamento_producao', ApontamentoProducaoViewSet)
 app_name = 'bordado'
 urlpatterns = [
     path('api/', include(router.urls)),
-    path('', index, name='index'),
+    path('', menu, name='index'),
+    path('old', index, name='index_old'),
     path('sobre', sobre, name='sobre'),
 ]
