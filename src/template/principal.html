@@ -1,14 +1,12 @@
 {% extends 'layout/index_tw.html' %}
+{% load static %}
 
 {% block header %}
   {% include 'layout/header_tw.html' with app_link='principal' %}
 {% endblock %}
 
 {% block content %}
-<section class="mt-4">
-  <h3>Main</h3>
-</section>
+  <div class="flex flex-col items-center place-content-around main-body">
+    <img src="{% static 'img/logo_b.jpeg' %}" alt="Imagem representando RPR" width="275" height="188">
+  </div>
 {% endblock %}
-
-<style scoped>
-</style>
