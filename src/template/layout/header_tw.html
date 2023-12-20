@@ -1,14 +1,16 @@
 <header class="px-4 flex row items-center justify-between border-b border-solid border-slate-800 shadow-[0_2px_2px_-1px] shadow-slate-700">
-  <a
-    class="router-link text-2xl font-bold
-    {% if app_link == 'principal' %}
-    router-link-active text-sky-600
-    {% endif %}
-    ""
-    href="{% url 'index' %}"
-  >
-    RPR - Ponto2 <span class="text-sm">b</span>
-  </a>
+  <div>
+    <a
+      class="router-link text-2xl font-bold
+      {% if app_link == 'principal' %}
+      router-link-active text-sky-600
+      {% endif %}
+      ""
+      href="{% url 'index' %}"
+    >
+      RPR - Ponto2 <span class="text-sm">b</span>
+    </a>
+  </div>
 
   <div>
     {% if request.user.is_authenticated %}
