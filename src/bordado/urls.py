@@ -2,6 +2,7 @@ from django.urls import include, path
 from rest_framework import routers
 
 from .views.main import *
+from .views.financeiro import Financeiro
 from .api.rest import *
 
 
@@ -24,4 +25,5 @@ urlpatterns = [
     path('', menu, name='index'),
     path('old', index, name='index_old'),
     path('sobre', sobre, name='sobre'),
+    path('financeiro', Financeiro.as_view(), name='financeiro'),
 ]
