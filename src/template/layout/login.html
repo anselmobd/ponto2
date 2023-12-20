@@ -1,14 +1,44 @@
-{% extends 'layout/index.html' %}
+{% extends 'layout/index_tw.html' %}
+{% load static %}
+
 {% block header %}
-  {% include 'layout/header.html' %}
+  {% include 'layout/header_tw.html' %}
 {% endblock %}
+
 {% block content %}
-<div class="container text-center"> 
-  <h2>Identificação</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Enviar</button>
-  </form>
-</div>
+  <div>
+    <h2 class="font-bold text-lg">Identificação</h2>
+    <form method="post">
+      {% csrf_token %}
+      <p class="my-4">
+        <label class="block" for="username">Usuário:</label>
+        <input
+          class="px-2 py-1 w-full border-2 rounded-xl"
+          id="id_username"
+          type="text"
+          name="username"
+          id="username"
+          maxlength="150"
+          autofocus=""
+          placeholder="login"
+          required="">
+      </p>
+      <p class="my-4">
+        <label class="block" for="password">Senha:</label>
+        <input
+          class="px-2 py-1 w-full border-2 rounded-xl"
+          id="id_password"
+          type="password"
+          name="password"
+          id="password"
+          placeholder="senha"
+          required="">
+      </p>
+      <p v-if="alerta" class="my-4 text-red-600">{{ alerta }}</p>
+      <button
+        class="px-2 py-1 rounded-xl bg-sky-700 font-bold text-slate-100"
+        type="submit"
+      >Enviar</button>
+    </form>
+  </div>
 {% endblock %}
