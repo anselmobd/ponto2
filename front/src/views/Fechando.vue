@@ -13,7 +13,7 @@ import { floatRound } from "../utils/number.js";
 const route = useRoute();
 
 const fechando_id = ref(route.params.id);
-console.log('fechando_id', fechando_id);
+// console.log('fechando_id', fechando_id);
 
 // valores recebidos de DB
 
@@ -125,6 +125,7 @@ function doGetFirstsPedidoItensBordado(callBack) {
   getPedidoItens({
     cliente_apelido: pedido_item.value.pedido.cliente.apelido,
     bordado_nome: pedido_item.value.bordado.nome,
+    bordado_codigo: pedido_item.value.bordado.codigo,
     callBack: cbGetFirstsPedidoItensBordado
   });
 }
@@ -133,7 +134,10 @@ function cbGetFirstsPedidoItensCliente(data, error) {
   if (data) {
     if (data?.results) pedido_itens_cliente.value = 
       data.results.filter((item) => {
-        return item.bordado.nome != pedido_item.value.bordado.nome
+        return (
+          item.bordado.nome != pedido_item.value.bordado.nome  ||
+          item.bordado.codigo != pedido_item.value.bordado.codigo
+        )
       });
   }
 }
@@ -255,11 +259,14 @@ function calcAjuste() {
       <table class="w-full">
         <thead>
           <tr>
-            <th>Usuário</th>
-            <th>Data</th>
-            <th>Cliente</th>
-            <th>Bordado Nome</th>
-            <th>Bordado Código</th>
+            <th rowspan="2">Usuário</th>
+            <th rowspan="2">Data</th>
+            <th rowspan="2">Cliente</th>
+            <th colspan="2">Bordado</th>
+          </tr>
+          <tr>
+            <th>Nome</th>
+            <th>Código</th>
           </tr>
         </thead>
         <tbody>
@@ -285,7 +292,7 @@ function calcAjuste() {
       v-if="!pedido_item.cobrancas.length"
       @submit.prevent="formGrava()"
       >
-        <h3 class="my-4 font-bold text-lg">Dados do bordado</h3>
+        <h3 class="my-4 font-bold text-lg">Dados do pedido</h3>
         <table class="w-full">
           <thead>
             <tr>
@@ -455,17 +462,21 @@ function calcAjuste() {
       <table class="w-full">
         <thead>
           <tr>
-            <th>Pedido</th>
-            <th>Bordado</th>
-            <th>Data de entrega</th>
-            <th>Quantidade</th>
-            <th>Valor unitário</th>
-            <th>Valor</th>
-            <th>Programação</th>
-            <th>Ajuste</th>
-            <th>Valor final</th>
-            <th>Cobrado</th>
-            <th>Ação</th>
+            <th rowspan="2">Pedido</th>
+            <th colspan="2">Bordado</th>
+            <th rowspan="2">Data de entrega</th>
+            <th rowspan="2">Quantidade</th>
+            <th rowspan="2">Valor unitário</th>
+            <th rowspan="2">Valor</th>
+            <th rowspan="2">Programação</th>
+            <th rowspan="2">Ajuste</th>
+            <th rowspan="2">Valor final</th>
+            <th rowspan="2">Cobrado</th>
+            <th rowspan="2">Ação</th>
+          </tr>
+          <tr>
+            <th>Nome</th>
+            <th>Código</th>
           </tr>
         </thead>
         <tbody>
@@ -475,6 +486,7 @@ function calcAjuste() {
           >
             <td>{{ pedido_item_clie.id }}</td>
             <td>{{ pedido_item_clie.bordado.nome }}</td>
+            <td>{{ pedido_item_clie.bordado.codigo }}</td>
             <td>{{ inputStrDate2PtBrDate(pedido_item_clie.pedido.entrega, empty='-') }}</td>
             <td>{{ pedido_item_clie.quantidade }}</td>
             <td>{{ ptBrCurrencyFormat.format(pedido_item_clie.preco) }}</td>
