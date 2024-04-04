@@ -83,6 +83,7 @@ class SetBordadoSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'nome',
+            'codigo',
             'pontos',
             'cores',
             'tamanho_maximo',
