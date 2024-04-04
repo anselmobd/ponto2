@@ -10,9 +10,15 @@ export function getBordados(cliente_apelido, callBack) {
     {params: params}
   )
   .then(response => {
-    callBack(response.data.results.map(
-      bord => bord.nome
-    ));
+    callBack(
+      Array.from(
+        new Set(
+          response.data.results.map(
+            bord => bord.nome
+          )
+        )
+      )
+    );
   })
   .catch(error => {
     console.error('Erro ao obter bordados de cliente via API:', error);
