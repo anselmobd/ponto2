@@ -4,6 +4,7 @@ export function getPedidoItens({
   page=1,
   cliente_apelido=null,
   bordado_nome=null,
+  bordado_codigo=null,
   callBack=()=>{}
 }) {
   const params = new URLSearchParams();
@@ -16,6 +17,9 @@ export function getPedidoItens({
   }
   if (bordado_nome) {
     params.append('bordado__nome', bordado_nome);
+  }
+  if (bordado_codigo) {
+    params.append('bordado__codigo', bordado_codigo);
   }
   axiosPrivate.get(
     '/bordado/api/pedido_item/',
