@@ -8,7 +8,6 @@ from rest_framework import (
     status,
 )
 from rest_framework.response import Response
-from rest_framework.request import Request
 from drf_spectacular.utils import (
     extend_schema_view,
     extend_schema,
@@ -26,7 +25,7 @@ from bordado.serializers import (
 )
 from o2lib.dict import dict_keys_value
 
-from bordado.api.rest_consts import *
+from bordado.api.rest_consts import __ACTIONS
 
 
 __all__ = [
@@ -63,10 +62,9 @@ class PedidoItemViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_200_OK,
             )
 
-        """Alé de apagar o PedidoItem indicado, apaga também o pedido,
+        """Além de apagar o PedidoItem indicado, apaga também o pedido,
         o bordado e o cliente, desde que estes não sejam utilizados por 
-        nenhum outro registro.
-        """
+        nenhum outro registro."""
         pedido_item = PedidoItem.objects.get(
             id=kwargs['pk']
         )
