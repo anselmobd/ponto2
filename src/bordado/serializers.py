@@ -69,6 +69,7 @@ class BordadoSerializer(serializers.ModelSerializer):
             'id',
             'cliente',
             'nome',
+            'codigo',
             'pontos',
             'cores',
             'tamanho_maximo',
