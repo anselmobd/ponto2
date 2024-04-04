@@ -56,8 +56,10 @@ export function getPedidoItem({
 export function addClienteBordado(
   cliente_apelido,
   bordado_nome,
+  bordado_codigo,
   callBack
 ) {
+  console.log(bordado_codigo);
   const params = new URLSearchParams();
   params.append('format', 'json');
   params.append('page_size', '999999');
@@ -66,7 +68,10 @@ export function addClienteBordado(
     '/bordado/api/pedido_item/',
     {
       cliente: {apelido: cliente_apelido},
-      bordado: {nome: bordado_nome}
+      bordado: {
+        nome: bordado_nome,
+        codigo: bordado_codigo
+      }
     },
     {params: params},
   )
