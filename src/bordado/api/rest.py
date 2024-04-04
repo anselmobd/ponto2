@@ -18,8 +18,27 @@ from bordado.api.cobranca import CobrancaViewSet
 from bordado.api.pedido_item import PedidoItemViewSet
 from bordado.api.lancamento import LancamentoViewSet
 from bordado.api.rest_consts import __ACTIONS
-from bordado.models import *
-from bordado.serializers import *
+from bordado.models import (
+    ApontamentoProducao,
+    Bordado,
+    Cliente,
+    DificuldadeBordado,
+    OrdemProducao,
+    Pedido,
+    PedidoItem,
+    PedidoItemCobranca,
+)
+from bordado.serializers import (
+    ApontamentoProducaoSerializer,
+    BordadoSerializer,
+    ClienteSerializer,
+    DificuldadeBordadoSerializer,
+    OrdemProducaoSerializer,
+    PedidoItemCobrancaSerializer,
+    PedidoItemSerializer,
+    PedidoSerializer,
+    UserSerializer,
+)
 
 
 __all__ = [
