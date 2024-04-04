@@ -7,6 +7,7 @@ import { useAuthStore } from '../stores/auth.js';
 import { getPedidoItens, addClienteBordado, delClienteBordado } from '../api/pedidoItem.js';
 import { getClientes } from '../api/cliente.js';
 import { getBordados } from '../api/bordado.js';
+import { getBordadoCodigos } from '../api/bordado_codigo.js';
 
 const auth = useAuthStore();
 // const { user } = storeToRefs(auth)
@@ -28,23 +29,31 @@ const bordado = ref({
   error: '',
   list: []
 });
+const codigo = ref({
+  input: '',
+  error: '',
+  list: []
+});
 
 // componentes do template que serão referenciados
 
 const inputCliente = ref(null)
 const inputBordado = ref(null)
+const inputCodigo = ref(null)
 
 // get set refs
 
 function clearInputs(cliente_apelido = '') {
   cliente.value.input = cliente_apelido;
   bordado.value.input = '';
+  codigo.value.input = '';
   pedido_itens_index = '';
 }
 
 function clearErrors() {
   cliente.value.error = '';
   bordado.value.error = '';
+  codigo.value.error = '';
 }
 
 // DB API calls (do) and callbacks (cb)
@@ -98,6 +107,17 @@ function doGetBordados() {
   }
 }
 
+function cbGetBordadoCodigo(data, error) {
+  if (data) codigo.value.list = data;
+}
+
+function doGetBordadoCodigos() {
+  codigo.value.list = [];
+  if (cliente?.value?.input && bordado?.value?.input) {
+    getBordadoCodigos(cliente.value.input, bordado.value.input, cbGetBordadoCodigo)
+  }
+}
+
 function cbAddClienteBordado(data, error) {
   if (data) {
     pedidoItemParaTela(data);
@@ -112,11 +132,15 @@ function cbAddClienteBordado(data, error) {
     if ('nome' in error) {
       bordado.value.error = error.nome.join('|');
     }
+    if ('codigo' in error) {
+      codigo.value.error = error.codigo.join('|');
+    }
   };
   getClientes(cbGetClientes);
 }
 
 function doAddClienteBordado() {
+  console.log("doAddClienteBordado");
   clearErrors();
   if (!cliente?.value?.input) {
     cliente.value.error = 'Campo cliente vazio.';
@@ -124,10 +148,14 @@ function doAddClienteBordado() {
   if (!bordado?.value?.input) {
     bordado.value.error = 'Campo bordado vazio.';
   }
-  if (cliente?.value?.input && bordado?.value?.input) {
+  if (!codigo?.value?.input) {
+    codigo.value.error = 'Campo código vazio.';
+  }
+  if (cliente?.value?.input && bordado?.value?.input && codigo?.value?.input) {
     addClienteBordado(
       cliente.value.input,
       bordado.value.input,
+      codigo.value.input,
       cbAddClienteBordado
     );
   }
@@ -281,10 +309,10 @@ watch(status, (newStatus) => {
       <thead>
         <tr>
           <th>Usuário</th>
-          <th>Data</th>
+          <th>Data/Hora</th>
           <th>Pedido</th>
           <th>Cliente<span v-if="pedido_itens_filtro_apelido" ><br/><span class="text-indigo-700">{{ pedido_itens_filtro_apelido }}</span><a href="#" class="button" @click="handleCancelaFiltroClick">&cross;</a></span></th>
-          <th>Bordado</th>
+          <th colspan="2">Bordado</th>
           <th>Ações</th>
         </tr>
         <tr class="table__tr-input">
@@ -299,6 +327,7 @@ watch(status, (newStatus) => {
               v-model.trim="cliente.input"
               :disabled="status == 'b' || (status == 'i' && pedido_itens_filtro_apelido)"
               type="text"
+              size="12"
               name="cliente"
               id="cliente"
               ref="inputCliente"
@@ -317,14 +346,34 @@ watch(status, (newStatus) => {
               :disabled="status != 'i'"
               @focus="doGetBordados"
               type="text"
+              size="12"
               name="bordado"
               id="bordado"
               ref="inputBordado"
-              placeholder="Bordado"
+              placeholder="Nome"
               list="bordado-list"
             >
             <datalist id="bordado-list">
               <option v-for="bordado1 in bordado.list">{{bordado1}}</option>
+            </datalist>
+          </th>
+          <th>
+            <span class="text-sm text-red-700 font-bold" v-if="codigo.error" >{{ codigo.error }}<br /></span>
+            <input
+              class="mx-0.5 border border-solid border-slate-500 disabled:border-slate-200 rounded"
+              v-model.trim="codigo.input"
+              :disabled="status != 'i'"
+              @focus="doGetBordadoCodigos"
+              type="text"
+              size="12"
+              name="codigo"
+              id="codigo"
+              ref="inputCodigo"
+              placeholder="Código"
+              list="codigo-list"
+            >
+            <datalist id="codigo-list">
+              <option v-for="codigo1 in codigo.list">{{codigo1}}</option>
             </datalist>
           </th>
           <th>
@@ -353,7 +402,7 @@ watch(status, (newStatus) => {
       </thead>
       <tbody>
         <tr v-if="pedido_itens_loading">
-          <td colspan="6">
+          <td colspan="7">
             <span v-if="pedido_itens_next == 1 && !pedido_itens">Carregando</span>
             <span v-if="pedido_itens_next == 1 && pedido_itens">Recarregando</span>
             <span v-if="pedido_itens_next == 1"> os pedidos mais recentes...</span>
@@ -369,6 +418,7 @@ watch(status, (newStatus) => {
           <td>{{pedido_item.id}}</td>
           <td>{{pedido_item.pedido.cliente.apelido}}</td>
           <td>{{pedido_item.bordado.nome}}</td>
+          <td>{{pedido_item.bordado.codigo}}</td>
           <td>
             <button
               v-if="!pedido_item.quantidade"
