@@ -1,18 +1,17 @@
 from ponto2.admin import admin
 
 from .models import (
-    Cliente,
-    DificuldadeBordado,
+    ApontamentoProducao,
     Bordado,
-    Pedido,
-    PedidoItem,
+    Cliente,
     Cobranca,
-    PedidoItemCobranca,
+    DificuldadeBordado,
     Lancamento,
     OrdemProducao,
-    ApontamentoProducao,
+    Pedido,
+    PedidoItem,
+    PedidoItemCobranca,
 )
-
 
 
 class CustomModelAdmin(admin.ModelAdmin):
@@ -56,10 +55,10 @@ class DificuldadeBordadoAdmin(CustomModelAdmin):
 @admin.register(Bordado)
 class BordadoAdmin(admin.ModelAdmin):
     list_display = [
-        'nome', 'cliente', 'pontos', 'cores', 'tamanho_maximo', 'dificuldade'
+        'nome', 'codigo', 'cliente', 'pontos', 'cores', 'tamanho_maximo', 'dificuldade'
     ]
-    list_display_links = ['cliente', 'nome']
-    search_fields = ['cliente__apelido', 'cliente__cnpj9', 'nome']
+    list_display_links = ['cliente', 'nome', 'codigo']
+    search_fields = ['cliente__apelido', 'cliente__cnpj9', 'nome', 'codigo']
     list_filter = ['cliente']
 
 

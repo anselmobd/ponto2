@@ -166,8 +166,8 @@ class DificuldadeBordado(models.Model):
 
 
 class BordadoManager(models.Manager):
-    def get_by_natural_key(self, nome, cnpj9, cnpj4):
-        return self.get(nome=nome, cliente__cnpj9=cnpj9, cliente__cnpj4=cnpj4)
+    def get_by_natural_key(self, nome, codigo, cnpj9, cnpj4):
+        return self.get(nome=nome, codigo=codigo, cliente__cnpj9=cnpj9, cliente__cnpj4=cnpj4)
 
 
 class Bordado(models.Model):
@@ -180,6 +180,13 @@ class Bordado(models.Model):
     )
     nome = models.CharField(
         max_length=50,
+    )
+    codigo = models.CharField(
+        'código',
+        max_length=50,
+        default="",
+        blank=True,
+        null=True,
     )
     pontos = models.PositiveIntegerField(
         default=0,
@@ -202,16 +209,17 @@ class Bordado(models.Model):
 
     def __str__(self):
         cliente = f" - {self.cliente}" if self.cliente else ''
-        return f"{self.nome} {cliente}"
+        codigo = f" - {self.codigo}" if self.codigo else ''
+        return f"{self.nome}{codigo}{cliente}"
 
     class Meta:
         db_table = "po2_bordado"
         verbose_name = "Bordado"
-        ordering = ['nome']
-        unique_together = [['nome', 'cliente']]
+        ordering = ['nome', 'codigo']
+        unique_together = [['nome', 'codigo', 'cliente']]
 
     def natural_key(self):
-        return (self.nome, ) + Cliente.nullable_natural_key(self.cliente)
+        return (self.nome, self.codigo) + Cliente.nullable_natural_key(self.cliente)
 
     natural_key.dependencies = ['bordado.cliente']
 
