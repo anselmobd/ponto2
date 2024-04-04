@@ -15,7 +15,7 @@ export function getBordados(cliente_apelido, callBack) {
     ));
   })
   .catch(error => {
-    console.error('Erro ao obter clientes via API:', error);
+    console.error('Erro ao obter bordados de cliente via API:', error);
     callBack(null, error);
   });
 }
