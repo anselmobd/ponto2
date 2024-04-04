@@ -22,7 +22,7 @@ const { encerrar } = auth
         v-if="user.name"
         :to="{ name: 'bordado' }"
         :exact-active-class="'text-sky-600 font-bold'"
-      >Bordado</router-link>
+      >Pedido</router-link>
       <router-link
         class="router-link px-1 border-l border-sky-600"
         :to="{ name: 'sobre' }"
