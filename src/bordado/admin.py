@@ -1,6 +1,18 @@
 from ponto2.admin import admin
 
-from .models import *
+from .models import (
+    Cliente,
+    DificuldadeBordado,
+    Bordado,
+    Pedido,
+    PedidoItem,
+    Cobranca,
+    PedidoItemCobranca,
+    Lancamento,
+    OrdemProducao,
+    ApontamentoProducao,
+)
+
 
 
 class CustomModelAdmin(admin.ModelAdmin):
