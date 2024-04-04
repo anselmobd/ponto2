@@ -41,7 +41,7 @@ class PedidoItemViewSet(viewsets.ModelViewSet):
     serializer_class = PedidoItemSerializer
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['pedido__cliente__apelido', 'bordado__nome']
+    filterset_fields = ['pedido__cliente__apelido', 'bordado__nome', 'bordado__codigo']
 
     def destroy(self, request, *args, **kwargs):
         if request.query_params.get('tipo', '-') == 'fechamento':
@@ -117,6 +117,7 @@ class PedidoItemViewSet(viewsets.ModelViewSet):
                     bordado = Bordado.objects.get(
                         cliente=cliente,
                         nome=request.data['bordado']['nome'],
+                        codigo=request.data['bordado']['codigo'],
                     )
                 except Bordado.DoesNotExist:
                     serializer = SetBordadoSerializer(data=request.data['bordado'])
@@ -127,7 +128,10 @@ class PedidoItemViewSet(viewsets.ModelViewSet):
                         raise TypeError
                 except KeyError:
                     errors.update({
-                        'bordado': {'nome': ["KeyError"]}
+                        'bordado': {
+                            'nome': ["KeyError"],
+                            'codigo': ["KeyError"],
+                        }
                     })
                     raise TypeError
 
