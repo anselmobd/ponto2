@@ -258,7 +258,8 @@ function calcAjuste() {
             <th>Usuário</th>
             <th>Data</th>
             <th>Cliente</th>
-            <th>Bordado</th>
+            <th>Bordado Nome</th>
+            <th>Bordado Código</th>
           </tr>
         </thead>
         <tbody>
@@ -275,6 +276,7 @@ function calcAjuste() {
               >💲</button>
             </td>
             <td>{{pedido_item.bordado.nome}}</td>
+            <td>{{pedido_item.bordado.codigo}}</td>
           </tr>
         </tbody>
       </table>
