@@ -88,7 +88,7 @@ class BordadoViewSet(viewsets.ModelViewSet):
     queryset = Bordado.objects.all()
     serializer_class = BordadoSerializer
     permission_classes = [permissions.IsAuthenticated]
-    filterset_fields = ['cliente__apelido']
+    filterset_fields = ['cliente__apelido', 'nome']
 
 
 @extend_schema_view(
