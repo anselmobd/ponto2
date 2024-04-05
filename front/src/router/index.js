@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import { useAuthStore } from '@/stores/auth.js';
 
 import Sobre from '../views/Sobre.vue'
-import Bordado from '../views/Bordado.vue'
+import Pedido from '../views/Pedido.vue'
 import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
 import Fechando from '../views/Fechando.vue'
@@ -25,9 +25,9 @@ const routes = [
       component: Sobre,
     },
     {
-      path: "/bordado",
-      name: "bordado",
-      component: Bordado,
+      path: "/pedido",
+      name: "pedido",
+      component: Pedido,
     },
     {
       path: "/fechando/:id",

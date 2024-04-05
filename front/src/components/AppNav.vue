@@ -20,7 +20,7 @@ const { encerrar } = auth
       <router-link 
         class="router-link px-1 border-l border-sky-600"
         v-if="user.name"
-        :to="{ name: 'bordado' }"
+        :to="{ name: 'pedido' }"
         :exact-active-class="'text-sky-600 font-bold'"
       >Pedido</router-link>
       <router-link
