@@ -277,24 +277,28 @@ onMounted(() => {
       <table class="w-full">
         <thead>
           <tr>
-            <th>Seleção</th>
-            <th>Data entrega</th>
-            <th>Pedido</th>
-            <th>Bordado</th>
-            <th>Valor</th>
-            <th>Cobrado</th>
-            <th>A cobrar</th>
+            <th rowspan="2">Seleção</th>
+            <th rowspan="2">Data entrega</th>
+            <th rowspan="2">Pedido</th>
+            <th colspan="2">Bordado</th>
+            <th rowspan="2">Valor</th>
+            <th rowspan="2">Cobrado</th>
+            <th rowspan="2">A cobrar</th>
+          </tr>
+          <tr>
+            <th>Nome</th>
+            <th>Código</th>
           </tr>
           <tr v-if="pedido_itens_error">
-            <th class="text-red-800" colspan="7">
+            <th class="text-red-800" colspan="8">
               {{ pedido_itens_error }}
             </th>
           </tr>
           <tr v-if="pedido_itens_carregando">
-            <td colspan="7">Carregando dados dos pedidos...</td>
+            <td colspan="8">Carregando dados dos pedidos...</td>
           </tr>
           <tr v-if="!pedido_itens_carregando && (pedido_itens.length == 0)">
-            <td colspan="7">Nenhum pedido encontrado</td>
+            <td colspan="8">Nenhum pedido encontrado</td>
           </tr>
         </thead>
         <tbody>
@@ -316,6 +320,7 @@ onMounted(() => {
             <td>{{ inputStrDate2PtBrDate(pedido_item.pedido.entrega) }}</td>
             <td>{{pedido_item.id}}</td>
             <td>{{pedido_item.bordado.nome}}</td>
+            <td>{{pedido_item.bordado.codigo}}</td>
             <td class="!text-right">{{ ptBrCurrencyFormat.format(pedido_item.valor_final) }}</td>
             <td class="!text-right" :title="pedido_item.cobrancas_ids">{{ ptBrCurrencyFormat.format(pedido_item.cobrado) }}</td>
             <td class="!text-right">{{ ptBrCurrencyFormat.format(pedido_item.acobrar) }}</td>
