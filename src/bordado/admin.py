@@ -31,11 +31,41 @@ class CustomModelAdmin(admin.ModelAdmin):
 class ClienteAdmin(CustomModelAdmin):
     list_display = ['__str__', 'usuario', 'quando']
     search_fields = ['__str__']
+    fields = [
+        'apelido',
+        (
+            'usuario',
+            'quando',
+        ),
+        (
+            'cnpj9',
+            'cnpj4',
+            'cnpj2',
+        ),
+        'nome',
+        'fansasia',
+        (
+            'cep',
+            'cidade',
+            'uf',
+        ),
+        (
+            'logradouro',
+            'numero',
+            'complemento',
+        ),
+        # 'boleto',
+        # 'conta_corrente',
+        # 'parcela',
+    ]
     field_style = {
         'cnpj9': 'width: 9em;',
         'cnpj4': 'width: 4em;',
         'cnpj2': 'width: 3em;',
-        'parcela': 'width: 3em;',
+        'cep': 'width: 10em;',
+        'complemento': 'width: 10em;',
+        'uf': 'width: 3em;',
+        # 'parcela': 'width: 3em;',
     }
     readonly_fields = [
         'usuario',

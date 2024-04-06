@@ -55,6 +55,12 @@ class Cliente(models.Model):
     #     on_delete=models.PROTECT,
     # )
     nome = models.CharField(
+        'Nome/Razão Social',
+        max_length=100,
+        blank=True,
+    )
+    fansasia = models.CharField(
+        'Nome Fantasia',
         max_length=100,
         blank=True,
     )
@@ -76,6 +82,32 @@ class Cliente(models.Model):
         'CNPJ (dígitos)',
         default=0,
         validators=[MinValueValidator(0), MaxValueValidator(99)],
+    )
+    cep = models.CharField(
+        'CEP',
+        max_length=30,
+        blank=True,
+    )
+    logradouro = models.CharField(
+        max_length=100,
+        blank=True,
+    )
+    numero = models.PositiveSmallIntegerField(
+        'Número',
+        default=0,
+        validators=[MinValueValidator(0), MaxValueValidator(999_999)],
+    )
+    complemento = models.CharField(
+        max_length=30,
+        blank=True,
+    )
+    cidade = models.CharField(
+        max_length=100,
+        blank=True,
+    )
+    uf = models.CharField(
+        max_length=2,
+        blank=True,
     )
     boleto = models.BooleanField(
         'Gera boleto?',
