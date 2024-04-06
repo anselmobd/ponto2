@@ -26,6 +26,21 @@ export function getPedidoItens({
     {params: params}
   )
   .then(response => {
+    response.data.results.forEach(element => {
+      element.pedido.cliente.vazio = (
+        element.pedido.cliente.nome+
+        element.pedido.cliente.fansasia+
+        element.pedido.cliente.cnpj9+
+        element.pedido.cliente.cnpj4+
+        element.pedido.cliente.cnpj2+
+        element.pedido.cliente.cep+
+        element.pedido.cliente.logradouro+
+        element.pedido.cliente.numero+
+        element.pedido.cliente.complemento+
+        element.pedido.cliente.cidade+
+        element.pedido.cliente.uf
+      ) == '0000';
+    });
     callBack(response.data);
   })
   .catch(error => {
