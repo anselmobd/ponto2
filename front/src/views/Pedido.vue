@@ -222,6 +222,20 @@ function handleApagarClick(event) {
   if (answer) doDelClienteBordado(index);
 }
 
+function handleEditaDadosClienteClick(event) {
+  event.preventDefault();
+  const index = event.target.value;
+  const answer = window.confirm('Confirma editar dados de cliente?')
+  // if (answer) doDelClienteBordado(index);
+}
+
+function handleCriaDadosClienteClick(event) {
+  event.preventDefault();
+  const index = event.target.value;
+  const answer = window.confirm('Confirma criar dados do cliente?')
+  // if (answer) doDelClienteBordado(index);
+}
+
 function reloadPedidoItens(event) {
   event.preventDefault();
   doGetFirstsPedidoItens();
@@ -413,10 +427,20 @@ watch(status, (newStatus) => {
           v-for="(pedido_item, index) in pedido_itens"
           :key="pedido_item.id"
         >
-          <td>{{ pedido_item.usuario.username }}</td>
+          <td>{{pedido_item.usuario.username}}</td>
           <td>{{pedidoItemInseridoEmData(pedido_item)}}</td>
           <td>{{pedido_item.id}}</td>
-          <td>{{pedido_item.pedido.cliente.apelido}}</td>
+          <td>
+            {{pedido_item.pedido.cliente.apelido}}
+            <button
+              v-if="pedido_item.pedido.cliente.vazio"
+              class="button-text-shadow"
+              :value="index"
+              @click="handleCriaDadosClienteClick"
+              :disabled="status != 'b'"
+              title="Cria dados de cliente"
+            >👤</button>
+          </td>
           <td>{{pedido_item.bordado.nome}}</td>
           <td>{{pedido_item.bordado.codigo}}</td>
           <td>
@@ -443,6 +467,14 @@ watch(status, (newStatus) => {
               :disabled="status != 'b'"
               title="Financeiro"
             >💲</button>
+            <button
+              v-if="!pedido_item.pedido.cliente.vazio"
+              class="button-text-shadow"
+              :value="index"
+              @click="handleEditaDadosClienteClick"
+              :disabled="status != 'b'"
+              title="Edita dados de cliente"
+            >👩‍🦲</button>
           </td>
         </tr>
       </tbody>
