@@ -19,3 +19,23 @@ export function getClientes(callBack) {
     callBack(null, error);
   });
 }
+
+export function getCliente({
+  id=null,
+  callBack=()=>{}
+}) {
+  const params = new URLSearchParams();
+  params.append('format', 'json');
+  axiosPrivate.get(
+    `/bordado/api/clientes/${id}/`,
+    {params: params}
+  )
+  .then(response => {
+    console.log(response.data);
+    callBack(response.data);
+  })
+  .catch(error => {
+    console.error('Erro ao obter cliente '+id+' via API:', error)
+    callBack(null, error);
+  });
+}
