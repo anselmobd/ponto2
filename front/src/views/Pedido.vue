@@ -224,16 +224,14 @@ function handleApagarClick(event) {
 
 function handleEditaDadosClienteClick(event) {
   event.preventDefault();
-  const index = event.target.value;
-  const answer = window.confirm('Confirma editar dados de cliente?')
-  // if (answer) doDelClienteBordado(index);
+  const id = event.target.value;
+  router.push({ name: 'cliente', params: { id: id } });
 }
 
 function handleCriaDadosClienteClick(event) {
   event.preventDefault();
-  const index = event.target.value;
-  const answer = window.confirm('Confirma criar dados do cliente?')
-  // if (answer) doDelClienteBordado(index);
+  const id = event.target.value;
+  router.push({ name: 'cliente', params: { id: id } });
 }
 
 function reloadPedidoItens(event) {
@@ -435,7 +433,7 @@ watch(status, (newStatus) => {
             <button
               v-if="pedido_item.pedido.cliente.vazio"
               class="button-text-shadow"
-              :value="index"
+              :value="pedido_item.pedido.cliente.id"
               @click="handleCriaDadosClienteClick"
               :disabled="status != 'b'"
               title="Cria dados de cliente"
@@ -470,7 +468,7 @@ watch(status, (newStatus) => {
             <button
               v-if="!pedido_item.pedido.cliente.vazio"
               class="button-text-shadow"
-              :value="index"
+              :value="pedido_item.pedido.cliente.id"
               @click="handleEditaDadosClienteClick"
               :disabled="status != 'b'"
               title="Edita dados de cliente"
