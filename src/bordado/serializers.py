@@ -1,7 +1,18 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from bordado.models import *
+from bordado.models import (
+    ApontamentoProducao,
+    Bordado,
+    Cliente,
+    Cobranca,
+    DificuldadeBordado,
+    Lancamento,
+    OrdemProducao,
+    Pedido,
+    PedidoItem,
+    PedidoItemCobranca,
+)
 
 
 __all__ = [
@@ -37,16 +48,23 @@ class ClienteSerializer(serializers.ModelSerializer):
         model = Cliente
         fields = [
             'id',
-            'nome',
             'apelido',
+            # 'usuario',
+            'quando',
+            'nome',
+            'fansasia',
             'cnpj9',
             'cnpj4',
             'cnpj2',
+            'cep',
+            'logradouro',
+            'numero',
+            'complemento',
+            'cidade',
+            'uf',
             'boleto',
             'conta_corrente',
             'parcela',
-            # 'usuario',
-            'quando',
         ]
 
 
