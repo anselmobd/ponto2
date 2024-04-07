@@ -11,6 +11,7 @@ const route = useRoute();
 const cliente = ref({})
 const cliente_carregando = ref(null)
 const cliente_error = ref(null)
+const cliente_salvo = ref(null)
 const field_error = ref(null)
 
 // DB API calls (do) and callbacks (cb)
@@ -39,21 +40,35 @@ function doGetCliente(callBack) {
 function cbSaveCliente(data, error) {
   if (data) {
     cliente.value = data;
+    cliente_error.value = "As alterações nos dados do cliente foram salvas.";
   }
   if (error) {
-    cliente_error.value = "As alterações nos dados do cliente não foram salvas! Por favor, corrija os problemas indicados abaixo.";
+    cliente_error.value = "As alterações nos dados do cliente não foram salvas. Por favor, corrija os problemas indicados abaixo.";
     field_error.value = error.response.data;
   };
 }
 
-function doSaveCliente(callBack) {
+function doSaveCliente() {
   cliente_error.value = null;
+  cliente_salvo.value = null;
   field_error.value = null;
   putCliente({
     id: route.params.id,
     payload: cliente.value,
     callBack: cbSaveCliente
   });
+}
+
+// event functions
+
+function handleSaveClick(event) {
+  event.preventDefault();
+  doSaveCliente();
+}
+
+function handleLimpaClick(event) {
+  event.preventDefault();
+  doGetCliente();
 }
 
 // Lifecycle Hooks
@@ -78,9 +93,10 @@ onMounted(() => {
           <!-- <p v-if="cliente?.id">cliente={{ cliente }}</p> -->
 
           <div class="bg-gray-100 rounded shadow-lg p-4 mb-6">
-            <form @submit.prevent="doSaveCliente()">
+            <form>
               <div class="grid grid-cols-1 gap-4">
                 <span v-if="cliente_error" class="text-red-800">{{ cliente_error }}</span>
+                <span v-if="cliente_salvo" class="text-green-800">{{ cliente_salvo }}</span>
 
                 <section id="nomes_section">
                   <div class="flex gap-4">
@@ -125,7 +141,7 @@ onMounted(() => {
                     </div>
                   </div>
                 </section>
-                
+
                 <section id="cnpj_section">
                   <p class="font-semibold">
                     CNPJ
@@ -240,14 +256,15 @@ onMounted(() => {
                     </div>
                   </div>
                 </section>
-                
+
                 <section id="botoes_section" class="inline-flex gap-8 justify-center">
                   <button
+                    @click="handleSaveClick"
                     class="px-4 py-1 rounded-xl bg-sky-700 font-bold text-slate-100"
                     type="submit"
                   >Salvar</button>
                   <button
-                    @click.prevent="doGetCliente"
+                    @click="handleLimpaClick"
                     class="px-4 py-1 rounded-xl bg-sky-700 font-bold text-slate-100"
                     type="reset"
                   >Limpar</button>
