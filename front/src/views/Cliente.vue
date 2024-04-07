@@ -11,6 +11,7 @@ const route = useRoute();
 const cliente = ref({})
 const cliente_carregando = ref(null)
 const cliente_error = ref(null)
+const field_error = ref(null)
 
 // DB API calls (do) and callbacks (cb)
 
@@ -28,6 +29,7 @@ function doGetCliente(callBack) {
   cliente.value = [];
   cliente_carregando.value = true;
   cliente_error.value = null;
+  field_error.value = null;
   getCliente({
     id: route.params.id,
     callBack: cbdoGetCliente
@@ -39,12 +41,14 @@ function cbSaveCliente(data, error) {
     cliente.value = data;
   }
   if (error) {
-    lancamento.value.error = error.response.data.human.join('|');
-    lancamento.value.error_tech = error.response.data.tech.join('|');
+    cliente_error.value = "As alterações nos dados do cliente não foram salvas! Por favor, corrija os problemas indicados abaixo.";
+    field_error.value = error.response.data;
   };
 }
 
 function doSaveCliente(callBack) {
+  cliente_error.value = null;
+  field_error.value = null;
   putCliente({
     id: route.params.id,
     payload: cliente.value,
@@ -62,29 +66,198 @@ onMounted(() => {
 
 <template>
   <div>
-    <span v-if="cliente_carregando">Carregando dados do cliente {{ route.params.id }}</span>
-    <span v-if="cliente_error" class="text-red-800">{{ cliente_error }}</span>
-    <section id="titulo" class="flex pt-4 place-content-between">
-      <h2 class="inline font-bold text-xl">Dados do cliente <span v-if="cliente?.apelido" class="text-indigo-700">{{ cliente?.apelido }}</span></h2>
-      <a title="Voltar" class="button text-xl cursor-pointer" @click.prevent="router.go(-1)">&#x2190;</a>
-    </section>
-    <p v-if="cliente?.id">cliente={{ cliente }}</p>
-    <form @submit.prevent="doSaveCliente()">
-      <p class="my-4">
-        <label for="apelido">Apelido:</label>
-        <input
-          class="mx-0.5 border border-solid border-slate-500 rounded"
-          v-model="cliente.apelido"
-          type="text"
-          name="apelido"
-          id="apelido"
-          required
-        >
-      </p>
-      <button
-        class="px-2 py-1 rounded-xl bg-sky-700 font-bold text-slate-100"
-        type="submit"
-      >Salvar</button>
-    </form>
+    <div class="my-4 p-6 bg-white flex items-center justify-center">
+      <div class="container max-w-screen-lg mx-auto">
+        <div>
+          <span v-if="cliente_carregando">Carregando dados do cliente {{ route.params.id }}</span>
+          
+          <section id="titulo_section" class="flex place-content-between">
+            <h2 class="font-semibold text-xl text-gray-600">Dados do cliente <span v-if="cliente?.apelido" class="text-indigo-700">{{ cliente?.apelido }}</span></h2>
+            <a title="Voltar" class="button text-xl cursor-pointer" @click.prevent="router.go(-1)">&#x2190;</a>
+          </section>
+          <!-- <p v-if="cliente?.id">cliente={{ cliente }}</p> -->
+
+          <div class="bg-gray-100 rounded shadow-lg p-4 mb-6">
+            <form @submit.prevent="doSaveCliente()">
+              <div class="grid grid-cols-1 gap-4">
+                <span v-if="cliente_error" class="text-red-800">{{ cliente_error }}</span>
+
+                <section id="nomes_section">
+                  <div class="flex gap-4">
+                    <div>
+                      <label class="block" for="apelido">Apelido</label>
+                      <p v-if="field_error?.apelido" class="text-red-800">{{ field_error.apelido.join(", ") }}</p>
+                      <input
+                      class="h-10 border mt-1 rounded px-4 bg-white"
+                      v-model="cliente.apelido"
+                      type="text"
+                      name="apelido"
+                      id="apelido"
+                      required
+                      >
+                    </div>
+                  </div>
+
+                  <div class="flex gap-4">
+                    <div>
+                      <label class="block" for="nome">Nome/Razão Social</label>
+                      <p v-if="field_error?.nome" class="text-red-800">{{ field_error.nome.join(", ") }}</p>
+                      <input
+                      class="h-10 border mt-1 rounded px-4 bg-white"
+                      v-model="cliente.nome"
+                      type="text"
+                      name="nome"
+                      id="nome"
+                      required
+                      >
+                    </div>
+                    <div>
+                      <label class="block" for="fansasia">Nome Fansasia</label>
+                      <p v-if="field_error?.fansasia" class="text-red-800">{{ field_error.fansasia.join(", ") }}</p>
+                      <input
+                      class="h-10 border mt-1 rounded px-4 bg-white"
+                      v-model="cliente.fansasia"
+                      type="text"
+                      name="fansasia"
+                      id="fansasia"
+                      required
+                      >
+                    </div>
+                  </div>
+                </section>
+                
+                <section id="cnpj_section">
+                  <p class="font-semibold">
+                    CNPJ
+                  </p>
+                  <div class="flex gap-4">
+                    <div>
+                      <label class="block" for="cnpj9">Raiz</label>
+                      <p v-if="field_error?.cnpj9" class="text-red-800">{{ field_error.cnpj9.join(", ") }}</p>
+                      <input
+                        class="h-10 border mt-1 rounded px-1 w-40 bg-white"
+                        v-model="cliente.cnpj9"
+                        type="text"
+                        name="cnpj9"
+                        id="cnpj9"
+                      />
+                    </div>
+                    <div>
+                      <label class="block" for="cnpj4">Filial</label>
+                      <p v-if="field_error?.cnpj4" class="text-red-800">{{ field_error.cnpj4.join(", ") }}</p>
+                      <input
+                        class="h-10 border mt-1 rounded px-1 w-20 bg-white"
+                        v-model="cliente.cnpj4"
+                        type="text"
+                        name="cnpj4"
+                        id="cnpj4"
+                      />
+                    </div>
+                    <div>
+                      <label class="block" for="cnpj2">Dígitos</label>
+                      <p v-if="field_error?.cnpj2" class="text-red-800">{{ field_error.cnpj2.join(", ") }}</p>
+                      <input
+                        class="h-10 border mt-1 rounded px-1 w-10 bg-white"
+                        v-model="cliente.cnpj2"
+                        type="text"
+                        name="cnpj2"
+                        id="cnpj2"
+                      />
+                    </div>
+                  </div>
+                </section>
+
+                <section id="endereco_section">
+                  <div class="flex gap-4">
+                    <div>
+                      <label class="block" for="cep">CEP</label>
+                      <p v-if="field_error?.cep" class="text-red-800">{{ field_error.cep.join(", ") }}</p>
+                      <input
+                        class="h-10 border mt-1 rounded px-1 w-40 bg-white"
+                        v-model="cliente.cep"
+                        type="text"
+                        name="cep"
+                        id="cep"
+                      />
+                    </div>
+                    <div>
+                      <label class="block" for="cidade">Cidade</label>
+                      <p v-if="field_error?.cidade" class="text-red-800">{{ field_error.cidade.join(", ") }}</p>
+                      <input
+                        class="h-10 border mt-1 rounded px-1 bg-white"
+                        v-model="cliente.cidade"
+                        type="text"
+                        name="cidade"
+                        id="cidade"
+                      />
+                    </div>
+                    <div>
+                      <label class="block" for="uf">UF</label>
+                      <p v-if="field_error?.uf" class="text-red-800">{{ field_error.uf.join(", ") }}</p>
+                      <input
+                        class="h-10 border mt-1 rounded px-1 w-10 bg-white"
+                        v-model="cliente.uf"
+                        type="text"
+                        name="uf"
+                        id="uf"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="flex gap-4">
+                    <div>
+                      <label class="block" for="logradouro">Logradouro</label>
+                      <p v-if="field_error?.logradouro" class="text-red-800">{{ field_error.logradouro.join(", ") }}</p>
+                      <input
+                        class="h-10 border mt-1 rounded px-1 bg-white"
+                        v-model="cliente.logradouro"
+                        type="text"
+                        name="logradouro"
+                        id="logradouro"
+                      />
+                    </div>
+                    <div>
+                      <label class="block" for="numero">Número</label>
+                      <p v-if="field_error?.numero" class="text-red-800">{{ field_error.numero.join(", ") }}</p>
+                      <input
+                        class="h-10 border mt-1 rounded px-1 w-20 bg-white"
+                        v-model="cliente.numero"
+                        type="text"
+                        name="numero"
+                        id="numero"
+                      />
+                    </div>
+                    <div>
+                      <label class="block" for="complemento">Complemento</label>
+                      <p v-if="field_error?.complemento" class="text-red-800">{{ field_error.complemento.join(", ") }}</p>
+                      <input
+                        class="h-10 border mt-1 rounded px-1 bg-white"
+                        v-model="cliente.complemento"
+                        type="text"
+                        name="complemento"
+                        id="complemento"
+                      />
+                    </div>
+                  </div>
+                </section>
+                
+                <section id="botoes_section" class="inline-flex gap-8 justify-center">
+                  <button
+                    class="px-4 py-1 rounded-xl bg-sky-700 font-bold text-slate-100"
+                    type="submit"
+                  >Salvar</button>
+                  <button
+                    @click.prevent="doGetCliente"
+                    class="px-4 py-1 rounded-xl bg-sky-700 font-bold text-slate-100"
+                    type="reset"
+                  >Limpar</button>
+                </section>
+              </div> <!--div class="grid grid-cols-1 gap-4"-->
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </div>
   </div>
 </template>
