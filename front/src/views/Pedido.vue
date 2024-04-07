@@ -490,6 +490,7 @@ watch(status, (newStatus) => {
     <button
       v-if="pedido_itens_next"
       @click="handleMaisPedidosClick"
+      :disabled="status != 'b'"
     >Mais pedidos</button>
   </div>
 </template>
