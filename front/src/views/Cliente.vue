@@ -260,12 +260,10 @@ onMounted(() => {
                 <section id="botoes_section" class="inline-flex gap-8 justify-center">
                   <button
                     @click="handleSaveClick"
-                    class="px-4 py-1 rounded-xl bg-sky-700 font-bold text-slate-100"
                     type="submit"
                   >Salvar</button>
                   <button
                     @click="handleLimpaClick"
-                    class="px-4 py-1 rounded-xl bg-sky-700 font-bold text-slate-100"
                     type="reset"
                   >Limpar</button>
                 </section>
@@ -278,3 +276,9 @@ onMounted(() => {
     </div>
   </div>
 </template>
+
+<style scoped>
+button, .button {
+  @apply mx-0.5 my-[1px] px-2 py-0.5 rounded-lg bg-sky-700 font-bold text-slate-100
+}
+</style>
