@@ -318,7 +318,13 @@ onMounted(() => {
               >
             </td>
             <td>{{ inputStrDate2PtBrDate(pedido_item.pedido.entrega) }}</td>
-            <td>{{pedido_item.id}}</td>
+            <td>
+              <router-link
+                :to="{ name: 'fechando', params: { id: pedido_item.id } }"
+                class="router-link text-sky-800"
+                title="Dados do fechamento do pedido"
+              >{{pedido_item.id}}</router-link>
+            </td>
             <td>{{pedido_item.bordado.nome}}</td>
             <td>{{pedido_item.bordado.codigo}}</td>
             <td class="!text-right">{{ ptBrCurrencyFormat.format(pedido_item.valor_final) }}</td>
@@ -620,5 +626,8 @@ button, .button {
 }
 button:disabled {
   @apply bg-slate-500
+}
+.router-link:not(.router-link-active):hover {
+  text-shadow: 1px 1px 2px  rgba(3, 132, 196, 0.7)
 }
 </style>
