@@ -85,7 +85,7 @@ class Cliente(models.Model):
     )
     cep = models.CharField(
         'CEP',
-        max_length=30,
+        max_length=10,
         blank=True,
     )
     logradouro = models.CharField(
