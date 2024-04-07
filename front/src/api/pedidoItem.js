@@ -1,5 +1,9 @@
 import { axiosPrivate } from '../common/axiosPrivate.js';
 
+function avaliarNullComoVazio(valor) {
+  return valor === null ? "" : valor;
+}
+
 export function getPedidoItens({
   page=1,
   cliente_apelido=null,
@@ -30,16 +34,16 @@ export function getPedidoItens({
       element.pedido.cliente.vazio = (
         element.pedido.cliente.nome+
         element.pedido.cliente.fansasia+
-        element.pedido.cliente.cnpj9+
-        element.pedido.cliente.cnpj4+
-        element.pedido.cliente.cnpj2+
+        avaliarNullComoVazio(element.pedido.cliente.cnpj9)+
+        avaliarNullComoVazio(element.pedido.cliente.cnpj4)+
+        avaliarNullComoVazio(element.pedido.cliente.cnpj2)+
         element.pedido.cliente.cep+
         element.pedido.cliente.logradouro+
-        element.pedido.cliente.numero+
+        avaliarNullComoVazio(element.pedido.cliente.numero)+
         element.pedido.cliente.complemento+
         element.pedido.cliente.cidade+
         element.pedido.cliente.uf
-      ) == '0000';
+      ) == '';
     });
     callBack(response.data);
   })
