@@ -427,17 +427,27 @@ watch(status, (newStatus) => {
         >
           <td>{{pedido_item.usuario.username}}</td>
           <td>{{pedidoItemInseridoEmData(pedido_item)}}</td>
-          <td>{{pedido_item.id}}</td>
+          <td>
+            <span
+              v-if="!pedido_item.cobrancas.length || status != 'b'"
+            >{{pedido_item.id}}</span>
+            <router-link
+              v-if="pedido_item.cobrancas.length && status == 'b'"
+              :to="{ name: 'fechando', params: { id: pedido_item.id } }"
+              class="router-link text-sky-800"
+              title="Dados do fechamento do pedido"
+            >{{pedido_item.id}}</router-link>
+          </td>
           <td>
             <span
               v-if="!pedido_item.pedido.cliente.vazio && status != 'b'"
-              >{{pedido_item.pedido.cliente.apelido}}</span>
+            >{{pedido_item.pedido.cliente.apelido}}</span>
             <router-link
               v-if="!pedido_item.pedido.cliente.vazio && status == 'b'"
               :to="{ name: 'cliente', params: { id: pedido_item.pedido.cliente.id } }"
               class="router-link text-sky-800"
               title="Edita dados de cliente"
-              >{{pedido_item.pedido.cliente.apelido}}</router-link>
+            >{{pedido_item.pedido.cliente.apelido}}</router-link>
             <button
               v-if="pedido_item.pedido.cliente.vazio"
               class="button-text-shadow"
