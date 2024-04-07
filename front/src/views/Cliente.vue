@@ -86,7 +86,7 @@ onMounted(() => {
 
 <template>
   <div>
-    <div class="my-4 p-6 bg-white flex items-center justify-center">
+    <div class="my-4 px-4 bg-white flex items-center justify-center">
       <div class="container max-w-screen-lg mx-auto">
         <div>
           
@@ -97,7 +97,7 @@ onMounted(() => {
           </section>
           <!-- <p v-if="cliente?.id">cliente={{ cliente }}</p> -->
 
-          <div class="bg-gray-100 rounded shadow-lg p-4 mb-6">
+          <div class="bg-slate-100 rounded shadow-lg p-4 mb-6">
             <form>
               <div class="grid grid-cols-1 gap-4">
                 <span v-if="cliente_error" class="text-red-800">{{ cliente_error }}</span>
