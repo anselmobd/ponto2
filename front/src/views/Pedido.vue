@@ -429,7 +429,15 @@ watch(status, (newStatus) => {
           <td>{{pedidoItemInseridoEmData(pedido_item)}}</td>
           <td>{{pedido_item.id}}</td>
           <td>
-            {{pedido_item.pedido.cliente.apelido}}
+            <span
+              v-if="!pedido_item.pedido.cliente.vazio && status != 'b'"
+              >{{pedido_item.pedido.cliente.apelido}}</span>
+            <router-link
+              v-if="!pedido_item.pedido.cliente.vazio && status == 'b'"
+              :to="{ name: 'cliente', params: { id: pedido_item.pedido.cliente.id } }"
+              class="router-link text-sky-800"
+              title="Edita dados de cliente"
+              >{{pedido_item.pedido.cliente.apelido}}</router-link>
             <button
               v-if="pedido_item.pedido.cliente.vazio"
               class="button-text-shadow"
@@ -437,7 +445,7 @@ watch(status, (newStatus) => {
               @click="handleCriaDadosClienteClick"
               :disabled="status != 'b'"
               title="Cria dados de cliente"
-            >👤</button>
+            >{{pedido_item.pedido.cliente.apelido}}</button>
           </td>
           <td>{{pedido_item.bordado.nome}}</td>
           <td>{{pedido_item.bordado.codigo}}</td>
@@ -465,14 +473,6 @@ watch(status, (newStatus) => {
               :disabled="status != 'b'"
               title="Financeiro"
             >💲</button>
-            <button
-              v-if="!pedido_item.pedido.cliente.vazio"
-              class="button-text-shadow"
-              :value="pedido_item.pedido.cliente.id"
-              @click="handleEditaDadosClienteClick"
-              :disabled="status != 'b'"
-              title="Edita dados de cliente"
-            >👩‍🦲</button>
           </td>
         </tr>
       </tbody>
@@ -499,5 +499,8 @@ button:disabled {
 }
 .button-text-shadow {
   text-shadow: 0px 0px 0.5px whitesmoke
+}
+.router-link:not(.router-link-active):hover {
+  text-shadow: 1px 1px 2px  rgba(3, 132, 196, 0.7)
 }
 </style>
