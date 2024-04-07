@@ -31,7 +31,6 @@ export function getCliente({
     {params: params}
   )
   .then(response => {
-    console.log(response.data);
     callBack(response.data);
   })
   .catch(error => {
@@ -39,3 +38,26 @@ export function getCliente({
     callBack(null, error);
   });
 }
+
+export function putCliente({
+  id=null,
+  payload={},  
+  callBack=()=>{}
+}) {
+  const params = new URLSearchParams();
+  params.append('format', 'json');
+  console.log('addCobranca', payload);
+  axiosPrivate.put(
+    `/bordado/api/clientes/${id}/`,
+    payload,
+    {params: params}
+  )
+  .then(response => {
+    callBack(response.data);
+  })
+  .catch(error => {
+    console.error('Erro ao gravar dados do cliente '+id+' via API:', error)
+    callBack(null, error);
+  });
+}
+
