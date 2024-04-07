@@ -289,8 +289,8 @@ function calcAjuste() {
       </table>
 
       <form
-      v-if="!pedido_item.cobrancas.length"
-      @submit.prevent="formGrava()"
+        v-if="!pedido_item.cobrancas.length"
+        @submit.prevent="formGrava()"
       >
         <h3 class="my-4 font-bold text-lg">Dados do pedido</h3>
         <table class="w-full">
@@ -419,13 +419,27 @@ function calcAjuste() {
         </thead>
         <tbody>
           <tr
-            :class="{ 'font-bold': pedido_item_bord.id == fechando_id }"
+            :class="{
+              'font-bold': pedido_item_bord.id == fechando_id,
+              'bg-slate-100': pedido_item_bord.id == fechando_id
+            }"
             v-for="pedido_item_bord in pedido_itens_bordado"
             :key="pedido_item_bord.id"
           >
-            <td
-              :class="{ 'text-indigo-700': pedido_item_bord.id == fechando_id }"
-            >{{ pedido_item_bord.id }}</td>
+            <td>
+              <span
+                v-if="pedido_item_bord.id == fechando_id"
+                class="text-indigo-700"
+              >
+                {{ pedido_item_bord.id }}
+              </span>
+              <router-link
+                v-if="pedido_item_bord.id != fechando_id"
+                :to="{ name: 'fechando', params: { id: pedido_item_bord.id } }"
+                class="router-link text-sky-800"
+                title="Dados do fechamento do pedido"
+              >{{pedido_item_bord.id}}</router-link>
+            </td>
             <td>{{ inputStrDate2PtBrDate(pedido_item_bord.pedido.entrega, empty='-') }}</td>
             <td>{{ pedido_item_bord.quantidade }}</td>
             <td>{{ ptBrCurrencyFormat.format(pedido_item_bord.preco) }}</td>
@@ -484,7 +498,13 @@ function calcAjuste() {
             v-for="pedido_item_clie in pedido_itens_cliente"
             :key="pedido_item_clie.id"
           >
-            <td>{{ pedido_item_clie.id }}</td>
+            <td>
+              <router-link
+                :to="{ name: 'fechando', params: { id: pedido_item_clie.id } }"
+                class="router-link text-sky-800"
+                title="Dados do fechamento do pedido"
+              >{{pedido_item_clie.id}}</router-link>
+            </td>
             <td>{{ pedido_item_clie.bordado.nome }}</td>
             <td>{{ pedido_item_clie.bordado.codigo }}</td>
             <td>{{ inputStrDate2PtBrDate(pedido_item_clie.pedido.entrega, empty='-') }}</td>
@@ -525,5 +545,8 @@ th, td {
 }
 button, .button {
   @apply mx-0.5 my-[1px] px-2 py-0.5 rounded-lg bg-sky-700 font-bold text-slate-100
+}
+.router-link:not(.router-link-active):hover {
+  text-shadow: 1px 1px 2px  rgba(3, 132, 196, 0.7)
 }
 </style>
