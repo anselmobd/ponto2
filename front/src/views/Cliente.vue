@@ -14,6 +14,14 @@ const cliente_error = ref(null)
 const cliente_salvo = ref(null)
 const field_error = ref(null)
 
+// Funções auxiliares
+
+function limpaMensagensCliente() {
+  cliente_error.value = null;
+  cliente_salvo.value = null;
+  field_error.value = null;
+}
+
 // DB API calls (do) and callbacks (cb)
 
 function cbdoGetCliente(data, error) {
@@ -29,8 +37,7 @@ function cbdoGetCliente(data, error) {
 function doGetCliente(callBack) {
   cliente.value = [];
   cliente_carregando.value = true;
-  cliente_error.value = null;
-  field_error.value = null;
+  limpaMensagensCliente();
   getCliente({
     id: route.params.id,
     callBack: cbdoGetCliente
@@ -40,7 +47,7 @@ function doGetCliente(callBack) {
 function cbSaveCliente(data, error) {
   if (data) {
     cliente.value = data;
-    cliente_error.value = "As alterações nos dados do cliente foram salvas.";
+    cliente_salvo.value = "As alterações nos dados do cliente foram salvas.";
   }
   if (error) {
     cliente_error.value = "As alterações nos dados do cliente não foram salvas. Por favor, corrija os problemas indicados abaixo.";
@@ -49,9 +56,7 @@ function cbSaveCliente(data, error) {
 }
 
 function doSaveCliente() {
-  cliente_error.value = null;
-  cliente_salvo.value = null;
-  field_error.value = null;
+  limpaMensagensCliente();
   putCliente({
     id: route.params.id,
     payload: cliente.value,
