@@ -413,7 +413,7 @@ function calcAjuste() {
             <th>Programação</th>
             <th>Ajuste</th>
             <th>Valor final</th>
-            <th>Cobrado</th>
+            <th>Cobranças</th>
             <th>Ação</th>
           </tr>
         </thead>
@@ -455,7 +455,9 @@ function calcAjuste() {
               }}
             </td>
             <td>
-              {{ pedido_item_bord.cobrancas.length ? 'Sim' : ( pedido_item_bord.pedido.entrega ? 'Não' : '-' ) }}
+              {{ pedido_item_bord.cobrancas.length ?
+                 pedido_item_bord.cobrancas.map(c => { return c.id }).join(", ") :
+                 ( pedido_item_bord.pedido.entrega ? 'Não' : '-' ) }}
             </td>
             <td>
               <button
@@ -485,7 +487,7 @@ function calcAjuste() {
             <th rowspan="2">Programação</th>
             <th rowspan="2">Ajuste</th>
             <th rowspan="2">Valor final</th>
-            <th rowspan="2">Cobrado</th>
+            <th rowspan="2">Cobrança</th>
             <th rowspan="2">Ação</th>
           </tr>
           <tr>
@@ -518,7 +520,9 @@ function calcAjuste() {
               + parseFloat(pedido_item_clie.programacao) + parseFloat(pedido_item_clie.ajuste)
             ) }}</td>
             <td>
-              {{ pedido_item_clie.cobrancas.length ? 'Sim' : ( pedido_item_clie.pedido.entrega ? 'Não' : '-' ) }}
+              {{ pedido_item_clie.cobrancas.length ?
+                 pedido_item_clie.cobrancas.map(c => { return c.id }).join(", ") :
+                 ( pedido_item_clie.pedido.entrega ? 'Não' : '-' ) }}
             </td>
             <td>
               <button
