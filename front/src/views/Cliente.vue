@@ -84,10 +84,10 @@ onMounted(() => {
     <div class="my-4 p-6 bg-white flex items-center justify-center">
       <div class="container max-w-screen-lg mx-auto">
         <div>
-          <span v-if="cliente_carregando">Carregando dados do cliente {{ route.params.id }}</span>
           
           <section id="titulo_section" class="flex place-content-between">
-            <h2 class="font-semibold text-xl text-gray-600">Dados do cliente <span v-if="cliente?.apelido" class="text-indigo-700">{{ cliente?.apelido }}</span></h2>
+            <h2 v-if="cliente_carregando" class="font-semibold text-xl text-gray-600">Carregando dados do cliente <span class="text-indigo-700">{{ route.params.id }}</span></h2>
+            <h2 v-if="!cliente_carregando" class="font-semibold text-xl text-gray-600">Dados do cliente <span v-if="cliente?.apelido" class="text-indigo-700">{{ cliente?.apelido }}</span></h2>
             <a title="Voltar" class="button text-xl cursor-pointer" @click.prevent="router.go(-1)">&#x2190;</a>
           </section>
           <!-- <p v-if="cliente?.id">cliente={{ cliente }}</p> -->
