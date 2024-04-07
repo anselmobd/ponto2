@@ -70,17 +70,23 @@ class Cliente(models.Model):
     )
     cnpj9 = models.PositiveIntegerField(
         'CNPJ (raiz)',
-        default=0,
+        default=None,
+        blank=True,
+        null=True,
         validators=[MinValueValidator(0), MaxValueValidator(999_999_999)],
     )
     cnpj4 = models.PositiveSmallIntegerField(
         'CNPJ (filial)',
-        default=0,
+        default=None,
+        blank=True,
+        null=True,
         validators=[MinValueValidator(0), MaxValueValidator(9_999)],
     )
     cnpj2 = models.PositiveSmallIntegerField(
         'CNPJ (dígitos)',
-        default=0,
+        default=None,
+        blank=True,
+        null=True,
         validators=[MinValueValidator(0), MaxValueValidator(99)],
     )
     cep = models.CharField(
@@ -94,7 +100,9 @@ class Cliente(models.Model):
     )
     numero = models.PositiveSmallIntegerField(
         'Número',
-        default=0,
+        default=None,
+        blank=True,
+        null=True,
         validators=[MinValueValidator(0), MaxValueValidator(999_999)],
     )
     complemento = models.CharField(
@@ -135,9 +143,15 @@ class Cliente(models.Model):
 
     @property
     def cnpj(self):
-        cnpj = CNPJ(self.cnpj9, self.cnpj4, self.cnpj2)
-        mark = "" if cnpj.valid() else "!"
-        return f"{cnpj}{mark}"
+        if ( self.cnpj9 is not None
+            and self.cnpj4 is not None
+            and self.cnpj2 is not None
+        ):
+            cnpj = CNPJ(self.cnpj9, self.cnpj4, self.cnpj2)
+            mark = "" if cnpj.valid() else "!"
+            return f"{cnpj}{mark}"
+        else:
+            return f"!"
 
     def __str__(self):
         return f'{self.apelido} ({self.cnpj})'
