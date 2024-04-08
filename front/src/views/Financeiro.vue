@@ -99,7 +99,14 @@ function doGetPedidoItens(callBack) {
 
 function cbGetCobrancas(data, error) {
   if (data) {
-    if (data?.results) cobrancas.value = data.results;
+    if (data?.results) cobrancas.value = data.results.map(cobranca => {
+      cobranca.pedidos_ids = cobranca.pedidoitemcobranca_set.map( ped_item_cobr => {
+        return ped_item_cobr.pedido_item.pedido.numero
+      }).join(", ");
+      return cobranca;
+    });
+    ;
+    console.log(cobrancas);
   }
   if (error) {
     cobrancas_error.value = error;
@@ -452,6 +459,7 @@ onMounted(() => {
             <th>Tipo</th>
             <th>Nº NF</th>
             <th>Valor</th>
+            <th>Pedido</th>
             <th>Data</th>
             <th>Parcelamento</th>
           </tr>
@@ -476,6 +484,7 @@ onMounted(() => {
             <td>{{ cobranca.tipo }}</td>
             <td>{{ cobranca.nf }}</td>
             <td class="!text-right">{{ ptBrCurrencyFormat.format(cobranca.valor) }}</td>
+            <td>{{ cobranca.pedidos_ids }}</td>
             <td>{{ inputStrDate2PtBrDate(cobranca.data) }}</td>
             <td>{{ cobranca.parcelamento }}</td>
           </tr>
