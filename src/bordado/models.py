@@ -629,3 +629,20 @@ class ApontamentoProducao(models.Model):
         return (self.apontado_em, self.op.numero)
 
     natural_key.dependencies = ['bordado.ordemproducao']
+
+
+class TipoComunicacao(models.Model):
+    admin_order = 250
+    descricao = models.CharField(
+        'Descrição',
+        max_length=50,
+        unique=True,
+    )
+
+    def __str__(self):
+        return self.descricao
+
+    class Meta:
+        db_table = "po2_tipo_comunicacao"
+        verbose_name = "Tipo de comunicação"
+        verbose_name_plural = "Tipos de comunicação"
