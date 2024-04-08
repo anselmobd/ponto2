@@ -176,6 +176,8 @@ class LancamentoSerializer(serializers.ModelSerializer):
             'cliente',
             'data',
             'cobranca',
+            'parcela',
+            'n_parcelas',
             'informacao',
             'valor',
             'calculando',

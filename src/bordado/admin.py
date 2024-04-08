@@ -189,6 +189,8 @@ class LancamentoAdmin(admin.ModelAdmin):
     list_display = [
         '__str__',
         'cobranca',
+        'parcela',
+        'n_parcelas',
         'informacao',
         'valor',
         'saldo_cliente',
