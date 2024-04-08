@@ -25,7 +25,7 @@ from bordado.models import (
     PedidoItem,
     PedidoItemCobranca,
 )
-from bordado.serializers import CobrancaSerializer
+from bordado.serializers.full.cobranca import CobrancaSerializer
 
 
 __all__ = [
