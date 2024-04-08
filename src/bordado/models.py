@@ -25,6 +25,7 @@ __all__ = [
     'Lancamento',
     'OrdemProducao',
     'ApontamentoProducao',
+    'TipoComunicacao',
 ]
 
 
@@ -632,7 +633,7 @@ class ApontamentoProducao(models.Model):
 
 
 class TipoComunicacao(models.Model):
-    admin_order = 250
+    admin_order = 545
     descricao = models.CharField(
         'Descrição',
         max_length=50,
@@ -646,3 +647,4 @@ class TipoComunicacao(models.Model):
         db_table = "po2_tipo_comunicacao"
         verbose_name = "Tipo de comunicação"
         verbose_name_plural = "Tipos de comunicação"
+        ordering = ['id']
