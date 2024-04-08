@@ -579,8 +579,9 @@ onMounted(() => {
           <tr>
             <th>Data</th>
             <th>Informação</th>
-            <th>Cobrança</th>
-            <th>Lançamento</th>
+            <!-- <th>Cobrança</th>
+            <th>Lançamento</th> -->
+            <th>Valor</th>
             <th>Saldo</th>
           </tr>
           <tr v-if="lancamentos_error">
@@ -596,12 +597,20 @@ onMounted(() => {
           >
             <td>{{ inputStrDate2PtBrDate(lancamento.data) }}</td>
             <td>{{ lancamento.informacao }}</td>
-            <td class="!text-right" v-if="lancamento.cobranca">{{ ptBrCurrencyFormat.format(lancamento.valor) }}</td>
+            <!-- <td class="!text-right" v-if="lancamento.cobranca">{{ ptBrCurrencyFormat.format(lancamento.valor) }}</td>
             <td class="!text-center text-slate-500" v-if="!lancamento.cobranca">—</td>
             <td class="!text-right" v-if="!lancamento.cobranca">{{ ptBrCurrencyFormat.format(lancamento.valor) }}</td>
-            <td class="!text-center text-slate-500" v-if="lancamento.cobranca">—</td>
+            <td class="!text-center text-slate-500" v-if="lancamento.cobranca">—</td> -->
+            <td class="!text-right"
+              :class="{
+                'text-red-800': lancamento.cobranca,
+                'text-green-800': !lancamento.cobranca,
+              }"
+            >{{ ptBrCurrencyFormat.format(lancamento.valor) }}</td>
             <td class="!text-right">{{ ptBrCurrencyFormat.format(lancamento.saldo_cliente) }}</td>
           </tr>
+        </tbody>
+        <tfoot>
           <tr v-if="lancamentos_carregando == 1">
             <td colspan="7">Carregando lançamentos...</td>
           </tr>
@@ -611,7 +620,7 @@ onMounted(() => {
           <tr v-if="!lancamentos_carregando && (lancamentos.length == 0)">
             <td colspan="7">Nenhum lançamento encontrado</td>
           </tr>
-        </tbody>
+        </tfoot>
       </table>
       <button
         v-if="lancamentos_next && !lancamentos_carregando"
