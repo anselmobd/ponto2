@@ -103,8 +103,8 @@ class LancamentoSerializer(serializers.ModelSerializer):
 class CobrancaSerializer(serializers.ModelSerializer):
     cliente = ClienteSerializer()
     usuario = UserSerializer()
-    pedidoitemcobranca = PedidoItemCobrancasSerializer()
-    lancamento = LancamentoSerializer()
+    pedidoitemcobranca_set = PedidoItemCobrancasSerializer(many=True, read_only=True)
+    lancamento_set = LancamentoSerializer(many=True, read_only=True)
 
     class Meta:
         model = Cobranca
@@ -118,6 +118,6 @@ class CobrancaSerializer(serializers.ModelSerializer):
             'parcelamento',
             'usuario',
             'quando',
-            'pedidoitemcobranca',
-            'lancamento',
+            'pedidoitemcobranca_set',
+            'lancamento_set',
         ]
