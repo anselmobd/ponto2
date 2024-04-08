@@ -352,7 +352,7 @@ onMounted(() => {
         <table class="w-full">
           <thead>
             <tr>
-              <th>Tipo</th>
+              <th>Comunicação</th>
               <th>NF</th>
               <th>Valor</th>
               <th>Data</th>
@@ -578,6 +578,7 @@ onMounted(() => {
           <tr>
             <th>Data</th>
             <th>Informação</th>
+            <th>Comunicação</th>
             <th>NF</th>
             <th>Cobrança</th>
             <th>Parcela</th>
@@ -597,6 +598,7 @@ onMounted(() => {
           >
             <td>{{ inputStrDate2PtBrDate(lancamento.data) }}</td>
             <td>{{ lancamento.informacao }}</td>
+            <td>{{ lancamento?.cobranca?.tipo ? lancamento.cobranca.tipo : '-' }}</td>
             <td>{{ lancamento?.cobranca?.nf ? lancamento.cobranca.nf : '-' }}</td>
             <td>{{ lancamento?.cobranca?.id ? lancamento.cobranca.id : '-' }}</td>
             <td>{{ lancamento?.n_parcelas > 1 ? lancamento.parcela+'/'+lancamento.n_parcelas : lancamento?.n_parcelas == 1 ? 'única' : '-' }}</td>
