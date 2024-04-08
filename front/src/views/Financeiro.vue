@@ -106,7 +106,6 @@ function cbGetCobrancas(data, error) {
       return cobranca;
     });
     ;
-    console.log(cobrancas);
   }
   if (error) {
     cobrancas_error.value = error;
@@ -354,7 +353,7 @@ onMounted(() => {
           <thead>
             <tr>
               <th>Tipo</th>
-              <th>Nº NF</th>
+              <th>NF</th>
               <th>Valor</th>
               <th>Data</th>
               <th>Parcelamento</th>
@@ -457,7 +456,7 @@ onMounted(() => {
           <tr>
             <th>Nº</th>
             <th>Tipo</th>
-            <th>Nº NF</th>
+            <th>NF</th>
             <th>Valor</th>
             <th>Pedido</th>
             <th>Data</th>
@@ -579,6 +578,7 @@ onMounted(() => {
           <tr>
             <th>Data</th>
             <th>Informação</th>
+            <th>NF</th>
             <th>Cobrança</th>
             <th>Parcela</th>
             <th>Valor</th>
@@ -597,6 +597,7 @@ onMounted(() => {
           >
             <td>{{ inputStrDate2PtBrDate(lancamento.data) }}</td>
             <td>{{ lancamento.informacao }}</td>
+            <td>{{ lancamento?.cobranca?.nf ? lancamento.cobranca.nf : '-' }}</td>
             <td>{{ lancamento?.cobranca?.id ? lancamento.cobranca.id : '-' }}</td>
             <td>{{ lancamento?.n_parcelas > 1 ? lancamento.parcela+'/'+lancamento.n_parcelas : lancamento?.n_parcelas == 1 ? 'única' : '-' }}</td>
             <td class="!text-right"
