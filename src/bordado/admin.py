@@ -11,6 +11,7 @@ from .models import (
     Pedido,
     PedidoItem,
     PedidoItemCobranca,
+    TipoComunicacao,
 )
 
 
@@ -250,3 +251,9 @@ class ApontamentoProducaoAdmin(admin.ModelAdmin):
     readonly_fields = [
         'apontado_em',
     ]
+
+
+@admin.register(TipoComunicacao)
+class TipoComunicacaoAdmin(CustomModelAdmin):
+    list_display = ['__str__']
+    search_fields = ['__str__']
