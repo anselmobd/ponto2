@@ -72,17 +72,17 @@ def post_save_lancamento(sender, instance, *args, **kwargs):
         acerta_saldos_empresa(instance.busca_data)
 
 
-@receiver(post_init, sender=Lancamento)
-def post_init_lancamento(sender, instance, *args, **kwargs):
-    if instance.cobranca:
-        informacao_list = []
-        if instance.cobranca.nf:
-            informacao_list.append(
-                f"{instance.cobranca.tipo} {instance.cobranca.nf}")
-        else:
-            informacao_list.append(instance.cobranca.tipo)
-        informacao_list.append(f"Cobrança {instance.cobranca.id}")
-        if instance.n_parcelas > 1:
-            informacao_list.append(f"parcela {instance.parcela}/{instance.n_parcelas}")
-        informacao = "; ".join(informacao_list)
-        instance.informacao = informacao
+# @receiver(post_init, sender=Lancamento)
+# def post_init_lancamento(sender, instance, *args, **kwargs):
+#     if instance.cobranca:
+#         informacao_list = []
+#         if instance.cobranca.nf:
+#             informacao_list.append(
+#                 f"{instance.cobranca.tipo} {instance.cobranca.nf}")
+#         else:
+#             informacao_list.append(instance.cobranca.tipo)
+#         informacao_list.append(f"Cobrança {instance.cobranca.id}")
+#         if instance.n_parcelas > 1:
+#             informacao_list.append(f"parcela {instance.parcela}/{instance.n_parcelas}")
+#         informacao = "; ".join(informacao_list)
+#         instance.informacao = informacao
