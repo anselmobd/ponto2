@@ -579,8 +579,8 @@ onMounted(() => {
           <tr>
             <th>Data</th>
             <th>Informação</th>
-            <!-- <th>Cobrança</th>
-            <th>Lançamento</th> -->
+            <th>Cobrança</th>
+            <th>Parcela</th>
             <th>Valor</th>
             <th>Saldo</th>
           </tr>
@@ -597,10 +597,8 @@ onMounted(() => {
           >
             <td>{{ inputStrDate2PtBrDate(lancamento.data) }}</td>
             <td>{{ lancamento.informacao }}</td>
-            <!-- <td class="!text-right" v-if="lancamento.cobranca">{{ ptBrCurrencyFormat.format(lancamento.valor) }}</td>
-            <td class="!text-center text-slate-500" v-if="!lancamento.cobranca">—</td>
-            <td class="!text-right" v-if="!lancamento.cobranca">{{ ptBrCurrencyFormat.format(lancamento.valor) }}</td>
-            <td class="!text-center text-slate-500" v-if="lancamento.cobranca">—</td> -->
+            <td>{{ lancamento?.cobranca?.id ? lancamento.cobranca.id : '-' }}</td>
+            <td>{{ lancamento?.n_parcelas > 1 ? lancamento.parcela+'/'+lancamento.n_parcelas : lancamento?.n_parcelas == 1 ? 'única' : '-' }}</td>
             <td class="!text-right"
               :class="{
                 'text-red-800': lancamento.cobranca,
