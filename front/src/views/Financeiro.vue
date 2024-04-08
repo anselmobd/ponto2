@@ -77,9 +77,6 @@ function cbGetPedidoItens(data, error) {
       ped_item.cobrancas_ids = ped_item.cobrancas.map((cobr) => {
         return cobr.cobranca.id
       }).join(', ');
-      if (ped_item.cobrancas_ids) {
-        ped_item.cobrancas_ids = 'Cobrança: ' + ped_item.cobrancas_ids;
-      }
       ped_item.acobrar = ped_item.valor_final - ped_item.cobrado;
       return ped_item;
     });
@@ -283,6 +280,7 @@ onMounted(() => {
             <th colspan="2">Bordado</th>
             <th rowspan="2">Valor</th>
             <th rowspan="2">Cobrado</th>
+            <th rowspan="2">Cobrança</th>
             <th rowspan="2">A cobrar</th>
           </tr>
           <tr>
@@ -328,7 +326,8 @@ onMounted(() => {
             <td>{{pedido_item.bordado.nome}}</td>
             <td>{{pedido_item.bordado.codigo}}</td>
             <td class="!text-right">{{ ptBrCurrencyFormat.format(pedido_item.valor_final) }}</td>
-            <td class="!text-right" :title="pedido_item.cobrancas_ids">{{ ptBrCurrencyFormat.format(pedido_item.cobrado) }}</td>
+            <td class="!text-right">{{ ptBrCurrencyFormat.format(pedido_item.cobrado) }}</td>
+            <td>{{ pedido_item.cobrancas_ids }}</td>
             <td class="!text-right">{{ ptBrCurrencyFormat.format(pedido_item.acobrar) }}</td>
           </tr>
         </tbody>
