@@ -3,6 +3,7 @@ import router from '@/router'
 import { useRoute } from "vue-router";
 import { ref, onMounted } from 'vue'
 import { getCliente, putCliente } from '../api/cliente.js';
+import { buscarPorCep } from '../webapi/cep.js';
 
 const route = useRoute();
 
@@ -64,6 +65,28 @@ function doSaveCliente() {
   });
 }
 
+function cbBuscarPorCep(data) {
+  if (data) {
+    cliente.value.dados_cep = data;
+    cliente.value.bairro = data.bairro;
+    cliente.value.cidade = data.localidade;
+    cliente.value.uf = data.uf;
+    cliente.value.logradouro = data.logradouro;
+    cliente.value.numero = data?.numero ? data.numero : '';
+    cliente.value.complemento = data.complemento;
+    cliente.value.cep = data.cep;
+  }
+}
+
+function doBuscarPorCep() {
+  if (cliente.value.cep.length === 8 && !cliente.value.cep.includes("-")) {
+    buscarPorCep({
+      cep: cliente.value.cep,
+      callBack: cbBuscarPorCep
+    });
+  }
+}
+
 // event functions
 
 function handleSaveClick(event) {
@@ -93,6 +116,7 @@ onMounted(() => {
           <section id="titulo_section" class="flex place-content-between">
             <h2 v-if="cliente_carregando" class="font-semibold text-xl text-gray-600">Carregando dados do cliente <span class="text-indigo-700">{{ route.params.id }}</span></h2>
             <h2 v-if="!cliente_carregando" class="font-semibold text-xl text-gray-600">Dados do cliente <span v-if="cliente?.apelido" class="text-indigo-700">{{ cliente?.apelido }}</span></h2>
+
             <a title="Voltar" class="button text-xl cursor-pointer" @click.prevent="router.go(-1)">&#x2190;</a>
           </section>
           <!-- <p v-if="cliente?.id">cliente={{ cliente }}</p> -->
@@ -126,6 +150,7 @@ onMounted(() => {
                       <input
                       class="h-10 border mt-1 rounded px-4 bg-white"
                       v-model="cliente.nome"
+                      v-focus
                       type="text"
                       name="nome"
                       id="nome"
@@ -191,7 +216,7 @@ onMounted(() => {
                 <section id="endereco_section">
                   <div class="flex gap-4">
                     <div>
-                      <label class="block" for="cep">CEP</label>
+                      <label class="block" for="cep">CEP <span class="text-xs">(8 dígitos, busca)</span></label>
                       <p v-if="field_error?.cep" class="text-red-800">{{ field_error.cep }}</p>
                       <input
                         class="h-10 border mt-1 rounded px-1 w-40 bg-white"
@@ -199,6 +224,7 @@ onMounted(() => {
                         type="text"
                         name="cep"
                         id="cep"
+                        @input="doBuscarPorCep()"
                       />
                     </div>
                     <div>
