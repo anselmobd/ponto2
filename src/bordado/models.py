@@ -427,8 +427,11 @@ class Cobranca(models.Model):
     )
     tipo = models.CharField(
         max_length=50,
-        validators=[MinLengthValidator(
-            1, "O campo Tipo deve conter ao menos um caractere.")],
+        # validators=[MinLengthValidator(
+        #     1, "O campo Tipo deve conter ao menos um caractere.")],
+        default='',
+        blank=True,
+        null=True,
     )
     comunicacao = models.ForeignKey(
         TipoComunicacao,
