@@ -58,6 +58,7 @@ class ClienteSerializer(serializers.ModelSerializer):
             'logradouro',
             'numero',
             'complemento',
+            'bairro',
             'cidade',
             'uf',
             'boleto',

@@ -30,6 +30,7 @@ class ClienteDownSerializer(serializers.ModelSerializer):
             'logradouro',
             'numero',
             'complemento',
+            'bairro',
             'cidade',
             'uf',
             'boleto',
