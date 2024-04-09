@@ -3,41 +3,16 @@ from rest_framework import serializers
 from bordado.models import (
     Cobranca,
     Lancamento,
-    PedidoItem,
     PedidoItemCobranca,
 )
-from bordado.serializers.down.bordado import BordadoDownSerializer
 from bordado.serializers.down.cliente import ClienteDownSerializer
-from bordado.serializers.down.pedido import PedidoDownSerializer
+from bordado.serializers.down.pedido_item import PedidoItemDownSerializer
 from bordado.serializers.simple.tipo_comunicacao import TipoComunicacaoSimpleSerializer
 from bordado.serializers.simple.user import UserSimpleSerializer
 
 
-class PedidoItemSerializer(serializers.ModelSerializer):
-    pedido = PedidoDownSerializer()
-    bordado = BordadoDownSerializer()
-    usuario = UserSimpleSerializer()
-
-    class Meta:
-        model = PedidoItem
-        fields = [
-            'id',
-            'pedido',
-            'ordem',
-            'inserido_em',
-            'bordado',
-            'quantidade',
-            'preco',
-            'programacao',
-            'ajuste',
-            'cancelado',
-            'usuario',
-            # 'ordemproducao'  # Não utilizado por ora
-        ]
-
-
 class PedidoItemCobrancasSerializer(serializers.ModelSerializer):
-    pedido_item = PedidoItemSerializer()
+    pedido_item = PedidoItemDownSerializer()
 
     class Meta:
         model = PedidoItemCobranca
