@@ -19,7 +19,7 @@ from bordado.models import (
     Cliente,
     Lancamento,
 )
-from bordado.serializers import LancamentoSerializer
+from bordado.serializers.full.lancamento import LancamentoFullSerializer
 
 
 __all__ = [
@@ -31,7 +31,7 @@ __all__ = [
     **dict_keys_value(__ACTIONS, extend_schema(tags=['lancamento'])))
 class LancamentoViewSet(viewsets.ModelViewSet):
     queryset = Lancamento.objects.all()
-    serializer_class = LancamentoSerializer
+    serializer_class = LancamentoFullSerializer
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['cliente__apelido']
@@ -68,7 +68,7 @@ class LancamentoViewSet(viewsets.ModelViewSet):
                     raise TypeError
 
                 return Response(
-                    LancamentoSerializer(lancamento).data,
+                    self.serializer_class(lancamento).data,
                     status=status.HTTP_201_CREATED,
                 )
             except Exception:
