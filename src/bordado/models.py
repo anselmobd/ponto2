@@ -15,16 +15,16 @@ from o2lib.datetime.tz import tz_local
 
 
 __all__ = [
-    'Cliente',
-    'DificuldadeBordado',
+    'ApontamentoProducao',
     'Bordado',
-    'Pedido',
-    'PedidoItem',
+    'Cliente',
     'Cobranca',
-    'PedidoItemCobranca',
+    'DificuldadeBordado',
     'Lancamento',
     'OrdemProducao',
-    'ApontamentoProducao',
+    'Pedido',
+    'PedidoItem',
+    'PedidoItemCobranca',
     'TipoComunicacao',
 ]
 
