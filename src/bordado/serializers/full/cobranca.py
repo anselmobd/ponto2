@@ -11,7 +11,7 @@ from bordado.models import (
 
 from bordado.serializers.cliente import ClienteSerializer
 from bordado.serializers.dificuldade_bordado import DificuldadeBordadoSerializer
-from bordado.serializers.user import UserSerializer
+from bordado.serializers.simple.user import UserSerializer
 from bordado.serializers.simple.tipo_comunicacao import TipoComunicacaoSerializer
 
 

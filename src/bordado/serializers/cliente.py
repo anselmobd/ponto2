@@ -3,7 +3,7 @@ from rest_framework import serializers
 from bordado.models import (
     Cliente,
 )
-from bordado.serializers.user import UserSerializer
+from bordado.serializers.simple.user import UserSerializer
 
 
 __all__ = [
