@@ -107,7 +107,7 @@ onMounted(() => {
                   <div class="flex gap-4">
                     <div>
                       <label class="block" for="apelido">Apelido</label>
-                      <p v-if="field_error?.apelido" class="text-red-800">{{ field_error.apelido.join(", ") }}</p>
+                      <p v-if="field_error?.apelido" class="text-red-800">{{ field_error.apelido }}</p>
                       <input
                       class="h-10 border mt-1 rounded px-4 bg-white"
                       v-model="cliente.apelido"
@@ -122,7 +122,7 @@ onMounted(() => {
                   <div class="flex gap-4">
                     <div>
                       <label class="block" for="nome">Nome/Razão Social</label>
-                      <p v-if="field_error?.nome" class="text-red-800">{{ field_error.nome.join(", ") }}</p>
+                      <p v-if="field_error?.nome" class="text-red-800">{{ field_error.nome }}</p>
                       <input
                       class="h-10 border mt-1 rounded px-4 bg-white"
                       v-model="cliente.nome"
@@ -134,7 +134,7 @@ onMounted(() => {
                     </div>
                     <div>
                       <label class="block" for="fansasia">Nome Fansasia</label>
-                      <p v-if="field_error?.fansasia" class="text-red-800">{{ field_error.fansasia.join(", ") }}</p>
+                      <p v-if="field_error?.fansasia" class="text-red-800">{{ field_error.fansasia }}</p>
                       <input
                       class="h-10 border mt-1 rounded px-4 bg-white"
                       v-model="cliente.fansasia"
@@ -154,7 +154,7 @@ onMounted(() => {
                   <div class="flex gap-4">
                     <div>
                       <label class="block" for="cnpj9">Raiz</label>
-                      <p v-if="field_error?.cnpj9" class="text-red-800">{{ field_error.cnpj9.join(", ") }}</p>
+                      <p v-if="field_error?.cnpj9" class="text-red-800">{{ field_error.cnpj9 }}</p>
                       <input
                         class="h-10 border mt-1 rounded px-1 w-40 bg-white"
                         v-model="cliente.cnpj9"
@@ -165,7 +165,7 @@ onMounted(() => {
                     </div>
                     <div>
                       <label class="block" for="cnpj4">Filial</label>
-                      <p v-if="field_error?.cnpj4" class="text-red-800">{{ field_error.cnpj4.join(", ") }}</p>
+                      <p v-if="field_error?.cnpj4" class="text-red-800">{{ field_error.cnpj4 }}</p>
                       <input
                         class="h-10 border mt-1 rounded px-1 w-20 bg-white"
                         v-model="cliente.cnpj4"
@@ -176,7 +176,7 @@ onMounted(() => {
                     </div>
                     <div>
                       <label class="block" for="cnpj2">Dígitos</label>
-                      <p v-if="field_error?.cnpj2" class="text-red-800">{{ field_error.cnpj2.join(", ") }}</p>
+                      <p v-if="field_error?.cnpj2" class="text-red-800">{{ field_error.cnpj2 }}</p>
                       <input
                         class="h-10 border mt-1 rounded px-1 w-10 bg-white"
                         v-model="cliente.cnpj2"
@@ -192,7 +192,7 @@ onMounted(() => {
                   <div class="flex gap-4">
                     <div>
                       <label class="block" for="cep">CEP</label>
-                      <p v-if="field_error?.cep" class="text-red-800">{{ field_error.cep.join(", ") }}</p>
+                      <p v-if="field_error?.cep" class="text-red-800">{{ field_error.cep }}</p>
                       <input
                         class="h-10 border mt-1 rounded px-1 w-40 bg-white"
                         v-model="cliente.cep"
@@ -214,7 +214,7 @@ onMounted(() => {
                     </div>
                     <div>
                       <label class="block" for="cidade">Cidade</label>
-                      <p v-if="field_error?.cidade" class="text-red-800">{{ field_error.cidade.join(", ") }}</p>
+                      <p v-if="field_error?.cidade" class="text-red-800">{{ field_error.cidade }}</p>
                       <input
                         class="h-10 border mt-1 rounded px-1 bg-white"
                         v-model="cliente.cidade"
@@ -225,7 +225,7 @@ onMounted(() => {
                     </div>
                     <div>
                       <label class="block" for="uf">UF</label>
-                      <p v-if="field_error?.uf" class="text-red-800">{{ field_error.uf.join(", ") }}</p>
+                      <p v-if="field_error?.uf" class="text-red-800">{{ field_error.uf }}</p>
                       <input
                         class="h-10 border mt-1 rounded px-1 w-10 bg-white"
                         v-model="cliente.uf"
@@ -239,7 +239,7 @@ onMounted(() => {
                   <div class="flex gap-4">
                     <div>
                       <label class="block" for="logradouro">Logradouro</label>
-                      <p v-if="field_error?.logradouro" class="text-red-800">{{ field_error.logradouro.join(", ") }}</p>
+                      <p v-if="field_error?.logradouro" class="text-red-800">{{ field_error.logradouro }}</p>
                       <input
                         class="h-10 border mt-1 rounded px-1 bg-white"
                         v-model="cliente.logradouro"
@@ -250,7 +250,7 @@ onMounted(() => {
                     </div>
                     <div>
                       <label class="block" for="numero">Número</label>
-                      <p v-if="field_error?.numero" class="text-red-800">{{ field_error.numero.join(", ") }}</p>
+                      <p v-if="field_error?.numero" class="text-red-800">{{ field_error.numero }}</p>
                       <input
                         class="h-10 border mt-1 rounded px-1 w-20 bg-white"
                         v-model="cliente.numero"
@@ -261,7 +261,7 @@ onMounted(() => {
                     </div>
                     <div>
                       <label class="block" for="complemento">Complemento</label>
-                      <p v-if="field_error?.complemento" class="text-red-800">{{ field_error.complemento.join(", ") }}</p>
+                      <p v-if="field_error?.complemento" class="text-red-800">{{ field_error.complemento }}</p>
                       <input
                         class="h-10 border mt-1 rounded px-1 bg-white"
                         v-model="cliente.complemento"
