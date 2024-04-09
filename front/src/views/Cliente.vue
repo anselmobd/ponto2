@@ -202,6 +202,17 @@ onMounted(() => {
                       />
                     </div>
                     <div>
+                      <label class="block" for="bairro">Bairro</label>
+                      <p v-if="field_error?.bairro" class="text-red-800">{{ field_error.bairro }}</p>
+                      <input
+                        class="h-10 border mt-1 rounded px-1 bg-white"
+                        v-model="cliente.bairro"
+                        type="text"
+                        name="bairro"
+                        id="bairro"
+                      />
+                    </div>
+                    <div>
                       <label class="block" for="cidade">Cidade</label>
                       <p v-if="field_error?.cidade" class="text-red-800">{{ field_error.cidade.join(", ") }}</p>
                       <input
