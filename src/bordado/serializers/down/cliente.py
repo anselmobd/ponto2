@@ -7,7 +7,7 @@ from bordado.serializers.simple.user import UserSerializer
 
 
 __all__ = [
-    'ClienteSerializer',
+    'ClienteDownSerializer',
 ]
 
 
