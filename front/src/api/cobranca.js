@@ -51,6 +51,7 @@ export function addCobranca({
       "apelido": null,
     },
     "tipo": null,
+    "comunicacao_id": null,
     "nf": null,
     "valor": null,
     "data": null,
