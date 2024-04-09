@@ -163,6 +163,7 @@ class CobrancaAdmin(admin.ModelAdmin):
         '__str__',
         'cliente',
         'tipo',
+        'comunicacao',
         'nf',
         'valor',
         'data',
