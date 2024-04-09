@@ -51,7 +51,7 @@ const status = ref('b'); // 'b' browsing; 'c' inserting comunicado; 'l' insertin
 function clearComunicado() {
   comunicado.value = {
     valor_total: 0,
-    tipo: '',
+    informacao: '',
     nf: null,
     data: strDataAtual,
     parcelamento: '',
@@ -163,7 +163,7 @@ function doAddCobranca(callBack) {
     "cliente": {
       "apelido": route.params.apelido,
     },
-    "tipo": comunicado.value.tipo,
+    "informacao": comunicado.value.informacao,
     "comunicacao_id": comunicado.value.comunicacao_id,
     "nf": comunicado.value.nf,
     "valor": comunicado.value.valor_total,
@@ -373,7 +373,6 @@ onMounted(() => {
         class="px-2 py-1 rounded-xl bg-sky-700 font-bold text-slate-100"
         @click="handleInserirComunicadoClick"
       >Comunicar cobrança</button>
-      {{ comunicado }}
       <div v-if="status == 'c'">
         <h3 class="my-4 font-bold text-lg text-center">Inserindo comunicado</h3>
         <table class="w-full">
@@ -397,10 +396,10 @@ onMounted(() => {
               <td>
                 <input
                   class="mx-0.5 border border-solid border-slate-500 rounded"
-                  v-model.trim="comunicado.tipo"
+                  v-model.trim="comunicado.informacao"
                   type="text"
-                  name="tipo"
-                  id="tipo"
+                  name="informacao"
+                  id="informacao"
                   placeholder="Informação"
                   v-focus
                 >
@@ -518,7 +517,7 @@ onMounted(() => {
             :key="cobranca.id"
           >
             <td>{{ cobranca.id }}</td>
-            <td>{{ cobranca.tipo }}</td>
+            <td>{{ cobranca.informacao }}</td>
             <td>{{ cobranca.comunicacao.descricao }}</td>
             <td>{{ cobranca.nf }}</td>
             <td class="!text-right">{{ ptBrCurrencyFormat.format(cobranca.valor) }}</td>
@@ -636,7 +635,7 @@ onMounted(() => {
             :key="lancamento.id"
           >
             <td>{{ inputStrDate2PtBrDate(lancamento.data) }}</td>
-            <td>{{ lancamento?.cobranca ? lancamento.cobranca.tipo : lancamento.informacao }}</td>
+            <td>{{ lancamento?.cobranca ? lancamento.cobranca.informacao : lancamento.informacao }}</td>
             <td>{{ lancamento?.cobranca?.comunicacao?.descricao ? lancamento.cobranca.comunicacao.descricao : '-' }}</td>
             <td>{{ lancamento?.cobranca?.nf ? lancamento.cobranca.nf : '-' }}</td>
             <td>{{ lancamento?.cobranca?.id ? lancamento.cobranca.id : '-' }}</td>
