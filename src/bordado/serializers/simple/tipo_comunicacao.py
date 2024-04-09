@@ -11,7 +11,7 @@ __all__ = [
 ]
 
 
-class TipoComunicacaoSerializer(serializers.ModelSerializer):
+class TipoComunicacaoSimpleSerializer(serializers.ModelSerializer):
     class Meta:
         model = TipoComunicacao
         fields = [
