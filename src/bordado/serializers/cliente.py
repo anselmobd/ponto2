@@ -37,15 +37,15 @@ class ClienteSerializer(serializers.ModelSerializer):
             'parcela',
         ]
 
-    def none_if_empty(self, data, field):
+    def none_if_empty_str(self, data, field):
         if field in data:
             if isinstance(data[field], str):
                 if data[field].strip() == '':
                     data[field] = None
 
     def to_internal_value(self, data):
-        self.none_if_empty(data, 'numero')
-        self.none_if_empty(data, 'cnpj9')
-        self.none_if_empty(data, 'cnpj4')
-        self.none_if_empty(data, 'cnpj2')
+        self.none_if_empty_str(data, 'numero')
+        self.none_if_empty_str(data, 'cnpj9')
+        self.none_if_empty_str(data, 'cnpj4')
+        self.none_if_empty_str(data, 'cnpj2')
         return super().to_internal_value(data)
