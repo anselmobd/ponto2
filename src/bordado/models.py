@@ -433,9 +433,6 @@ class Cobranca(models.Model):
     comunicacao = models.ForeignKey(
         TipoComunicacao,
         on_delete=models.PROTECT,
-        default=None,
-        blank=True,
-        null=True,
     )
     nf = models.PositiveIntegerField(
         'NF',
