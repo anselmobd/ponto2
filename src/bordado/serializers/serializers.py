@@ -141,7 +141,7 @@ class CobrancaSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'cliente',
-            'tipo',
+            'informacao',
             'nf',
             'valor',
             'data',

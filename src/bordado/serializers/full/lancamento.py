@@ -35,7 +35,7 @@ class CobrancaSerializer(serializers.ModelSerializer):
             'id',
             'cliente',
             'valor',
-            'tipo',
+            'informacao',
             'comunicacao',
             'nf',
             'data',
