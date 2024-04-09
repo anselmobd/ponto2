@@ -5,6 +5,7 @@ import { ref, onMounted, watch } from 'vue'
 import { getPedidoItens } from '../api/pedidoItem.js';
 import { getCobrancas, addCobranca } from '../api/cobranca.js';
 import { getLancamentos, addLancamento } from '../api/lancamento.js';
+import { getTiposComunicacao } from '../api/tipo_comunicacao.js';
 import { inputStrDate2PtBrDate, date2InputText } from "../utils/date.js";
 import { ptBrCurrencyFormat } from "../utils/numStr.js";
 
@@ -15,6 +16,9 @@ const route = useRoute();
 const pedido_itens = ref([])
 const pedido_itens_carregando = ref(null)
 const pedido_itens_error = ref(null)
+
+const tipo_comunicacao = ref([])
+const tipo_comunicacao_error = ref(null)
 
 const cobrancas = ref([])
 const cobrancas_carregando = ref(null)
@@ -87,13 +91,29 @@ function cbGetPedidoItens(data, error) {
   pedido_itens_carregando.value = false;
 }
 
-function doGetPedidoItens(callBack) {
+function doGetPedidoItens() {
   pedido_itens.value = [];
   pedido_itens_carregando.value = true;
   pedido_itens_error.value = null;
   getPedidoItens({
     cliente_apelido: route.params.apelido,
     callBack: cbGetPedidoItens
+  });
+}
+
+function cbGetTiposComunicacao(data, error) {
+  if (data) {
+    tipo_comunicacao.value = data.results;
+  }
+  if (error) {
+    tipo_comunicacao_error.value = "Erro ao buscar possíveis valores para Tipos de comunicação";
+  };
+}
+
+function doGetTiposComunicacao() {
+  tipo_comunicacao_error.value = null;
+  getTiposComunicacao({
+    callBack: cbGetTiposComunicacao
   });
 }
 
@@ -261,6 +281,7 @@ function handleMaisLancamentosClick(event) {
 // Lifecycle Hooks
 
 onMounted(() => {
+  doGetTiposComunicacao();
   doGetPedidoItens();
   doGetCobrancas();
   doGetLancamentos(1);
@@ -296,6 +317,11 @@ onMounted(() => {
           <tr v-if="pedido_itens_error">
             <th class="text-red-800" colspan="8">
               {{ pedido_itens_error }}
+            </th>
+          </tr>
+          <tr v-if="tipo_comunicacao_error">
+            <th class="text-red-800" colspan="8">
+              {{ tipo_comunicacao_error }}
             </th>
           </tr>
           <tr v-if="pedido_itens_carregando">
