@@ -50,7 +50,7 @@ export function addCobranca({
     "cliente": {
       "apelido": null,
     },
-    "tipo": null,
+    "informacao": null,
     "comunicacao_id": null,
     "nf": null,
     "valor": null,
