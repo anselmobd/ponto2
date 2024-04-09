@@ -7,7 +7,6 @@ from bordado.models import (
     Cliente,
     Cobranca,
     DificuldadeBordado,
-    Lancamento,
     OrdemProducao,
     Pedido,
     PedidoItem,
@@ -25,7 +24,6 @@ __all__ = [
     'PedidoItemSerializer',
     'CobrancaSerializer',
     'PedidoItemCobrancaSerializer',
-    'LancamentoSerializer',
     'OrdemProducaoSerializer',
     'ApontamentoProducaoSerializer',
 ]
@@ -162,29 +160,6 @@ class PedidoItemCobrancasSerializer(serializers.ModelSerializer):
             'id',
             'cobranca',
             'valor',
-        ]
-
-class LancamentoSerializer(serializers.ModelSerializer):
-    cliente = ClienteSerializer()
-    cobranca = CobrancaSerializer()
-    usuario = UserSerializer()
-
-    class Meta:
-        model = Lancamento
-        fields = [
-            'id',
-            'cliente',
-            'data',
-            'cobranca',
-            'parcela',
-            'n_parcelas',
-            'informacao',
-            'valor',
-            'calculando',
-            'saldo_cliente',
-            'saldo_empresa',
-            'usuario',
-            'quando',
         ]
 
 
