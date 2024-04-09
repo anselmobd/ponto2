@@ -11,7 +11,7 @@ from bordado.models import (
 
 from bordado.serializers.down.cliente import ClienteDownSerializer
 from bordado.serializers.dificuldade_bordado import DificuldadeBordadoSerializer
-from bordado.serializers.simple.user import UserSerializer
+from bordado.serializers.simple.user import UserSimpleSerializer
 from bordado.serializers.simple.tipo_comunicacao import TipoComunicacaoSerializer
 
 
@@ -47,7 +47,7 @@ class BordadoSerializer(serializers.ModelSerializer):
 class PedidoItemSerializer(serializers.ModelSerializer):
     pedido = PedidoSerializer()
     bordado = BordadoSerializer()
-    usuario = UserSerializer()
+    usuario = UserSimpleSerializer()
 
     class Meta:
         model = PedidoItem
@@ -81,7 +81,7 @@ class PedidoItemCobrancasSerializer(serializers.ModelSerializer):
 
 class LancamentoSerializer(serializers.ModelSerializer):
     cliente = ClienteDownSerializer()
-    usuario = UserSerializer()
+    usuario = UserSimpleSerializer()
 
     class Meta:
         model = Lancamento
@@ -104,7 +104,7 @@ class LancamentoSerializer(serializers.ModelSerializer):
 class CobrancaSerializer(serializers.ModelSerializer):
     cliente = ClienteDownSerializer()
     comunicacao = TipoComunicacaoSerializer()
-    usuario = UserSerializer()
+    usuario = UserSimpleSerializer()
     pedidoitemcobranca_set = PedidoItemCobrancasSerializer(many=True, read_only=True)
     lancamento_set = LancamentoSerializer(many=True, read_only=True)
 

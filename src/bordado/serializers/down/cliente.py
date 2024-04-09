@@ -3,7 +3,7 @@ from rest_framework import serializers
 from bordado.models import (
     Cliente,
 )
-from bordado.serializers.simple.user import UserSerializer
+from bordado.serializers.simple.user import UserSimpleSerializer
 
 
 __all__ = [
@@ -12,7 +12,7 @@ __all__ = [
 
 
 class ClienteDownSerializer(serializers.ModelSerializer):
-    usuario = UserSerializer()
+    usuario = UserSimpleSerializer()
 
     class Meta:
         model = Cliente

@@ -3,11 +3,11 @@ from rest_framework import serializers
 
 
 __all__ = [
-    'UserSerializer',
+    'UserSimpleSerializer',
 ]
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserSimpleSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
