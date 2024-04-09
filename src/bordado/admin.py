@@ -162,7 +162,7 @@ class CobrancaAdmin(admin.ModelAdmin):
     list_display = [
         '__str__',
         'cliente',
-        'tipo',
+        'informacao',
         'comunicacao',
         'nf',
         'valor',

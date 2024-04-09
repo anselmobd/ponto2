@@ -423,7 +423,7 @@ class Cobranca(models.Model):
         validators=[MinValueValidator(0.01), MaxValueValidator(1_000_000)],
         default=0,
     )
-    tipo = models.CharField(
+    informacao = models.CharField(
         max_length=50,
         default='',
         blank=True,
@@ -458,7 +458,7 @@ class Cobranca(models.Model):
     def __str__(self):
         nf = f" ({self.nf})" if self.nf else ""
         comunicacao = f" {self.comunicacao.descricao}" if self.comunicacao else ""
-        return f"{self.id}: {self.tipo}{comunicacao}{nf} [{self.data}]"
+        return f"{self.id}: {self.informacao}{comunicacao}{nf} [{self.data}]"
 
     def cleanned_usuario(self):
         return SingletonLoggedInUser().user
