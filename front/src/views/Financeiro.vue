@@ -455,6 +455,7 @@ onMounted(() => {
         <thead>
           <tr>
             <th>Nº</th>
+            <th>Old Tipo</th>
             <th>Tipo</th>
             <th>NF</th>
             <th>Valor</th>
@@ -481,6 +482,7 @@ onMounted(() => {
           >
             <td>{{ cobranca.id }}</td>
             <td>{{ cobranca.tipo }}</td>
+            <td>{{ cobranca.comunicacao.descricao }}</td>
             <td>{{ cobranca.nf }}</td>
             <td class="!text-right">{{ ptBrCurrencyFormat.format(cobranca.valor) }}</td>
             <td>{{ cobranca.pedidos_ids }}</td>
@@ -598,7 +600,7 @@ onMounted(() => {
           >
             <td>{{ inputStrDate2PtBrDate(lancamento.data) }}</td>
             <td>{{ lancamento.informacao }}</td>
-            <td>{{ lancamento?.cobranca?.tipo ? lancamento.cobranca.tipo : '-' }}</td>
+            <td>{{ lancamento?.cobranca?.comunicacao?.descricao ? lancamento.cobranca.comunicacao.descricao : '-' }}</td>
             <td>{{ lancamento?.cobranca?.nf ? lancamento.cobranca.nf : '-' }}</td>
             <td>{{ lancamento?.cobranca?.id ? lancamento.cobranca.id : '-' }}</td>
             <td>{{ lancamento?.n_parcelas > 1 ? lancamento.parcela+'/'+lancamento.n_parcelas : lancamento?.n_parcelas == 1 ? 'única' : '-' }}</td>
