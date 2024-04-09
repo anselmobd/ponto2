@@ -396,7 +396,7 @@ class PedidoItem(models.Model):
 
 
 class TipoComunicacao(models.Model):
-    admin_order = 545
+    admin_order = 600
     descricao = models.CharField(
         'Descrição',
         max_length=50,
@@ -414,7 +414,7 @@ class TipoComunicacao(models.Model):
 
 
 class Cobranca(models.Model):
-    admin_order = 530
+    admin_order = 700
     cliente = models.ForeignKey(
         Cliente,
         on_delete=models.PROTECT,
@@ -475,7 +475,7 @@ class Cobranca(models.Model):
 
 
 class PedidoItemCobranca(models.Model):
-    admin_order = 560
+    admin_order = 800
     pedido_item = models.ForeignKey(
         PedidoItem,
         on_delete=models.PROTECT,
@@ -503,7 +503,7 @@ class PedidoItemCobranca(models.Model):
 
 
 class Lancamento(models.Model):
-    admin_order = 580
+    admin_order = 900
     cliente = models.ForeignKey(
         Cliente,
         on_delete=models.PROTECT,
@@ -576,7 +576,7 @@ class Lancamento(models.Model):
 
 
 class OrdemProducao(models.Model):
-    admin_order = 600
+    admin_order = 1000
     numero = models.AutoField(
         'Número',
         primary_key=True
@@ -612,7 +612,7 @@ class ApontamentoProducaoManager(models.Manager):
 
 
 class ApontamentoProducao(models.Model):
-    admin_order = 700
+    admin_order = 1100
     op = models.ForeignKey(
         OrdemProducao,
         on_delete=models.PROTECT,
