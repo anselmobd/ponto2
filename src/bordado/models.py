@@ -3,11 +3,9 @@ from pprint import pprint
 from django.contrib.auth.models import User
 from django.core.validators import (
     MaxValueValidator,
-    MinLengthValidator,
     MinValueValidator,
 )
 from django.db import models
-from django.db.models import Q
 
 from o2lib.classes.logged_in_user import SingletonLoggedInUser
 from o2lib.codes.cnpj import CNPJ
@@ -152,7 +150,7 @@ class Cliente(models.Model):
             mark = "" if cnpj.valid() else "!"
             return f"{cnpj}{mark}"
         else:
-            return f"!"
+            return "!"
 
     def __str__(self):
         return f'{self.apelido} ({self.cnpj})'
@@ -427,8 +425,6 @@ class Cobranca(models.Model):
     )
     tipo = models.CharField(
         max_length=50,
-        # validators=[MinLengthValidator(
-        #     1, "O campo Tipo deve conter ao menos um caractere.")],
         default='',
         blank=True,
         null=True,
