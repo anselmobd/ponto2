@@ -164,6 +164,7 @@ function doAddCobranca(callBack) {
       "apelido": route.params.apelido,
     },
     "tipo": comunicado.value.tipo,
+    "comunicacao_id": comunicado.value.comunicacao_id,
     "nf": comunicado.value.nf,
     "valor": comunicado.value.valor_total,
     "data": comunicado.value.data,
@@ -372,12 +373,13 @@ onMounted(() => {
         class="px-2 py-1 rounded-xl bg-sky-700 font-bold text-slate-100"
         @click="handleInserirComunicadoClick"
       >Comunicar cobrança</button>
-
+      {{ comunicado }}
       <div v-if="status == 'c'">
         <h3 class="my-4 font-bold text-lg text-center">Inserindo comunicado</h3>
         <table class="w-full">
           <thead>
             <tr>
+              <th>Informação</th>
               <th>Comunicação</th>
               <th>NF</th>
               <th>Valor</th>
@@ -399,15 +401,24 @@ onMounted(() => {
                   type="text"
                   name="tipo"
                   id="tipo"
-                  placeholder="Tipo"
-                  list="tipo-list"
-                  required
+                  placeholder="Informação"
                   v-focus
                 >
-                <datalist id="tipo-list">
-                  <option>Mail</option>
-                  <option>Zap</option>
-                </datalist>
+              </td>
+              <td>
+                <select
+                  class="mx-0.5 border border-solid border-slate-500 rounded"
+                  v-model="comunicado.comunicacao_id"
+                  name="comunicacao_id"
+                  id="comunicacao_id"
+                >
+                  <option
+                    v-for="tipo_comunic in tipo_comunicacao"
+                    :key="tipo_comunic.id"
+                    :value="tipo_comunic.id"
+                    required
+                  >{{ tipo_comunic.descricao }}</option>
+                </select>
               </td>
               <td>
                 <input
@@ -481,7 +492,7 @@ onMounted(() => {
         <thead>
           <tr>
             <th>Nº</th>
-            <th>Old Tipo</th>
+            <th>Informação</th>
             <th>Tipo</th>
             <th>NF</th>
             <th>Valor</th>
@@ -625,7 +636,7 @@ onMounted(() => {
             :key="lancamento.id"
           >
             <td>{{ inputStrDate2PtBrDate(lancamento.data) }}</td>
-            <td>{{ lancamento.informacao }}</td>
+            <td>{{ lancamento?.cobranca ? lancamento.cobranca.tipo : lancamento.informacao }}</td>
             <td>{{ lancamento?.cobranca?.comunicacao?.descricao ? lancamento.cobranca.comunicacao.descricao : '-' }}</td>
             <td>{{ lancamento?.cobranca?.nf ? lancamento.cobranca.nf : '-' }}</td>
             <td>{{ lancamento?.cobranca?.id ? lancamento.cobranca.id : '-' }}</td>
