@@ -460,11 +460,9 @@ class Cobranca(models.Model):
     quando = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        result = f'{self.id}: {self.tipo}'
-        if self.nf:
-             result = f'{result} ({self.nf})'
-        result = f'{result} [{self.data}]'
-        return result
+        nf = f" ({self.nf})" if self.nf else ""
+        comunicacao = f" {self.comunicacao.descricao}" if self.comunicacao else ""
+        return f"{self.id}: {self.tipo}{comunicacao}{nf} [{self.data}]"
 
     def cleanned_usuario(self):
         return SingletonLoggedInUser().user
