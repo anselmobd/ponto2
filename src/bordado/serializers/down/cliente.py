@@ -11,7 +11,7 @@ __all__ = [
 ]
 
 
-class ClienteSerializer(serializers.ModelSerializer):
+class ClienteDownSerializer(serializers.ModelSerializer):
     usuario = UserSerializer()
 
     class Meta:
