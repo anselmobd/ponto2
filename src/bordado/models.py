@@ -395,6 +395,24 @@ class PedidoItem(models.Model):
     natural_key.dependencies = ['bordado.pedido']
 
 
+class TipoComunicacao(models.Model):
+    admin_order = 545
+    descricao = models.CharField(
+        'Descrição',
+        max_length=50,
+        unique=True,
+    )
+
+    def __str__(self):
+        return self.descricao
+
+    class Meta:
+        db_table = "po2_tipo_comunicacao"
+        verbose_name = "Tipo de comunicação"
+        verbose_name_plural = "Tipos de comunicação"
+        ordering = ['id']
+
+
 class Cobranca(models.Model):
     admin_order = 530
     cliente = models.ForeignKey(
@@ -411,6 +429,13 @@ class Cobranca(models.Model):
         max_length=50,
         validators=[MinLengthValidator(
             1, "O campo Tipo deve conter ao menos um caractere.")],
+    )
+    comunicacao = models.ForeignKey(
+        TipoComunicacao,
+        on_delete=models.PROTECT,
+        default=None,
+        blank=True,
+        null=True,
     )
     nf = models.PositiveIntegerField(
         'NF',
@@ -630,21 +655,3 @@ class ApontamentoProducao(models.Model):
         return (self.apontado_em, self.op.numero)
 
     natural_key.dependencies = ['bordado.ordemproducao']
-
-
-class TipoComunicacao(models.Model):
-    admin_order = 545
-    descricao = models.CharField(
-        'Descrição',
-        max_length=50,
-        unique=True,
-    )
-
-    def __str__(self):
-        return self.descricao
-
-    class Meta:
-        db_table = "po2_tipo_comunicacao"
-        verbose_name = "Tipo de comunicação"
-        verbose_name_plural = "Tipos de comunicação"
-        ordering = ['id']
