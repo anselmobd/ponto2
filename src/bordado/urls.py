@@ -1,9 +1,26 @@
 from django.urls import include, path
 from rest_framework import routers
 
-from .views.main import *
+from .views.main import (
+    menu,
+    index,
+    sobre,
+)
 from .views.financeiro import Financeiro
-from .api.rest import *
+from .api.rest import (
+    ApontamentoProducaoViewSet,
+    BordadoViewSet,
+    ClienteViewSet,
+    CobrancaViewSet,
+    DificuldadeBordadoViewSet,
+    LancamentoViewSet,
+    OrdemProducaoViewSet,
+    PedidoItemCobrancaViewSet,
+    PedidoItemViewSet,
+    PedidoViewSet,
+    TipoComunicacaoViewSet,
+    UserViewSet,
+)
 
 
 router = routers.DefaultRouter()
@@ -13,6 +30,7 @@ router.register(r'dificuldade_bordado', DificuldadeBordadoViewSet)
 router.register(r'bordado', BordadoViewSet)
 router.register(r'pedido', PedidoViewSet)
 router.register(r'pedido_item', PedidoItemViewSet)
+router.register(r'tipo_comunicacao', TipoComunicacaoViewSet)
 router.register(r'cobranca', CobrancaViewSet)
 router.register(r'pedido_item_cobranca', PedidoItemCobrancaViewSet)
 router.register(r'lancamento', LancamentoViewSet)

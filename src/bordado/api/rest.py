@@ -27,6 +27,7 @@ from bordado.models import (
     Pedido,
     PedidoItem,
     PedidoItemCobranca,
+    TipoComunicacao,
 )
 from bordado.serializers import (
     ApontamentoProducaoSerializer,
@@ -39,20 +40,22 @@ from bordado.serializers import (
     PedidoSerializer,
     UserSerializer,
 )
+from bordado.serializers.simple.tipo_comunicacao import TipoComunicacaoSimpleSerializer
 
 
 __all__ = [
-    'UserViewSet',
-    'ClienteViewSet',
-    'DificuldadeBordadoViewSet',
+    'ApontamentoProducaoViewSet',
     'BordadoViewSet',
-    'PedidoViewSet',
-    'PedidoItemViewSet',
+    'ClienteViewSet',
     'CobrancaViewSet',
-    'PedidoItemCobrancaViewSet',
+    'DificuldadeBordadoViewSet',
     'LancamentoViewSet',
     'OrdemProducaoViewSet',
-    'ApontamentoProducaoViewSet',
+    'PedidoItemCobrancaViewSet',
+    'PedidoItemViewSet',
+    'PedidoViewSet',
+    'TipoComunicacaoViewSet',
+    'UserViewSet',
 ]
 
 
@@ -130,4 +133,12 @@ class ApontamentoProducaoViewSet(viewsets.ModelViewSet):
 class OrdemProducaoViewSet(viewsets.ModelViewSet):
     queryset = OrdemProducao.objects.all()
     serializer_class = OrdemProducaoSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+@extend_schema_view(
+    **dict_keys_value(__ACTIONS, extend_schema(tags=['tipo_comunicacao'])))
+class TipoComunicacaoViewSet(viewsets.ModelViewSet):
+    queryset = TipoComunicacao.objects.all()
+    serializer_class = TipoComunicacaoSimpleSerializer
     permission_classes = [permissions.IsAuthenticated]
