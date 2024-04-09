@@ -35,18 +35,17 @@ class ClienteAdmin(CustomModelAdmin):
     fields = [
         'apelido',
         (
-            'usuario',
-            'quando',
+            'nome',
+            'fansasia',
         ),
         (
             'cnpj9',
             'cnpj4',
             'cnpj2',
         ),
-        'nome',
-        'fansasia',
+        'cep',
         (
-            'cep',
+            'bairro',
             'cidade',
             'uf',
         ),
@@ -58,6 +57,10 @@ class ClienteAdmin(CustomModelAdmin):
         # 'boleto',
         # 'conta_corrente',
         # 'parcela',
+        (
+            'usuario',
+            'quando',
+        ),
     ]
     field_style = {
         'cnpj9': 'width: 9em;',

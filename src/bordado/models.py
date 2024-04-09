@@ -108,6 +108,10 @@ class Cliente(models.Model):
         max_length=30,
         blank=True,
     )
+    bairro = models.CharField(
+        max_length=100,
+        blank=True,
+    )
     cidade = models.CharField(
         max_length=100,
         blank=True,
