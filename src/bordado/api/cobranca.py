@@ -62,7 +62,7 @@ class CobrancaViewSet(viewsets.ModelViewSet):
                 try:
                     cobranca = Cobranca(
                         cliente=cliente,
-                        tipo=request.data.get('tipo'),
+                        informacao=request.data.get('informacao'),
                         comunicacao_id=request.data.get('comunicacao_id'),
                         nf=request.data.get('nf'),
                         valor=request.data.get('valor'),
