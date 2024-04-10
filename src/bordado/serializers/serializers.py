@@ -12,6 +12,7 @@ from bordado.models import (
     PedidoItem,
     PedidoItemCobranca,
 )
+from bordado.serializers.simple.tipo_comunicacao import TipoComunicacaoSimpleSerializer
 
 
 __all__ = [
@@ -42,6 +43,8 @@ class UserSerializer(serializers.ModelSerializer):
 
 class ClienteSerializer(serializers.ModelSerializer):
     # usuario = UserSerializer()
+    comunicacao_obj = serializers.SerializerMethodField()
+
     class Meta:
         model = Cliente
         fields = [
@@ -61,6 +64,8 @@ class ClienteSerializer(serializers.ModelSerializer):
             'bairro',
             'cidade',
             'uf',
+            'comunicacao',
+            'comunicacao_obj',
             'boleto',
             'conta_corrente',
             'parcela',
@@ -78,6 +83,11 @@ class ClienteSerializer(serializers.ModelSerializer):
         self.none_if_empty(data, 'cnpj4')
         self.none_if_empty(data, 'cnpj2')
         return super().to_internal_value(data)
+
+    def get_comunicacao_obj(self, obj):
+        if obj.comunicacao:
+            return TipoComunicacaoSimpleSerializer(obj.comunicacao).data
+        return None
 
 
 class DificuldadeBordadoSerializer(serializers.ModelSerializer):

@@ -3,6 +3,7 @@ from rest_framework import serializers
 from bordado.models import (
     Cliente,
 )
+from bordado.serializers.simple.tipo_comunicacao import TipoComunicacaoSimpleSerializer
 from bordado.serializers.simple.user import UserSimpleSerializer
 
 
@@ -13,6 +14,7 @@ __all__ = [
 
 class ClienteDownSerializer(serializers.ModelSerializer):
     usuario = UserSimpleSerializer()
+    comunicacao_obj = serializers.SerializerMethodField()
 
     class Meta:
         model = Cliente
@@ -33,6 +35,8 @@ class ClienteDownSerializer(serializers.ModelSerializer):
             'bairro',
             'cidade',
             'uf',
+            'comunicacao',
+            'comunicacao_obj',
             'boleto',
             'conta_corrente',
             'parcela',
@@ -50,3 +54,8 @@ class ClienteDownSerializer(serializers.ModelSerializer):
         self.none_if_empty_str(data, 'cnpj4')
         self.none_if_empty_str(data, 'cnpj2')
         return super().to_internal_value(data)
+
+    def get_comunicacao_obj(self, obj):
+        if obj.comunicacao:
+            return TipoComunicacaoSimpleSerializer(obj.comunicacao).data
+        return None
