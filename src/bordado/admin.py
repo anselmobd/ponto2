@@ -56,8 +56,8 @@ class ClienteAdmin(CustomModelAdmin):
         ),
         # 'boleto',
         # 'conta_corrente',
-        # 'parcela',
         'comunicacao',
+        'parcelamento',
         (
             'usuario',
             'quando',
@@ -70,7 +70,6 @@ class ClienteAdmin(CustomModelAdmin):
         'cep': 'width: 10em;',
         'complemento': 'width: 10em;',
         'uf': 'width: 3em;',
-        # 'parcela': 'width: 3em;',
     }
     readonly_fields = [
         'usuario',

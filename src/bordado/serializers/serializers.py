@@ -66,9 +66,9 @@ class ClienteSerializer(serializers.ModelSerializer):
             'uf',
             'comunicacao',
             'comunicacao_obj',
+            'parcelamento',
             'boleto',
             'conta_corrente',
-            'parcela',
         ]
 
     def none_if_empty(self, data, field):

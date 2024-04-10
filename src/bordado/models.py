@@ -151,11 +151,6 @@ class Cliente(models.Model):
         'Trabalha como conta corrente?',
         default=False,
     )
-    parcela = models.PositiveSmallIntegerField(
-        'Número de parcelas padrão',
-        validators=[MinValueValidator(0), MaxValueValidator(10)],
-        default=1,
-    )
     parcelamento = models.CharField(
         'Parcelamento padrão',
         max_length=30,

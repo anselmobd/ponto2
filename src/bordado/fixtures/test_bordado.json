@@ -9,7 +9,7 @@
         "cnpj2": 0,
         "boleto": true,
         "conta_corrente": false,
-        "parcela": 10,
+        "parcelamento": "10",
         "usuario": [
             "admin"
         ],
@@ -26,7 +26,7 @@
         "cnpj2": 33,
         "boleto": false,
         "conta_corrente": true,
-        "parcela": 1,
+        "parcelamento": "1",
         "usuario": [
             "admin"
         ],
@@ -43,7 +43,7 @@
         "cnpj2": 6,
         "boleto": false,
         "conta_corrente": false,
-        "parcela": 1,
+        "parcelamento": "1",
         "usuario": [
             "paulo"
         ],
@@ -60,7 +60,7 @@
         "cnpj2": 8,
         "boleto": false,
         "conta_corrente": false,
-        "parcela": 1,
+        "parcelamento": "1",
         "usuario": [
             "paulo"
         ],

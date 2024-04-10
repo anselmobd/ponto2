@@ -18,7 +18,7 @@ class ClienteTestCase(TestCase):
         self.assertEqual(cliente.cnpj2, 0)
         self.assertEqual(cliente.boleto, True)
         self.assertEqual(cliente.conta_corrente, False)
-        self.assertEqual(cliente.parcela, 10)
+        self.assertEqual(cliente.parcelamento, "10")
         self.assertEqual(cliente.cnpj, "00000001/0001-00!")
         self.assertEqual(cliente.usuario.username, "admin")
         self.assertEqual(
