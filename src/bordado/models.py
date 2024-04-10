@@ -156,6 +156,11 @@ class Cliente(models.Model):
         validators=[MinValueValidator(0), MaxValueValidator(10)],
         default=1,
     )
+    parcelamento = models.CharField(
+        'Parcelamento padrão',
+        max_length=30,
+        default="",
+    )
     usuario = models.ForeignKey(
         User,
         on_delete=models.PROTECT,
