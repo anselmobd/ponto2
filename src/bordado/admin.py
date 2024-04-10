@@ -57,6 +57,7 @@ class ClienteAdmin(CustomModelAdmin):
         # 'boleto',
         # 'conta_corrente',
         # 'parcela',
+        'comunicacao',
         (
             'usuario',
             'quando',

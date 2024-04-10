@@ -42,6 +42,24 @@ __all__ = [
 #         ordering = ['nome']
 
 
+class TipoComunicacao(models.Model):
+    admin_order = 50
+    descricao = models.CharField(
+        'Descrição',
+        max_length=50,
+        unique=True,
+    )
+
+    def __str__(self):
+        return self.descricao
+
+    class Meta:
+        db_table = "po2_tipo_comunicacao"
+        verbose_name = "Tipo de comunicação"
+        verbose_name_plural = "Tipos de comunicação"
+        ordering = ['id']
+
+
 class ClienteManager(models.Manager):
     def get_by_natural_key(self, cnpj9, cnpj4):
         return self.get(cnpj9=cnpj9, cnpj4=cnpj4)
@@ -119,6 +137,11 @@ class Cliente(models.Model):
     uf = models.CharField(
         max_length=2,
         blank=True,
+    )
+    comunicacao = models.ForeignKey(
+        TipoComunicacao,
+        on_delete=models.PROTECT,
+        verbose_name="Comunicação preferêncial",
     )
     boleto = models.BooleanField(
         'Gera boleto?',
@@ -395,24 +418,6 @@ class PedidoItem(models.Model):
         return (self.ordem, self.pedido.numero)
 
     natural_key.dependencies = ['bordado.pedido']
-
-
-class TipoComunicacao(models.Model):
-    admin_order = 600
-    descricao = models.CharField(
-        'Descrição',
-        max_length=50,
-        unique=True,
-    )
-
-    def __str__(self):
-        return self.descricao
-
-    class Meta:
-        db_table = "po2_tipo_comunicacao"
-        verbose_name = "Tipo de comunicação"
-        verbose_name_plural = "Tipos de comunicação"
-        ordering = ['id']
 
 
 class Cobranca(models.Model):
