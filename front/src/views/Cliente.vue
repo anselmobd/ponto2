@@ -3,6 +3,7 @@ import router from '@/router'
 import { useRoute } from "vue-router";
 import { ref, onMounted } from 'vue'
 import { getCliente, putCliente } from '../api/cliente.js';
+import { getTiposComunicacao } from '../api/tipo_comunicacao.js';
 import { buscarPorCep } from '../webapi/cep.js';
 
 const route = useRoute();
@@ -14,6 +15,9 @@ const cliente_carregando = ref(null)
 const cliente_error = ref(null)
 const cliente_salvo = ref(null)
 const field_error = ref(null)
+
+const tipo_comunicacao = ref([])
+const tipo_comunicacao_error = ref(null)
 
 // Funções auxiliares
 
@@ -87,6 +91,22 @@ function doBuscarPorCep() {
   }
 }
 
+function cbGetTiposComunicacao(data, error) {
+  if (data) {
+    tipo_comunicacao.value = data.results;
+  }
+  if (error) {
+    tipo_comunicacao_error.value = "Erro ao buscar possíveis valores para Tipos de comunicação";
+  };
+}
+
+function doGetTiposComunicacao() {
+  tipo_comunicacao_error.value = null;
+  getTiposComunicacao({
+    callBack: cbGetTiposComunicacao
+  });
+}
+
 // event functions
 
 function handleSaveClick(event) {
@@ -102,6 +122,7 @@ function handleLimpaClick(event) {
 // Lifecycle Hooks
 
 onMounted(() => {
+  doGetTiposComunicacao();
   doGetCliente();
 })
 
@@ -124,6 +145,7 @@ onMounted(() => {
           <div class="bg-slate-100 rounded shadow-lg p-4 mb-6">
             <form>
               <div class="grid grid-cols-1 gap-4">
+                <span v-if="tipo_comunicacao_error" class="text-red-800">{{ tipo_comunicacao_error }}</span>
                 <span v-if="cliente_error" class="text-red-800">{{ cliente_error }}</span>
                 <span v-if="cliente_salvo" class="text-green-800">{{ cliente_salvo }}</span>
 
@@ -297,6 +319,24 @@ onMounted(() => {
                       />
                     </div>
                   </div>
+                </section>
+
+                <section id="config">
+                  <label class="block" for="comunicacao">Comunicação Preferencial</label>
+                  <p v-if="field_error?.comunicacao" class="text-red-800">{{ field_error.comunicacao }}</p>
+                  <select
+                    class="h-10 border mt-1 rounded px-1 bg-white"
+                    v-model="cliente.comunicacao"
+                    name="comunicacao"
+                    id="comunicacao"
+                  >
+                    <option
+                      v-for="tipo_comunic in tipo_comunicacao"
+                      :key="tipo_comunic.id"
+                      :value="tipo_comunic.id"
+                      required
+                    >{{ tipo_comunic.descricao }}</option>
+                  </select>
                 </section>
 
                 <section id="botoes_section" class="inline-flex gap-8 justify-center">
