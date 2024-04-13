@@ -19,10 +19,10 @@ from bordado.models import (
     PedidoItem,
 )
 from bordado.serializers import (
-    ClienteSerializer,
     PedidoItemSerializer,
     SetBordadoSerializer,
 )
+from bordado.serializers.down.cliente import ClienteDownSerializer
 from o2lib.dict import dict_keys_value
 
 from bordado.api.rest_consts import __ACTIONS
@@ -103,7 +103,7 @@ class PedidoItemViewSet(viewsets.ModelViewSet):
                         request.data['cliente']['comunicacao'] = 1
                     if 'usuario' not in request.data['cliente']:
                         request.data['cliente']['usuario'] = 1
-                    serializer = ClienteSerializer(data=request.data['cliente'])
+                    serializer = ClienteDownSerializer(data=request.data['cliente'])
                     if serializer.is_valid():
                         cliente = serializer.save(usuario=self.request.user)
                     else:

@@ -1,10 +1,11 @@
+from django.contrib.auth.models import User
 from rest_framework import serializers
 
 from bordado.models import (
     Cliente,
+    TipoComunicacao,
 )
 from bordado.serializers.simple.tipo_comunicacao import TipoComunicacaoSimpleSerializer
-from bordado.serializers.simple.user import UserSimpleSerializer
 
 
 __all__ = [
@@ -13,7 +14,8 @@ __all__ = [
 
 
 class ClienteDownSerializer(serializers.ModelSerializer):
-    usuario = UserSimpleSerializer()
+    usuario = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    comunicacao = serializers.PrimaryKeyRelatedField(queryset=TipoComunicacao.objects.all())
     comunicacao_obj = serializers.SerializerMethodField()
 
     class Meta:

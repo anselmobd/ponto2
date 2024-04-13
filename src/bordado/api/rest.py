@@ -32,7 +32,6 @@ from bordado.models import (
 from bordado.serializers import (
     ApontamentoProducaoSerializer,
     BordadoSerializer,
-    ClienteSerializer,
     DificuldadeBordadoSerializer,
     OrdemProducaoSerializer,
     PedidoItemCobrancaSerializer,
@@ -41,6 +40,7 @@ from bordado.serializers import (
     UserSerializer,
 )
 from bordado.serializers.simple.tipo_comunicacao import TipoComunicacaoSimpleSerializer
+from bordado.serializers.down.cliente import ClienteDownSerializer
 
 
 __all__ = [
@@ -71,7 +71,7 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     **dict_keys_value(__ACTIONS, extend_schema(tags=['cliente'])))
 class ClienteViewSet(viewsets.ModelViewSet):
     queryset = Cliente.objects.all()
-    serializer_class = ClienteSerializer
+    serializer_class = ClienteDownSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
