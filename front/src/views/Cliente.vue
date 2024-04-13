@@ -321,22 +321,36 @@ onMounted(() => {
                   </div>
                 </section>
 
-                <section id="config">
-                  <label class="block" for="comunicacao">Comunicação Preferencial</label>
-                  <p v-if="field_error?.comunicacao" class="text-red-800">{{ field_error.comunicacao }}</p>
-                  <select
-                    class="h-10 border mt-1 rounded px-1 bg-white"
-                    v-model="cliente.comunicacao"
-                    name="comunicacao"
-                    id="comunicacao"
-                  >
-                    <option
-                      v-for="tipo_comunic in tipo_comunicacao"
-                      :key="tipo_comunic.id"
-                      :value="tipo_comunic.id"
-                      required
-                    >{{ tipo_comunic.descricao }}</option>
-                  </select>
+                <section id="config" class="flex gap-4">
+                  <div>
+                    <label class="block" for="comunicacao">Comunicação Preferencial</label>
+                    <p v-if="field_error?.comunicacao" class="text-red-800">{{ field_error.comunicacao }}</p>
+                    <select
+                      class="h-10 border mt-1 rounded px-1 bg-white"
+                      v-model="cliente.comunicacao"
+                      name="comunicacao"
+                      id="comunicacao"
+                    >
+                      <option
+                        v-for="tipo_comunic in tipo_comunicacao"
+                        :key="tipo_comunic.id"
+                        :value="tipo_comunic.id"
+                        required
+                      >{{ tipo_comunic.descricao }}</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block" for="fansasia">Parcelamento padrão</label>
+                    <p v-if="field_error?.parcelamento" class="text-red-800">{{ field_error.parcelamento }}</p>
+                    <input
+                    class="h-10 border mt-1 rounded px-4 bg-white"
+                    v-model="cliente.parcelamento"
+                    type="text"
+                    name="parcelamento"
+                    id="parcelamento"
+                    required
+                    >
+                  </div>
                 </section>
 
                 <section id="botoes_section" class="inline-flex gap-8 justify-center">
