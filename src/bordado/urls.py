@@ -12,6 +12,7 @@ from .api.rest import (
     BordadoViewSet,
     ClienteViewSet,
     CobrancaViewSet,
+    ContatoViewSet,
     DificuldadeBordadoViewSet,
     LancamentoViewSet,
     OrdemProducaoViewSet,
@@ -26,6 +27,7 @@ from .api.rest import (
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
 router.register(r'clientes', ClienteViewSet)
+router.register(r'contato', ContatoViewSet)
 router.register(r'dificuldade_bordado', DificuldadeBordadoViewSet)
 router.register(r'bordado', BordadoViewSet)
 router.register(r'pedido', PedidoViewSet)

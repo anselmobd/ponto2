@@ -22,6 +22,7 @@ from bordado.models import (
     ApontamentoProducao,
     Bordado,
     Cliente,
+    Contato,
     DificuldadeBordado,
     OrdemProducao,
     Pedido,
@@ -41,6 +42,7 @@ from bordado.serializers import (
 )
 from bordado.serializers.simple.tipo_comunicacao import TipoComunicacaoSimpleSerializer
 from bordado.serializers.down.cliente import ClienteDownSerializer
+from bordado.serializers.down.contato import ContatoDownSerializer
 
 
 __all__ = [
@@ -77,6 +79,14 @@ class ClienteViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(usuario=self.request.user)
         
+
+@extend_schema_view(
+    **dict_keys_value(__ACTIONS, extend_schema(tags=['contato'])))
+class ContatoViewSet(viewsets.ModelViewSet):
+    queryset = Contato.objects.all()
+    serializer_class = ContatoDownSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
 
 @extend_schema_view(
     **dict_keys_value(__ACTIONS, extend_schema(tags=['dificuldade_bordado'])))
