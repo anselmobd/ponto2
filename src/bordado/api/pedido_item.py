@@ -99,6 +99,10 @@ class PedidoItemViewSet(viewsets.ModelViewSet):
                         apelido=request.data['cliente']['apelido']
                     )
                 except Cliente.DoesNotExist:
+                    if 'comunicacao' not in request.data['cliente']:
+                        request.data['cliente']['comunicacao'] = 1
+                    if 'usuario' not in request.data['cliente']:
+                        request.data['cliente']['usuario'] = 1
                     serializer = ClienteSerializer(data=request.data['cliente'])
                     if serializer.is_valid():
                         cliente = serializer.save(usuario=self.request.user)
@@ -148,7 +152,8 @@ class PedidoItemViewSet(viewsets.ModelViewSet):
                     PedidoItemSerializer(pedido_item).data,
                     status=status.HTTP_201_CREATED,
                 )
-            except Exception:
+            except Exception as e:
+                raise e
                 return Response(errors, status=status.HTTP_400_BAD_REQUEST)
 
         return super().create(request, *args, **kwargs)
