@@ -11,6 +11,7 @@ from bordado.models import (
     Pedido,
     PedidoItem,
     PedidoItemCobranca,
+    TipoComunicacao,
 )
 from bordado.serializers.simple.tipo_comunicacao import TipoComunicacaoSimpleSerializer
 
@@ -42,7 +43,8 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class ClienteSerializer(serializers.ModelSerializer):
-    # usuario = UserSerializer()
+    usuario = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    comunicacao = serializers.PrimaryKeyRelatedField(queryset=TipoComunicacao.objects.all())
     comunicacao_obj = serializers.SerializerMethodField()
 
     class Meta:
@@ -50,7 +52,7 @@ class ClienteSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'apelido',
-            # 'usuario',
+            'usuario',
             'quando',
             'nome',
             'fansasia',
