@@ -5,6 +5,7 @@ from .models import (
     Bordado,
     Cliente,
     Cobranca,
+    Contato,
     DificuldadeBordado,
     Lancamento,
     OrdemProducao,
@@ -76,6 +77,23 @@ class ClienteAdmin(CustomModelAdmin):
     readonly_fields = [
         'usuario',
         'quando',
+    ]
+
+
+@admin.register(Contato)
+class ContatoAdmin(CustomModelAdmin):
+    list_display = [
+        'cliente',
+        'nome',
+        'telefone',
+        'email',
+        'preferencial',
+    ]
+    search_fields = [
+        'cliente',
+        'nome',
+        'telefone',
+        'email',
     ]
 
 
