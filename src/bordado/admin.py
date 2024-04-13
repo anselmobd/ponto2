@@ -263,3 +263,10 @@ class ApontamentoProducaoAdmin(admin.ModelAdmin):
 class TipoComunicacaoAdmin(CustomModelAdmin):
     list_display = ['__str__']
     search_fields = ['__str__']
+    fields = [
+        'id',
+        'descricao',
+    ]
+    readonly_fields = [
+        'id',
+    ]
