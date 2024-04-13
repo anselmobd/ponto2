@@ -3,6 +3,7 @@ from rest_framework import serializers
 
 from bordado.models import (
     Cliente,
+    Contato,
     TipoComunicacao,
 )
 from bordado.serializers.simple.tipo_comunicacao import TipoComunicacaoSimpleSerializer
@@ -13,10 +14,24 @@ __all__ = [
 ]
 
 
+
+class ContatoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Contato
+        fields = [
+            'id',
+            'nome',
+            'telefone',
+            'email',
+            'preferencial',
+        ]
+
+
 class ClienteDownSerializer(serializers.ModelSerializer):
     usuario = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     comunicacao = serializers.PrimaryKeyRelatedField(queryset=TipoComunicacao.objects.all())
     comunicacao_obj = serializers.SerializerMethodField()
+    contato_set = ContatoSerializer(many=True, read_only=True)
 
     class Meta:
         model = Cliente
@@ -42,6 +57,7 @@ class ClienteDownSerializer(serializers.ModelSerializer):
             'parcelamento',
             'boleto',
             'conta_corrente',
+            'contato_set',
         ]
 
     def none_if_empty_str(self, data, field):
