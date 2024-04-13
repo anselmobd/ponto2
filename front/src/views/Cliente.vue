@@ -321,6 +321,30 @@ onMounted(() => {
                   </div>
                 </section>
 
+                <section id="contato">
+                  <table class="w-full">
+                    <thead>
+                      <tr>
+                        <th>Nome</th>
+                        <th>Telefone</th>
+                        <th>E-mail</th>
+                        <th>Preferencial</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        v-for="contato in cliente.contato_set"
+                        :key="contato.id"
+                      >
+                        <td>{{contato.nome}}</td>
+                        <td>{{contato.telefone}}</td>
+                        <td>{{contato.email}}</td>
+                        <td>{{contato.preferencial}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </section>
+
                 <section id="config" class="flex gap-4">
                   <div>
                     <label class="block" for="comunicacao">Comunicação Preferencial</label>
@@ -374,6 +398,9 @@ onMounted(() => {
 </template>
 
 <style scoped>
+th, td {
+  @apply border border-solid border-slate-300 text-center
+}
 button, .button {
   @apply mx-0.5 my-[1px] px-2 py-0.5 rounded-lg bg-sky-700 font-bold text-slate-100
 }
