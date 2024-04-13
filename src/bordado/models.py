@@ -155,12 +155,11 @@ class Cliente(models.Model):
         'Parcelamento padrão',
         max_length=30,
         default="",
+        blank=True,
     )
     usuario = models.ForeignKey(
         User,
         on_delete=models.PROTECT,
-        null=False,
-        blank=False,
         verbose_name="usuário",
     )
     quando = models.DateTimeField(auto_now=True)
