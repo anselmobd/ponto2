@@ -202,6 +202,36 @@ class Cliente(models.Model):
         return (None, None) if cliente is None else cliente.natural_key()
 
 
+class Contato(models.Model):
+    admin_order = 150
+    cliente = models.ForeignKey(
+        Cliente,
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True,
+    )
+    nome = models.CharField(
+        max_length=100,
+    )
+    telefone = models.CharField(
+        max_length=100,
+    )
+    email = models.CharField(
+        'E-mail',
+        max_length=100,
+    )
+    preferencial = models.BooleanField(
+        default=False,
+    )
+
+    def __str__(self):
+        return self.nome
+
+    class Meta:
+        db_table = "po2_contato"
+        verbose_name = "Contato"
+
+
 class DificuldadeBordadoManager(models.Manager):
     def get_by_natural_key(self, ordem):
         return self.get(ordem=ordem)
