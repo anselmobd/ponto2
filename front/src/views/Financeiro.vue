@@ -625,9 +625,12 @@ onMounted(() => {
             <th>Saldo</th>
           </tr>
           <tr v-if="lancamentos_error">
-            <th class="text-red-800" colspan="7">
+            <th class="text-red-800" colspan="8">
               {{ lancamentos_error }}
             </th>
+          </tr>
+          <tr v-if="!lancamentos_carregando && (lancamentos.length == 0)">
+            <th colspan="8">Nenhum lançamento encontrado</th>
           </tr>
         </thead>
         <tbody>
@@ -652,13 +655,10 @@ onMounted(() => {
         </tbody>
         <tfoot>
           <tr v-if="lancamentos_carregando == 1">
-            <td colspan="7">Carregando lançamentos...</td>
+            <td colspan="8">Carregando lançamentos...</td>
           </tr>
           <tr v-if="lancamentos_carregando == 2">
-            <td colspan="7">Carregando mais lançamentos...</td>
-          </tr>
-          <tr v-if="!lancamentos_carregando && (lancamentos.length == 0)">
-            <td colspan="7">Nenhum lançamento encontrado</td>
+            <td colspan="8">Carregando mais lançamentos...</td>
           </tr>
         </tfoot>
       </table>
