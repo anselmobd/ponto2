@@ -83,17 +83,27 @@ class ClienteAdmin(CustomModelAdmin):
 @admin.register(Contato)
 class ContatoAdmin(CustomModelAdmin):
     list_display = [
+        'id',
         'cliente',
         'nome',
         'telefone',
         'email',
         'preferencial',
     ]
+    list_display_links = [
+        'id',
+        'cliente',
+        'nome',
+    ]
     search_fields = [
         'cliente',
         'nome',
         'telefone',
         'email',
+    ]
+    fields = list_display
+    readonly_fields = [
+        'id',
     ]
 
 
