@@ -201,14 +201,16 @@ class Cliente(models.Model):
     def nullable_natural_key(cliente):
         return (None, None) if cliente is None else cliente.natural_key()
 
+    @staticmethod
+    def default_client_id():
+        return Cliente.objects.first().id
+
 
 class Contato(models.Model):
     admin_order = 150
     cliente = models.ForeignKey(
         Cliente,
-        on_delete=models.PROTECT,
-        blank=True,
-        null=True,
+        on_delete=models.CASCADE,
     )
     nome = models.CharField(
         max_length=100,
@@ -231,7 +233,8 @@ class Contato(models.Model):
     )
 
     def __str__(self):
-        return self.nome
+        id = self.nome or self.email or self.telefone or 'Vazio!'
+        return f"({self.cliente.nome}) {id}"
 
     class Meta:
         db_table = "po2_contato"
