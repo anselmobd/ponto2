@@ -322,10 +322,6 @@ onMounted(() => {
                   </div>
                 </section>
 
-                <section id="contato">
-                  <contato :cliente="cliente" />
-                </section>
-
                 <section id="config" class="flex gap-4">
                   <div>
                     <label class="block" for="comunicacao">Comunicação Preferencial</label>
@@ -367,6 +363,11 @@ onMounted(() => {
                     @click="handleLimpaClick"
                     type="reset"
                   >Limpar</button>
+                </section>
+
+                <h2 class="font-semibold text-xl text-gray-600">Contatos do cliente</h2>
+                <section id="contato">
+                  <contato :cliente="cliente" />
                 </section>
               </div> <!--div class="grid grid-cols-1 gap-4"-->
             </form>

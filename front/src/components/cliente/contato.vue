@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch, nextTick, onMounted } from 'vue';
-import { delContato, postContato } from '../../api/contato.js';
+import { delContato, postContato, putContato } from '../../api/contato.js';
 
 const status = ref('b'); // browsing inserting editing
 
@@ -81,11 +81,11 @@ function doDelContato(index, id) {
 
 function cbAddContato(data, error) {
   if (data) {
-    status.value = 'b';
     props.cliente.contato_set.push(contato.value);
+    status.value = 'b';
   }
   if (error) {
-    acoes_mensagem.value = "Erro ao tentar inserir contato";
+    acoes_mensagem.value = "Erro ao gravar novo contato";
   };
 }
 
@@ -93,6 +93,23 @@ function doAddContato() {
   postContato({
     payload: contato.value,
     callBack: cbAddContato
+  });
+}
+
+function cbSaveContato(data, error) {
+  if (data) {
+    props.cliente.contato_set[contato.value.index] = contato.value;
+    status.value = 'b';
+  }
+  if (error) {
+    acoes_mensagem.value = "Erro ao gravar alteração de contato";
+  };
+}
+
+function doSaveContato() {
+  putContato({
+    payload: contato.value,
+    callBack: cbSaveContato
   });
 }
 
@@ -112,10 +129,12 @@ function handleNovoClick(event) {
 
 function handleSalvaClick(event) {
   event.preventDefault();
-  const answer = window.confirm('Confirma salvar contato "'+contato.value.nome+'"?')
+  const answer = window.confirm('Confirma salvar contato?')
   if (answer) {
     if (contato.value.id == -1) {
       doAddContato();
+    } else {
+      doSaveContato();
     }
   }
 }
@@ -130,6 +149,7 @@ function handleEditaClick(event) {
   event.preventDefault();
   const index = event.target.value;
   setInputs(props.cliente.contato_set[index]);
+  contato.value.index = index;
   status.value = 'e';
 }
 
@@ -137,7 +157,7 @@ function handleApagaClick(event) {
   event.preventDefault();
   const index = event.target.value;
   const contato_selecionado = props.cliente.contato_set[index];
-  const answer = window.confirm('Confirma apagar contato "'+contato_selecionado.nome+'"?')
+  const answer = window.confirm('Confirma apagar contato?')
   if (answer) doDelContato(index, contato_selecionado.id);
 }
 
@@ -152,6 +172,8 @@ watch(status, (newStatus) => {
   clearAcoesMensagem();
   if (newStatus != 'b') {
     inputNomeFocus();
+  } else {
+    clearAll();
   }
 })
 
@@ -159,7 +181,6 @@ watch(status, (newStatus) => {
 
 <template>
   <div>
-    {{ cliente }}
     <table class="w-full">
       <thead>
         <tr>
