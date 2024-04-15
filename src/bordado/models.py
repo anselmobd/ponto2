@@ -212,13 +212,19 @@ class Contato(models.Model):
     )
     nome = models.CharField(
         max_length=100,
+        blank=True,
+        null=True,
     )
     telefone = models.CharField(
         max_length=100,
+        blank=True,
+        null=True,
     )
     email = models.CharField(
         'E-mail',
         max_length=100,
+        blank=True,
+        null=True,
     )
     preferencial = models.BooleanField(
         default=False,
