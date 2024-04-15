@@ -4,7 +4,6 @@ from bordado.models import (
     Cliente,
     Contato,
 )
-from bordado.serializers.down.cliente import ClienteDownSerializer
 
 
 __all__ = [
