@@ -21,3 +21,23 @@ export function delContato(
     callBack(-1);
   });
 }
+
+export function postContato({
+  payload={},  
+  callBack=()=>{}
+}) {
+  const params = new URLSearchParams();
+  params.append('format', 'json');
+  axiosPrivate.post(
+    `/bordado/api/contato/`,
+    payload,
+    {params: params}
+  )
+  .then(response => {
+    callBack(response.data);
+  })
+  .catch(error => {
+    console.error('Erro ao adicionar contato via API:', error)
+    callBack(null, error);
+  });
+}
