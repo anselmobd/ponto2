@@ -5,6 +5,7 @@ import { ref, onMounted } from 'vue'
 import { getCliente, putCliente } from '../api/cliente.js';
 import { getTiposComunicacao } from '../api/tipo_comunicacao.js';
 import { buscarPorCep } from '../webapi/cep.js';
+import contato from '../components/cliente/contato.vue';
 
 const route = useRoute();
 
@@ -124,7 +125,7 @@ function handleLimpaClick(event) {
 onMounted(() => {
   doGetTiposComunicacao();
   doGetCliente();
-})
+})  
 
 </script>
 
@@ -322,27 +323,7 @@ onMounted(() => {
                 </section>
 
                 <section id="contato">
-                  <table class="w-full">
-                    <thead>
-                      <tr>
-                        <th>Nome</th>
-                        <th>Telefone</th>
-                        <th>E-mail</th>
-                        <th>Preferencial</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr
-                        v-for="contato in cliente.contato_set"
-                        :key="contato.id"
-                      >
-                        <td>{{contato.nome}}</td>
-                        <td>{{contato.telefone}}</td>
-                        <td>{{contato.email}}</td>
-                        <td>{{contato.preferencial}}</td>
-                      </tr>
-                    </tbody>
-                  </table>
+                  <contato :contato_set="cliente.contato_set" />
                 </section>
 
                 <section id="config" class="flex gap-4">
