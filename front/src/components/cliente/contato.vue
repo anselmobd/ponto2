@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch, nextTick, onMounted } from 'vue';
-import { delContato } from '../../api/contato.js';
+import { delContato, postContato } from '../../api/contato.js';
 
 const status = ref('b'); // browsing inserting editing
 
@@ -9,7 +9,7 @@ const contato_erro = ref({});
 const acoes_mensagem = ref('');
 
 const props = defineProps({
-  contato_set: Array
+  cliente: Object
 });
 
 // componentes do template que serão referenciados
@@ -20,6 +20,7 @@ const inputNome = ref(null)
 
 function setInputs({
   id=-1,
+  cliente=props.cliente.id,
   nome='',
   telefone='',
   email='',
@@ -27,6 +28,7 @@ function setInputs({
 }) {
   contato.value = {
     id: id,
+    cliente: cliente,
     nome: nome,
     telefone: telefone,
     email: email,
@@ -60,7 +62,7 @@ function clearAll() {
 // generic functions
 
 function apagaContatoNaTela(index) {
-  props.contato_set.splice(index, 1);
+  props.cliente.contato_set.splice(index, 1);
 }
 
 // DB API calls (do) and callbacks (cb)
@@ -77,39 +79,21 @@ function doDelContato(index, id) {
   delContato(index, id, cbDelContato);
 }
 
-function cbAddLancamento(data, error) {
+function cbAddContato(data, error) {
   if (data) {
     status.value = 'b';
-    clearLancamento();
-    doGetLancamentos(1);
+    props.cliente.contato_set.push(contato.value);
   }
   if (error) {
-    lancamento.value.error = error.response.data.human.join('|');
-    lancamento.value.error_tech = error.response.data.tech.join('|');
+    acoes_mensagem.value = "Erro ao tentar inserir contato";
   };
 }
 
-function doAddLancamento(callBack) {
-  const payload= {
-    "cliente": {
-      "apelido": route.params.apelido,
-    },
-    "data": lancamento.value.data,
-    "informacao": lancamento.value.informacao,
-    "valor": lancamento.value.valor,
-  }
-  addLancamento({
-    payload: payload,
-    callBack: cbAddLancamento
-  });
-}
-
-function cbAddContato() {
-
-}
-
 function doAddContato() {
-
+  postContato({
+    payload: contato.value,
+    callBack: cbAddContato
+  });
 }
 
 function inputNomeFocus() {
@@ -145,14 +129,14 @@ function handleCancelaClick(event) {
 function handleEditaClick(event) {
   event.preventDefault();
   const index = event.target.value;
-  setInputs(props.contato_set[index]);
+  setInputs(props.cliente.contato_set[index]);
   status.value = 'e';
 }
 
 function handleApagaClick(event) {
   event.preventDefault();
   const index = event.target.value;
-  const contato_selecionado = props.contato_set[index];
+  const contato_selecionado = props.cliente.contato_set[index];
   const answer = window.confirm('Confirma apagar contato "'+contato_selecionado.nome+'"?')
   if (answer) doDelContato(index, contato_selecionado.id);
 }
@@ -175,7 +159,7 @@ watch(status, (newStatus) => {
 
 <template>
   <div>
-    {{ contato_set }}
+    {{ cliente }}
     <table class="w-full">
       <thead>
         <tr>
@@ -255,7 +239,7 @@ watch(status, (newStatus) => {
       </thead>
       <tbody>
         <tr
-          v-for="(contato, index) in contato_set"
+          v-for="(contato, index) in cliente.contato_set"
           :key="contato.id"
         >
           <td>{{contato.nome}}</td>

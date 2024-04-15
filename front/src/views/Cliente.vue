@@ -323,7 +323,7 @@ onMounted(() => {
                 </section>
 
                 <section id="contato">
-                  <contato :contato_set="cliente.contato_set" />
+                  <contato :cliente="cliente" />
                 </section>
 
                 <section id="config" class="flex gap-4">
