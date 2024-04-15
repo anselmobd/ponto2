@@ -41,3 +41,23 @@ export function postContato({
     callBack(null, error);
   });
 }
+
+export function putContato({
+  payload={},  
+  callBack=()=>{}
+}) {
+  const params = new URLSearchParams();
+  params.append('format', 'json');
+  axiosPrivate.put(
+    `/bordado/api/contato/${payload.id}/`,
+    payload,
+    {params: params}
+  )
+  .then(response => {
+    callBack(response.data);
+  })
+  .catch(error => {
+    console.error('Erro ao gravar dados do contato '+payload.id+' via API:', error)
+    callBack(null, error);
+  });
+}
