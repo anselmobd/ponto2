@@ -60,7 +60,7 @@ class ClienteAdmin(CustomModelAdmin):
         (
             'comunicacao',
             'parcelamento',
-            # 'forma_pagamento',
+            'forma_pagamento',
         ),
         (
             'usuario',
