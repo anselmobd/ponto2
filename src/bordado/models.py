@@ -143,10 +143,6 @@ class Cliente(models.Model):
         on_delete=models.PROTECT,
         verbose_name="Comunicação preferêncial",
     )
-    boleto = models.BooleanField(
-        'Gera boleto?',
-        default=False,
-    )
     conta_corrente = models.BooleanField(
         'Trabalha como conta corrente?',
         default=False,

@@ -55,7 +55,6 @@ class ClienteDownSerializer(serializers.ModelSerializer):
             'comunicacao',
             'comunicacao_obj',
             'parcelamento',
-            'boleto',
             'conta_corrente',
             'contato_set',
         ]
