@@ -174,6 +174,12 @@ class Cliente(models.Model):
         default="",
         blank=True,
     )
+    forma_pagamento = models.ForeignKey(
+        FormaPagamento,
+        on_delete=models.PROTECT,
+        verbose_name="Forma de pagamento",
+        default=FormaPagamento.default_id,
+    )
     usuario = models.ForeignKey(
         User,
         on_delete=models.PROTECT,
