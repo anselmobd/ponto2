@@ -165,9 +165,9 @@ class Cliente(models.Model):
     )
     comunicacao = models.ForeignKey(
         TipoComunicacao,
+        default=TipoComunicacao.default_id,
         on_delete=models.PROTECT,
         verbose_name="Comunicação preferêncial",
-        default=TipoComunicacao.default_id,
     )
     conta_corrente = models.BooleanField(
         'Trabalha como conta corrente?',
@@ -181,9 +181,9 @@ class Cliente(models.Model):
     )
     forma_pagamento = models.ForeignKey(
         FormaPagamento,
+        default=FormaPagamento.default_id,
         on_delete=models.PROTECT,
         verbose_name="Forma de pagamento",
-        default=FormaPagamento.default_id,
     )
     usuario = models.ForeignKey(
         User,
