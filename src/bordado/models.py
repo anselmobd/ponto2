@@ -167,6 +167,7 @@ class Cliente(models.Model):
         TipoComunicacao,
         on_delete=models.PROTECT,
         verbose_name="Comunicação preferêncial",
+        default=TipoComunicacao.default_id,
     )
     conta_corrente = models.BooleanField(
         'Trabalha como conta corrente?',
