@@ -60,6 +60,23 @@ class TipoComunicacao(models.Model):
         ordering = ['id']
 
 
+class FormaPagamento(models.Model):
+    admin_order = 75
+    nome = models.CharField(
+        max_length=50,
+        unique=True,
+    )
+
+    def __str__(self):
+        return self.nome
+
+    class Meta:
+        db_table = "po2_forma_pagamento"
+        verbose_name = "Forma de pagamento"
+        verbose_name_plural = "Formas de pagamento"
+        ordering = ['id']
+
+
 class ClienteManager(models.Manager):
     def get_by_natural_key(self, cnpj9, cnpj4):
         return self.get(cnpj9=cnpj9, cnpj4=cnpj4)
