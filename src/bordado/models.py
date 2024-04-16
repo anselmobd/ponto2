@@ -236,6 +236,16 @@ class Contato(models.Model):
         id = self.nome or self.email or self.telefone or 'Vazio!'
         return f"({self.cliente.nome}) {id}"
 
+    def save(self, *args, **kwargs):
+        if self.preferencial:
+            id = self.id if self.id else -1
+            outros = Contato.objects.filter(cliente=self.cliente).exclude(id=id)
+            if outros:
+                for outro in outros:
+                    outro.preferencial = False
+                    outro.save()
+        super(Contato, self).save(*args, **kwargs)
+
     class Meta:
         db_table = "po2_contato"
         verbose_name = "Contato"
