@@ -7,6 +7,7 @@ from .models import (
     Cobranca,
     Contato,
     DificuldadeBordado,
+    FormaPagamento,
     Lancamento,
     OrdemProducao,
     Pedido,
@@ -59,6 +60,7 @@ class ClienteAdmin(CustomModelAdmin):
         (
             'comunicacao',
             'parcelamento',
+            # 'forma_pagamento',
         ),
         (
             'usuario',
@@ -293,6 +295,19 @@ class TipoComunicacaoAdmin(CustomModelAdmin):
     fields = [
         'id',
         'descricao',
+    ]
+    readonly_fields = [
+        'id',
+    ]
+
+
+@admin.register(FormaPagamento)
+class FormaPagamentoAdmin(CustomModelAdmin):
+    list_display = ['__str__']
+    search_fields = ['__str__']
+    fields = [
+        'id',
+        'nome',
     ]
     readonly_fields = [
         'id',
