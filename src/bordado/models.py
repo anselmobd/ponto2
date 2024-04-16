@@ -70,6 +70,10 @@ class FormaPagamento(models.Model):
     def __str__(self):
         return self.nome
 
+    @staticmethod
+    def default_id():
+        return FormaPagamento.objects.get(nome="Boleto").id
+
     class Meta:
         db_table = "po2_forma_pagamento"
         verbose_name = "Forma de pagamento"
