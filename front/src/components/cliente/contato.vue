@@ -56,7 +56,6 @@ function clearAcoesMensagem() {
 function clearAll() {
   clearInputs();
   clearErrors();
-  clearAcoesMensagem();
 }
 
 // generic functions
@@ -79,12 +78,21 @@ function doDelContato(index, id) {
   delContato(index, id, cbDelContato);
 }
 
+function setContatoErro(data) {
+  for (var prop in data) {
+    if (data.hasOwnProperty(prop)) {
+        contato_erro.value[prop] = data[prop][0]
+    }
+  }
+}
+
 function cbAddContato(data, error) {
   if (data) {
     props.cliente.contato_set.push(contato.value);
     status.value = 'b';
   }
   if (error) {
+    setContatoErro(error.response.data);
     acoes_mensagem.value = "Erro ao gravar novo contato";
   };
 }
@@ -102,6 +110,7 @@ function cbSaveContato(data, error) {
     status.value = 'b';
   }
   if (error) {
+    setContatoErro(error.response.data);
     acoes_mensagem.value = "Erro ao gravar alteração de contato";
   };
 }
@@ -190,12 +199,12 @@ watch(status, (newStatus) => {
           <th>Preferencial</th>
           <th>Ações</th>
         </tr>
-        <tr v-if="acoes_mensagem">
+        <tr v-if="acoes_mensagem" class="text-red-800">
           <th colspan="5">{{ acoes_mensagem }}</th>
         </tr>
         <tr>
           <th>
-            <span class="text-sm text-red-700 font-bold" v-if="contato_erro.nome" >{{ contato_erro.nome }}<br /></span>
+            <span class="text-sm text-red-800 font-bold" v-if="contato_erro.nome" >{{ contato_erro.nome }}<br /></span>
             <input
               class="mx-0.5 border border-solid border-slate-500 disabled:border-slate-200 rounded"
               v-model.trim="contato.nome"
@@ -208,7 +217,7 @@ watch(status, (newStatus) => {
             >
           </th>
           <th>
-            <span class="text-sm text-red-700 font-bold" v-if="contato_erro.telefone" >{{ contato_erro.telefone }}<br /></span>
+            <span class="text-sm text-red-800 font-bold" v-if="contato_erro.telefone" >{{ contato_erro.telefone }}<br /></span>
             <input
               class="mx-0.5 border border-solid border-slate-500 disabled:border-slate-200 rounded"
               v-model.trim="contato.telefone"
@@ -220,7 +229,7 @@ watch(status, (newStatus) => {
             >
           </th>
           <th>
-            <span class="text-sm text-red-700 font-bold" v-if="contato_erro.email" >{{ contato_erro.email }}<br /></span>
+            <span class="text-sm text-red-800 font-bold" v-if="contato_erro.email" >{{ contato_erro.email }}<br /></span>
             <input
               class="mx-0.5 border border-solid border-slate-500 disabled:border-slate-200 rounded"
               v-model.trim="contato.email"
@@ -232,7 +241,7 @@ watch(status, (newStatus) => {
             >
           </th>
           <th>
-            <span class="text-sm text-red-700 font-bold" v-if="contato_erro.preferencial" >{{ contato_erro.preferencial }}<br /></span>
+            <span class="text-sm text-red-800 font-bold" v-if="contato_erro.preferencial" >{{ contato_erro.preferencial }}<br /></span>
             <input
               type="checkbox"
               v-model="contato.preferencial"
@@ -267,8 +276,8 @@ watch(status, (newStatus) => {
           <td>{{contato.telefone}}</td>
           <td>{{contato.email}}</td>
           <td>
-            <span v-if="contato.preferencial" class="text-green-800">🗹</span>
-            <span v-if="!contato.preferencial" class="text-red-800">🗷</span>
+            <span v-if="contato.preferencial">✅</span>
+            <span v-if="!contato.preferencial">🟩</span>
           </td>
           <td>
             <button
@@ -297,7 +306,7 @@ th, td {
   @apply border border-solid border-slate-300 text-center
 }
 button, .button {
-  @apply mx-0.5 my-[1px] px-2 py-0.5 rounded-lg bg-sky-700 font-bold text-slate-100
+  @apply mx-0.5 my-[1px] px-2 py-0.5 rounded-lg bg-sky-800 font-bold text-slate-100
 }
 button:disabled {
   @apply bg-slate-500
