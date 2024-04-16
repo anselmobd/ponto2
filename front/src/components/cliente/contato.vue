@@ -106,10 +106,17 @@ function cbSalvaContato(data, error) {
 }
 
 function doSalvaContato() {
-  postContato({
-    payload: contato.value,
-    callBack: cbSalvaContato
-  });
+  if (contato.value.id == -1) {
+    postContato({
+      payload: contato.value,
+      callBack: cbSalvaContato
+    });
+  } else {
+    putContato({
+      payload: contato.value,
+      callBack: cbSalvaContato
+    });
+  }
 }
 
 function inputNomeFocus() {
@@ -196,7 +203,7 @@ watch(status, (newStatus) => {
               v-model.trim="contato.nome"
               ref="inputNome"
               type="text"
-              size="12"
+              size="20"
               name="nome"
               id="nome"
               :disabled="status == 'b'"
@@ -220,7 +227,7 @@ watch(status, (newStatus) => {
               class="mx-0.5 border border-solid border-slate-500 disabled:border-slate-200 rounded"
               v-model.trim="contato.email"
               type="text"
-              size="12"
+              size="20"
               name="email"
               id="email"
               :disabled="status == 'b'"
