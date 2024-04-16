@@ -53,6 +53,10 @@ class TipoComunicacao(models.Model):
     def __str__(self):
         return self.descricao
 
+    @staticmethod
+    def default_id():
+        return TipoComunicacao.objects.get(descricao="Telefone").id
+
     class Meta:
         db_table = "po2_tipo_comunicacao"
         verbose_name = "Tipo de comunicação"
