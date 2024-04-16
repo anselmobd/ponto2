@@ -81,44 +81,34 @@ function doDelContato(index, id) {
 function setContatoErro(data) {
   for (var prop in data) {
     if (data.hasOwnProperty(prop)) {
-        contato_erro.value[prop] = data[prop][0]
+        contato_erro.value[prop] = data[prop].join(" & ");
     }
   }
 }
 
-function cbSalvaNovoContato(data, error) {
+function cbSalvaContato(data, error) {
   if (data) {
-    props.cliente.contato_set.push(data);
+    if (contato.value.id == -1) {
+      props.cliente.contato_set.push(data);
+    } else {
+      props.cliente.contato_set[contato.value.index] = data;
+    }
     status.value = 'b';
   }
   if (error) {
     setContatoErro(error.response.data);
-    acoes_mensagem.value = "Erro ao gravar novo contato";
+    if (contato.value.id == -1) {
+      acoes_mensagem.value = "Erro ao gravar novo contato";
+    } else {
+      acoes_mensagem.value = "Erro ao gravar alteração de contato";
+    }
   };
 }
 
-function doSalvaNovoContato() {
+function doSalvaContato() {
   postContato({
     payload: contato.value,
-    callBack: cbSalvaNovoContato
-  });
-}
-
-function cbSalvaEditadoContato(data, error) {
-  if (data) {
-    props.cliente.contato_set[contato.value.index] = data;
-    status.value = 'b';
-  }
-  if (error) {
-    setContatoErro(error.response.data);
-    acoes_mensagem.value = "Erro ao gravar alteração de contato";
-  };
-}
-
-function doSalvaEditadoContato() {
-  putContato({
-    payload: contato.value,
-    callBack: cbSalvaEditadoContato
+    callBack: cbSalvaContato
   });
 }
 
@@ -140,11 +130,7 @@ function handleSalvaClick(event) {
   event.preventDefault();
   const answer = window.confirm('Confirma salvar contato?')
   if (answer) {
-    if (contato.value.id == -1) {
-      doSalvaNovoContato();
-    } else {
-      doSalvaEditadoContato();
-    }
+    doSalvaContato();
   }
 }
 
