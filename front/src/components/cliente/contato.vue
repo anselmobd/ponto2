@@ -88,6 +88,11 @@ function setContatoErro(data) {
 
 function cbSalvaContato(data, error) {
   if (data) {
+    if (data.preferencial) {
+      props.cliente.contato_set.forEach(function(item) {
+        item.preferencial = false;
+      });
+    }
     if (contato.value.id == -1) {
       props.cliente.contato_set.push(data);
     } else {
