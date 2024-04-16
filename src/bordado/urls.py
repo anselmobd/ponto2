@@ -14,6 +14,7 @@ from .api.rest import (
     CobrancaViewSet,
     ContatoViewSet,
     DificuldadeBordadoViewSet,
+    FormaPagamentoViewSet,
     LancamentoViewSet,
     OrdemProducaoViewSet,
     PedidoItemCobrancaViewSet,
@@ -33,6 +34,7 @@ router.register(r'bordado', BordadoViewSet)
 router.register(r'pedido', PedidoViewSet)
 router.register(r'pedido_item', PedidoItemViewSet)
 router.register(r'tipo_comunicacao', TipoComunicacaoViewSet)
+router.register(r'forma_pagamento', FormaPagamentoViewSet)
 router.register(r'cobranca', CobrancaViewSet)
 router.register(r'pedido_item_cobranca', PedidoItemCobrancaViewSet)
 router.register(r'lancamento', LancamentoViewSet)

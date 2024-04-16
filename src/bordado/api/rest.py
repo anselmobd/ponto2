@@ -24,6 +24,7 @@ from bordado.models import (
     Cliente,
     Contato,
     DificuldadeBordado,
+    FormaPagamento,
     OrdemProducao,
     Pedido,
     PedidoItem,
@@ -41,6 +42,7 @@ from bordado.serializers import (
     UserSerializer,
 )
 from bordado.serializers.simple.tipo_comunicacao import TipoComunicacaoSimpleSerializer
+from bordado.serializers.simple.forma_pagamento import FormaPagamentoSimpleSerializer
 from bordado.serializers.down.cliente import ClienteDownSerializer
 from bordado.serializers.down.contato import ContatoDownSerializer
 
@@ -151,4 +153,12 @@ class OrdemProducaoViewSet(viewsets.ModelViewSet):
 class TipoComunicacaoViewSet(viewsets.ModelViewSet):
     queryset = TipoComunicacao.objects.all()
     serializer_class = TipoComunicacaoSimpleSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+@extend_schema_view(
+    **dict_keys_value(__ACTIONS, extend_schema(tags=['forma_pagamento'])))
+class FormaPagamentoViewSet(viewsets.ModelViewSet):
+    queryset = FormaPagamento.objects.all()
+    serializer_class = FormaPagamentoSimpleSerializer
     permission_classes = [permissions.IsAuthenticated]
