@@ -86,9 +86,9 @@ function setContatoErro(data) {
   }
 }
 
-function cbAddContato(data, error) {
+function cbSalvaNovoContato(data, error) {
   if (data) {
-    props.cliente.contato_set.push(contato.value);
+    props.cliente.contato_set.push(data);
     status.value = 'b';
   }
   if (error) {
@@ -97,16 +97,16 @@ function cbAddContato(data, error) {
   };
 }
 
-function doAddContato() {
+function doSalvaNovoContato() {
   postContato({
     payload: contato.value,
-    callBack: cbAddContato
+    callBack: cbSalvaNovoContato
   });
 }
 
-function cbSaveContato(data, error) {
+function cbSalvaEditadoContato(data, error) {
   if (data) {
-    props.cliente.contato_set[contato.value.index] = contato.value;
+    props.cliente.contato_set[contato.value.index] = data;
     status.value = 'b';
   }
   if (error) {
@@ -115,10 +115,10 @@ function cbSaveContato(data, error) {
   };
 }
 
-function doSaveContato() {
+function doSalvaEditadoContato() {
   putContato({
     payload: contato.value,
-    callBack: cbSaveContato
+    callBack: cbSalvaEditadoContato
   });
 }
 
@@ -141,9 +141,9 @@ function handleSalvaClick(event) {
   const answer = window.confirm('Confirma salvar contato?')
   if (answer) {
     if (contato.value.id == -1) {
-      doAddContato();
+      doSalvaNovoContato();
     } else {
-      doSaveContato();
+      doSalvaEditadoContato();
     }
   }
 }
