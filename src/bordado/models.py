@@ -53,15 +53,22 @@ class TipoComunicacao(models.Model):
     def __str__(self):
         return self.descricao
 
-    @staticmethod
-    def default_id():
-        return TipoComunicacao.objects.get(descricao="Telefone").id
+    # @staticmethod
+    # def default_id():
+    #     return TipoComunicacao.objects.get(descricao="Telefone").id
 
     class Meta:
         db_table = "po2_tipo_comunicacao"
         verbose_name = "Tipo de comunicação"
         verbose_name_plural = "Tipos de comunicação"
         ordering = ['id']
+
+
+def tipo_comunicacao_default_id():
+    tipo_comunicacao = TipoComunicacao.objects.filter(descricao="Telefone").first()
+    if tipo_comunicacao:
+        return tipo_comunicacao.id
+    return None
 
 
 class FormaPagamento(models.Model):
@@ -172,7 +179,7 @@ class Cliente(models.Model):
     )
     comunicacao = models.ForeignKey(
         TipoComunicacao,
-        # default=TipoComunicacao.default_id,
+        default=tipo_comunicacao_default_id,
         on_delete=models.PROTECT,
         verbose_name="Comunicação preferêncial",
     )
