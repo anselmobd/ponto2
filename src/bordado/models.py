@@ -266,9 +266,8 @@ class Contato(models.Model):
         blank=True,
         null=True,
     )
-    email = models.CharField(
+    email = models.EmailField(
         'E-mail',
-        max_length=100,
         blank=True,
         null=True,
     )
