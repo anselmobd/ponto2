@@ -85,7 +85,7 @@ class FormaPagamento(models.Model):
         ordering = ['id']
 
 
-def default_forma_pagamento_id():
+def forma_pagamento_default_id():
     forma_pagamento = FormaPagamento.objects.filter(nome="Boleto").first()
     if forma_pagamento:
         return forma_pagamento.id
@@ -192,7 +192,7 @@ class Cliente(models.Model):
         verbose_name="Forma de pagamento",
         null=True,
         blank=True,
-        default=default_forma_pagamento_id,
+        default=forma_pagamento_default_id,
     )
     usuario = models.ForeignKey(
         User,
