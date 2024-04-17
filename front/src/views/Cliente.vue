@@ -4,6 +4,7 @@ import { useRoute } from "vue-router";
 import { ref, onMounted } from 'vue'
 import { getCliente, putCliente } from '../api/cliente.js';
 import { getTiposComunicacao } from '../api/tipo_comunicacao.js';
+import { getFormaPagamento } from '../api/forma_pagamento.js';
 import { buscarPorCep } from '../webapi/cep.js';
 import contato from '../components/cliente/contato.vue';
 
@@ -19,6 +20,9 @@ const field_error = ref(null)
 
 const tipo_comunicacao = ref([])
 const tipo_comunicacao_error = ref(null)
+
+const forma_pagamento = ref([])
+const forma_pagamento_error = ref(null)
 
 // Funções auxiliares
 
@@ -108,6 +112,22 @@ function doGetTiposComunicacao() {
   });
 }
 
+function cbGetFormaPagamento(data, error) {
+  if (data) {
+    forma_pagamento.value = data.results;
+  }
+  if (error) {
+    forma_pagamento_error.value = "Erro ao buscar possíveis valores para Formas de pagamento";
+  };
+}
+
+function doGetFormaPagamento() {
+  forma_pagamento_error.value = null;
+  getFormaPagamento({
+    callBack: cbGetFormaPagamento
+  });
+}
+
 // event functions
 
 function handleSaveClick(event) {
@@ -123,6 +143,7 @@ function handleLimpaClick(event) {
 // Lifecycle Hooks
 
 onMounted(() => {
+  doGetFormaPagamento();
   doGetTiposComunicacao();
   doGetCliente();
 })  
@@ -147,6 +168,7 @@ onMounted(() => {
             <form>
               <div class="grid grid-cols-1 gap-4">
                 <span v-if="tipo_comunicacao_error" class="text-red-800">{{ tipo_comunicacao_error }}</span>
+                <span v-if="forma_pagamento_error" class="text-red-800">{{ forma_pagamento_error }}</span>
                 <span v-if="cliente_error" class="text-red-800">{{ cliente_error }}</span>
                 <span v-if="cliente_salvo" class="text-green-800">{{ cliente_salvo }}</span>
 
@@ -322,35 +344,57 @@ onMounted(() => {
                   </div>
                 </section>
 
-                <section id="config" class="flex gap-4">
-                  <div>
-                    <label class="block" for="comunicacao">Comunicação Preferencial</label>
-                    <p v-if="field_error?.comunicacao" class="text-red-800">{{ field_error.comunicacao }}</p>
-                    <select
-                      class="h-10 border mt-1 rounded px-1 bg-white"
-                      v-model="cliente.comunicacao"
-                      name="comunicacao"
-                      id="comunicacao"
-                    >
-                      <option
-                        v-for="tipo_comunic in tipo_comunicacao"
-                        :key="tipo_comunic.id"
-                        :value="tipo_comunic.id"
-                        required
-                      >{{ tipo_comunic.descricao }}</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label class="block" for="fansasia">Parcelamento padrão</label>
-                    <p v-if="field_error?.parcelamento" class="text-red-800">{{ field_error.parcelamento }}</p>
-                    <input
-                    class="h-10 border mt-1 rounded px-4 bg-white"
-                    v-model="cliente.parcelamento"
-                    type="text"
-                    name="parcelamento"
-                    id="parcelamento"
-                    required
-                    >
+                <section id="preferencias">
+                  <p class="font-semibold">
+                    Preferências
+                  </p>
+                  <div class="flex gap-4">
+                    <div>
+                      <label class="block" for="comunicacao">Comunicação</label>
+                      <p v-if="field_error?.comunicacao" class="text-red-800">{{ field_error.comunicacao }}</p>
+                      <select
+                        class="h-10 border mt-1 rounded px-1 bg-white"
+                        v-model="cliente.comunicacao"
+                        name="comunicacao"
+                        id="comunicacao"
+                      >
+                        <option
+                          v-for="tipo_comunic in tipo_comunicacao"
+                          :key="tipo_comunic.id"
+                          :value="tipo_comunic.id"
+                          required
+                        >{{ tipo_comunic.descricao }}</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label class="block" for="fansasia">Parcelamento</label>
+                      <p v-if="field_error?.parcelamento" class="text-red-800">{{ field_error.parcelamento }}</p>
+                      <input
+                      class="h-10 border mt-1 rounded px-4 bg-white"
+                      v-model="cliente.parcelamento"
+                      type="text"
+                      name="parcelamento"
+                      id="parcelamento"
+                      required
+                      >
+                    </div>
+                    <div>
+                      <label class="block" for="forma_pagamento">Forma de pagamento</label>
+                      <p v-if="field_error?.forma_pagamento" class="text-red-800">{{ field_error.comunicacao }}</p>
+                      <select
+                        class="h-10 border mt-1 rounded px-1 bg-white"
+                        v-model="cliente.forma_pagamento"
+                        name="forma_pagamento"
+                        id="forma_pagamento"
+                      >
+                        <option
+                          v-for="forma in forma_pagamento"
+                          :key="forma.id"
+                          :value="forma.id"
+                          required
+                        >{{ forma.nome }}</option>
+                      </select>
+                    </div>
                   </div>
                 </section>
 
