@@ -403,6 +403,17 @@ onMounted(() => {
                         >{{ forma.nome }}</option>
                       </select>
                     </div>
+                    <div class="flex flex-col items-center justify-center">
+                      <label class="block" for="forma_pagamento">Financeiro tipo conta corrente</label>
+                      <p v-if="field_error?.conta_corrente" class="text-red-800">{{ field_error.conta_corrente }}</p>
+                      <input
+                        class="h-10 border mt-1 rounded px-1 bg-white"
+                        v-model="cliente.conta_corrente"
+                        type="checkbox"
+                        name="conta_corrente"
+                        id="conta_corrente"
+                      >
+                    </div>
                   </div>
                 </section>
 
