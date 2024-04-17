@@ -471,9 +471,8 @@ class PedidoItem(models.Model):
     usuario = models.ForeignKey(
         User,
         on_delete=models.PROTECT,
-        null=False,
-        blank=False,
         verbose_name="usuário",
+        related_name="+",
     )
 
     objects = PedidoItemManager()
