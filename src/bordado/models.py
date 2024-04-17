@@ -203,6 +203,7 @@ class Cliente(models.Model):
         User,
         on_delete=models.PROTECT,
         verbose_name="usuário",
+        related_name="+",
     )
     quando = models.DateTimeField(auto_now=True)
 
