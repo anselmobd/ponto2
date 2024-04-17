@@ -56,11 +56,13 @@ class ClienteAdmin(CustomModelAdmin):
             'numero',
             'complemento',
         ),
-        # 'conta_corrente',
         (
             'comunicacao',
             'parcelamento',
+        ),
+        (
             'forma_pagamento',
+            'conta_corrente',
         ),
         (
             'usuario',
