@@ -243,6 +243,7 @@ function handleInserirComunicadoClick(event) {
     return pedidos_selecionados.value.includes(ped_item.id) ? ped_item.acobrar : 0
   }).reduce((soma, valor) => soma + valor, 0);
   comunicado.value.comunicacao_id = pedido_itens.value[0].pedido.cliente.comunicacao;
+  comunicado.value.parcelamento = pedido_itens.value[0].pedido.cliente.parcelamento;
   comunicado.value.data = strDataAtual;
   status.value = 'c';
 }
