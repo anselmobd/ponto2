@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('bordado', '0094_alter_contato_cliente'),
+        ('bordado', '0093_alter_contato_cliente'),
     ]
 
     operations = [

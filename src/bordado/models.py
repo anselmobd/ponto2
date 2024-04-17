@@ -85,6 +85,13 @@ class FormaPagamento(models.Model):
         ordering = ['id']
 
 
+def default_forma_pagamento_id():
+    forma_pagamento = FormaPagamento.objects.filter(nome="Boleto").first()
+    if forma_pagamento:
+        return forma_pagamento.id
+    return None
+
+
 class ClienteManager(models.Manager):
     def get_by_natural_key(self, cnpj9, cnpj4):
         return self.get(cnpj9=cnpj9, cnpj4=cnpj4)
@@ -165,7 +172,7 @@ class Cliente(models.Model):
     )
     comunicacao = models.ForeignKey(
         TipoComunicacao,
-        default=TipoComunicacao.default_id,
+        # default=TipoComunicacao.default_id,
         on_delete=models.PROTECT,
         verbose_name="Comunicação preferêncial",
     )
@@ -181,9 +188,11 @@ class Cliente(models.Model):
     )
     forma_pagamento = models.ForeignKey(
         FormaPagamento,
-        default=FormaPagamento.default_id,
         on_delete=models.PROTECT,
         verbose_name="Forma de pagamento",
+        null=True,
+        blank=True,
+        default=default_forma_pagamento_id,
     )
     usuario = models.ForeignKey(
         User,
@@ -239,6 +248,8 @@ class Contato(models.Model):
     cliente = models.ForeignKey(
         Cliente,
         on_delete=models.CASCADE,
+        null=True,
+        blank=True,
     )
     nome = models.CharField(
         max_length=100,

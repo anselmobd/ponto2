@@ -27,7 +27,7 @@ def undo(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('bordado', '0096_formapagamento'),
+        ('bordado', '0095_formapagamento'),
     ]
 
     operations = [

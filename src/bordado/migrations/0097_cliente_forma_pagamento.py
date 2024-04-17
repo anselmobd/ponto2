@@ -8,13 +8,13 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('bordado', '0097_insert_forma_pagamento'),
+        ('bordado', '0096_insert_forma_pagamento'),
     ]
 
     operations = [
         migrations.AddField(
             model_name='cliente',
             name='forma_pagamento',
-            field=models.ForeignKey(default=bordado.models.FormaPagamento.default_id, on_delete=django.db.models.deletion.PROTECT, to='bordado.formapagamento', verbose_name='Forma de pagamento'),
+            field=models.ForeignKey(blank=True, null=True, default=bordado.models.default_forma_pagamento_id, on_delete=django.db.models.deletion.PROTECT, to='bordado.formapagamento', verbose_name='Forma de pagamento'),
         ),
     ]
