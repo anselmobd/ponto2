@@ -346,7 +346,7 @@ onMounted(() => {
 
                 <section id="preferencias">
                   <p class="font-semibold">
-                    Preferências
+                    Padrões
                   </p>
                   <div class="flex gap-4">
                     <div>
@@ -378,6 +378,14 @@ onMounted(() => {
                       required
                       >
                     </div>
+                  </div>
+                </section>
+
+                <section id="preferencias">
+                  <p class="font-semibold">
+                    Preferências
+                  </p>
+                  <div class="flex gap-4">
                     <div>
                       <label class="block" for="forma_pagamento">Forma de pagamento</label>
                       <p v-if="field_error?.forma_pagamento" class="text-red-800">{{ field_error.comunicacao }}</p>
