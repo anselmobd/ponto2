@@ -27,6 +27,10 @@ __all__ = [
 ]
 
 
+def logged_user():
+    return SingletonLoggedInUser().user
+
+
 # class Empresa(models.Model):
 #     nome = models.CharField(
 #         max_length=50,
@@ -204,6 +208,7 @@ class Cliente(models.Model):
         on_delete=models.PROTECT,
         verbose_name="usuário",
         related_name="+",
+        default=logged_user,
     )
     quando = models.DateTimeField(auto_now=True)
 
@@ -223,13 +228,6 @@ class Cliente(models.Model):
 
     def __str__(self):
         return f'{self.apelido} ({self.cnpj})'
-
-    def cleanned_usuario(self):
-        return SingletonLoggedInUser().user
-
-    def clean(self):
-        super().clean()
-        self.usuario = self.cleanned_usuario()
 
     class Meta:
         db_table = "po2_cliente"
@@ -473,6 +471,7 @@ class PedidoItem(models.Model):
         on_delete=models.PROTECT,
         verbose_name="usuário",
         related_name="+",
+        default=logged_user,
     )
 
     objects = PedidoItemManager()
@@ -483,13 +482,6 @@ class PedidoItem(models.Model):
 
     def __str__(self):
         return f"{self.id}: Pedido {self.pedido.numero:04d}; ordem {self.ordem}; {self.quantidade} * {self.bordado}"
-
-    def cleanned_usuario(self):
-        return SingletonLoggedInUser().user
-
-    def clean(self):
-        super().clean()
-        self.usuario = self.cleanned_usuario()
 
     def save(self, *args, **kwargs):
         if not self.id:
@@ -551,6 +543,7 @@ class Cobranca(models.Model):
         on_delete=models.PROTECT,
         verbose_name="usuário",
         related_name="+",
+        default=logged_user,
     )
     quando = models.DateTimeField(auto_now=True)
 
@@ -558,13 +551,6 @@ class Cobranca(models.Model):
         nf = f" ({self.nf})" if self.nf else ""
         comunicacao = f" {self.comunicacao.descricao}" if self.comunicacao else ""
         return f"{self.id}: {self.informacao}{comunicacao}{nf} [{self.data}]"
-
-    def cleanned_usuario(self):
-        return SingletonLoggedInUser().user
-
-    def clean(self):
-        super().clean()
-        self.usuario = self.cleanned_usuario()
 
     class Meta:
         db_table = "po2_cobranca"
@@ -653,18 +639,12 @@ class Lancamento(models.Model):
         on_delete=models.PROTECT,
         verbose_name="usuário",
         related_name="+",
+        default=logged_user,
     )
     quando = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f'{self.id}: {self.data} {self.cliente}'
-
-    def cleanned_usuario(self):
-        return SingletonLoggedInUser().user
-
-    def clean(self):
-        super().clean()
-        self.usuario = self.cleanned_usuario()
 
     class Meta:
         db_table = "po2_lancamento"
