@@ -279,13 +279,16 @@ class Contato(models.Model):
         return f"({self.cliente.nome}) {id}"
 
     def save(self, *args, **kwargs):
+        id = self.id if self.id else -1
+        outros = Contato.objects.filter(cliente=self.cliente).exclude(id=id)
         if self.preferencial:
-            id = self.id if self.id else -1
-            outros = Contato.objects.filter(cliente=self.cliente).exclude(id=id)
             if outros:
                 for outro in outros:
                     outro.preferencial = False
                     outro.save()
+        else:
+            if not outros:
+                self.preferencial = True
         super(Contato, self).save(*args, **kwargs)
 
     class Meta:
