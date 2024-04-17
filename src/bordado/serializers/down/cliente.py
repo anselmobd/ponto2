@@ -30,10 +30,10 @@ class ContatoSerializer(serializers.ModelSerializer):
 
 
 class ClienteDownSerializer(serializers.ModelSerializer):
-    usuario = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
-    comunicacao = serializers.PrimaryKeyRelatedField(queryset=TipoComunicacao.objects.all())
+    usuario = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=False)
+    comunicacao = serializers.PrimaryKeyRelatedField(queryset=TipoComunicacao.objects.all(), required=False)
     comunicacao_obj = serializers.SerializerMethodField()
-    forma_pagamento = serializers.PrimaryKeyRelatedField(queryset=FormaPagamento.objects.all())
+    forma_pagamento = serializers.PrimaryKeyRelatedField(queryset=FormaPagamento.objects.all(), required=False)
     forma_pagamento_obj = serializers.SerializerMethodField()
     contato_set = ContatoSerializer(many=True, read_only=True)
 
