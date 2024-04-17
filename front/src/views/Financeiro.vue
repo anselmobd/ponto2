@@ -299,6 +299,11 @@ onMounted(() => {
       <a title="Voltar" class="button text-xl cursor-pointer" @click.prevent="router.go(-1)">&#x2190;</a>
     </section>
 
+    <section id="preferencias_cliente" class="mx-8">
+      <h3 class="font-bold">Preferências do cliente</h3>
+      <p>Forma de pagamento: <span class="font-bold">{{ pedido_itens?.length >0 ? pedido_itens[0].pedido.cliente.forma_pagamento_obj.nome : '...' }}</span></p>
+    </section>
+
     <section id="lista_pedidos">
       <h3 class="my-4 font-bold text-lg text-center">Pedidos</h3>
       <table class="w-full">
