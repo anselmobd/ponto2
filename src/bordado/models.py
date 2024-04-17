@@ -188,7 +188,7 @@ class Cliente(models.Model):
         verbose_name="Comunicação preferêncial",
     )
     conta_corrente = models.BooleanField(
-        'Trabalha como conta corrente?',
+        'Financeiro tipo conta corrente?',
         default=False,
     )
     parcelamento = models.CharField(
