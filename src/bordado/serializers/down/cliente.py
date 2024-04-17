@@ -4,9 +4,11 @@ from rest_framework import serializers
 from bordado.models import (
     Cliente,
     Contato,
+    FormaPagamento,
     TipoComunicacao,
 )
 from bordado.serializers.simple.tipo_comunicacao import TipoComunicacaoSimpleSerializer
+from bordado.serializers.simple.forma_pagamento import FormaPagamentoSimpleSerializer
 
 
 __all__ = [
@@ -31,6 +33,8 @@ class ClienteDownSerializer(serializers.ModelSerializer):
     usuario = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     comunicacao = serializers.PrimaryKeyRelatedField(queryset=TipoComunicacao.objects.all())
     comunicacao_obj = serializers.SerializerMethodField()
+    forma_pagamento = serializers.PrimaryKeyRelatedField(queryset=FormaPagamento.objects.all())
+    forma_pagamento_obj = serializers.SerializerMethodField()
     contato_set = ContatoSerializer(many=True, read_only=True)
 
     class Meta:
@@ -55,6 +59,8 @@ class ClienteDownSerializer(serializers.ModelSerializer):
             'comunicacao',
             'comunicacao_obj',
             'parcelamento',
+            'forma_pagamento',
+            'forma_pagamento_obj',
             'conta_corrente',
             'contato_set',
         ]
@@ -75,4 +81,9 @@ class ClienteDownSerializer(serializers.ModelSerializer):
     def get_comunicacao_obj(self, obj):
         if obj.comunicacao:
             return TipoComunicacaoSimpleSerializer(obj.comunicacao).data
+        return None
+
+    def get_forma_pagamento_obj(self, obj):
+        if obj.forma_pagamento:
+            return FormaPagamentoSimpleSerializer(obj.forma_pagamento).data
         return None
