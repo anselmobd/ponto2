@@ -16,3 +16,9 @@
     </article>
   </div>
 </template>
+
+<style scoped>
+a {
+  @apply text-sky-700
+}
+</style>
