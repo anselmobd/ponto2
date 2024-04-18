@@ -38,10 +38,10 @@ def logged_user():
 #     )
 
 #     def __str__(self):
-#         return f'{self.nome}'
+#         return f"{self.nome}"
 
 #     class Meta:
-#         db_table = "po2_empresa"
+#         db_table = 'po2_empresa'
 #         verbose_name = "Empresa"
 #         ordering = ['nome']
 
@@ -49,7 +49,7 @@ def logged_user():
 class TipoComunicacao(models.Model):
     admin_order = 50
     descricao = models.CharField(
-        'Descrição',
+        "Descrição",
         max_length=50,
         unique=True,
     )
@@ -57,12 +57,8 @@ class TipoComunicacao(models.Model):
     def __str__(self):
         return self.descricao
 
-    # @staticmethod
-    # def default_id():
-    #     return TipoComunicacao.objects.get(descricao="Telefone").id
-
     class Meta:
-        db_table = "po2_tipo_comunicacao"
+        db_table = 'po2_tipo_comunicacao'
         verbose_name = "Tipo de comunicação"
         verbose_name_plural = "Tipos de comunicação"
         ordering = ['id']
@@ -85,12 +81,8 @@ class FormaPagamento(models.Model):
     def __str__(self):
         return self.nome
 
-    @staticmethod
-    def default_id():
-        return FormaPagamento.objects.get(nome="Boleto").id
-
     class Meta:
-        db_table = "po2_forma_pagamento"
+        db_table = 'po2_forma_pagamento'
         verbose_name = "Forma de pagamento"
         verbose_name_plural = "Formas de pagamento"
         ordering = ['id']
@@ -115,12 +107,12 @@ class Cliente(models.Model):
     #     on_delete=models.PROTECT,
     # )
     nome = models.CharField(
-        'Nome/Razão Social',
+        "Nome/Razão Social",
         max_length=100,
         blank=True,
     )
     fansasia = models.CharField(
-        'Nome Fantasia',
+        "Nome Fantasia",
         max_length=100,
         blank=True,
     )
@@ -129,28 +121,28 @@ class Cliente(models.Model):
         unique=True,
     )
     cnpj9 = models.PositiveIntegerField(
-        'CNPJ (raiz)',
+        "CNPJ (raiz)",
         default=None,
         blank=True,
         null=True,
         validators=[MinValueValidator(0), MaxValueValidator(999_999_999)],
     )
     cnpj4 = models.PositiveSmallIntegerField(
-        'CNPJ (filial)',
+        "CNPJ (filial)",
         default=None,
         blank=True,
         null=True,
         validators=[MinValueValidator(0), MaxValueValidator(9_999)],
     )
     cnpj2 = models.PositiveSmallIntegerField(
-        'CNPJ (dígitos)',
+        "CNPJ (dígitos)",
         default=None,
         blank=True,
         null=True,
         validators=[MinValueValidator(0), MaxValueValidator(99)],
     )
     cep = models.CharField(
-        'CEP',
+        "CEP",
         max_length=10,
         blank=True,
     )
@@ -159,7 +151,7 @@ class Cliente(models.Model):
         blank=True,
     )
     numero = models.PositiveSmallIntegerField(
-        'Número',
+        "Número",
         default=None,
         blank=True,
         null=True,
@@ -188,11 +180,11 @@ class Cliente(models.Model):
         verbose_name="Comunicação preferêncial",
     )
     conta_corrente = models.BooleanField(
-        'Financeiro tipo conta corrente?',
+        "Financeiro tipo conta corrente?",
         default=False,
     )
     parcelamento = models.CharField(
-        'Parcelamento padrão',
+        "Parcelamento padrão",
         max_length=30,
         default="",
         blank=True,
@@ -204,14 +196,14 @@ class Cliente(models.Model):
         default=forma_pagamento_default_id,
     )
     nf = models.BooleanField(
-        'Nota Fiscal por cobrança?',
+        "Nota Fiscal por cobrança?",
         default=True,
     )
     usuario = models.ForeignKey(
         User,
         on_delete=models.PROTECT,
+        related_name='+',
         verbose_name="usuário",
-        related_name="+",
         default=logged_user,
     )
     quando = models.DateTimeField(auto_now=True)
@@ -231,10 +223,10 @@ class Cliente(models.Model):
             return "!"
 
     def __str__(self):
-        return f'{self.apelido} ({self.cnpj})'
+        return f"{self.apelido} ({self.cnpj})"
 
     class Meta:
-        db_table = "po2_cliente"
+        db_table = 'po2_cliente'
         verbose_name = "Cliente"
         ordering = ['apelido']
         # unique_together = [['cnpj9', 'cnpj4']]
@@ -270,7 +262,7 @@ class Contato(models.Model):
         null=True,
     )
     email = models.EmailField(
-        'E-mail',
+        "E-mail",
         blank=True,
         null=True,
     )
@@ -279,7 +271,7 @@ class Contato(models.Model):
     )
 
     def __str__(self):
-        id = self.nome or self.email or self.telefone or 'Vazio!'
+        id = self.nome or self.email or self.telefone or "Vazio!"
         return f"({self.cliente.nome}) {id}"
 
     def save(self, *args, **kwargs):
@@ -296,7 +288,7 @@ class Contato(models.Model):
         super(Contato, self).save(*args, **kwargs)
 
     class Meta:
-        db_table = "po2_contato"
+        db_table = 'po2_contato'
         verbose_name = "Contato"
 
 
@@ -311,7 +303,7 @@ class DificuldadeBordado(models.Model):
         unique=True,
     )
     descricao = models.CharField(
-        'Descrição',
+        "Descrição",
         max_length=50,
         unique=True,
     )
@@ -322,10 +314,10 @@ class DificuldadeBordado(models.Model):
         return DificuldadeBordado.objects.get(ordem=0).id
 
     def __str__(self):
-        return f'{self.ordem}-{self.descricao}'
+        return f"{self.ordem}-{self.descricao}"
 
     class Meta:
-        db_table = "po2_dificuldade_bordado"
+        db_table = 'po2_dificuldade_bordado'
         verbose_name = "Dificuldade de bordado"
         verbose_name_plural = "Dificuldades de bordado"
         ordering = ['ordem']
@@ -336,7 +328,8 @@ class DificuldadeBordado(models.Model):
 
 class BordadoManager(models.Manager):
     def get_by_natural_key(self, nome, codigo, cnpj9, cnpj4):
-        return self.get(nome=nome, codigo=codigo, cliente__cnpj9=cnpj9, cliente__cnpj4=cnpj4)
+        return self.get(
+            nome=nome, codigo=codigo, cliente__cnpj9=cnpj9, cliente__cnpj4=cnpj4)
 
 
 class Bordado(models.Model):
@@ -351,7 +344,7 @@ class Bordado(models.Model):
         max_length=50,
     )
     codigo = models.CharField(
-        'código',
+        "código",
         max_length=50,
         default="",
         blank=True,
@@ -364,7 +357,7 @@ class Bordado(models.Model):
         default=0,
     )
     tamanho_maximo = models.PositiveIntegerField(
-        'tamanho máximo',
+        "tamanho máximo",
         default=0,
         help_text="em milímetros",
     )
@@ -377,12 +370,12 @@ class Bordado(models.Model):
     objects = BordadoManager()
 
     def __str__(self):
-        cliente = f" - {self.cliente}" if self.cliente else ''
-        codigo = f" - {self.codigo}" if self.codigo else ''
+        cliente = f" - {self.cliente}" if self.cliente else ""
+        codigo = f" - {self.codigo}" if self.codigo else ""
         return f"{self.nome}{codigo}{cliente}"
 
     class Meta:
-        db_table = "po2_bordado"
+        db_table = 'po2_bordado'
         verbose_name = "Bordado"
         ordering = ['nome', 'codigo']
         unique_together = [['nome', 'codigo', 'cliente']]
@@ -396,7 +389,7 @@ class Bordado(models.Model):
 class Pedido(models.Model):
     admin_order = 400
     numero = models.AutoField(
-        'Número',
+        "Número",
         primary_key=True
     )
     cliente = models.ForeignKey(
@@ -418,7 +411,7 @@ class Pedido(models.Model):
         return f"{self.numero:04d} - {self.cliente}"
 
     class Meta:
-        db_table = "po2_pedido"
+        db_table = 'po2_pedido'
         ordering = ['-numero']
 
 
@@ -451,14 +444,14 @@ class PedidoItem(models.Model):
         default=0,
     )
     preco = models.DecimalField(
-        'Preço',
+        "Preço",
         max_digits=9,
         decimal_places=2,
         validators=[MinValueValidator(0.01), MaxValueValidator(1_000_000)],
         default=0,
     )
     programacao = models.DecimalField(
-        'Pogramação',
+        "Pogramação",
         max_digits=9,
         decimal_places=2,
         validators=[MinValueValidator(0.01), MaxValueValidator(1_000_000)],
@@ -476,8 +469,8 @@ class PedidoItem(models.Model):
     usuario = models.ForeignKey(
         User,
         on_delete=models.PROTECT,
+        related_name='+',
         verbose_name="usuário",
-        related_name="+",
         default=logged_user,
     )
 
@@ -488,7 +481,10 @@ class PedidoItem(models.Model):
         return self.pedido.cliente
 
     def __str__(self):
-        return f"{self.id}: Pedido {self.pedido.numero:04d}; ordem {self.ordem}; {self.quantidade} * {self.bordado}"
+        return (
+            f"{self.id}: Pedido {self.pedido.numero:04d}; ordem {self.ordem}; "
+            f"{self.quantidade} * {self.bordado}"
+        )
 
     def save(self, *args, **kwargs):
         if not self.id:
@@ -498,7 +494,7 @@ class PedidoItem(models.Model):
         super(PedidoItem, self).save(*args, **kwargs)
 
     class Meta:
-        db_table = "po2_pedido_item"
+        db_table = 'po2_pedido_item'
         verbose_name = "Item de pedido"
         verbose_name_plural = "Itens de pedido"
         ordering = ['-pedido__numero', '-ordem']
@@ -524,7 +520,7 @@ class Cobranca(models.Model):
     )
     informacao = models.CharField(
         max_length=50,
-        default='',
+        default="",
         blank=True,
         null=True,
     )
@@ -533,7 +529,7 @@ class Cobranca(models.Model):
         on_delete=models.PROTECT,
     )
     nf = models.PositiveIntegerField(
-        'NF',
+        "NF",
         blank=True,
         null=True,
     )
@@ -541,15 +537,15 @@ class Cobranca(models.Model):
     )
     parcelamento = models.CharField(
         max_length=50,
-        default='0',
+        default="0",
         blank=True,
         null=True,
     )
     usuario = models.ForeignKey(
         User,
         on_delete=models.PROTECT,
+        related_name='+',
         verbose_name="usuário",
-        related_name="+",
         default=logged_user,
     )
     quando = models.DateTimeField(auto_now=True)
@@ -560,7 +556,7 @@ class Cobranca(models.Model):
         return f"{self.id}: {self.informacao}{comunicacao}{nf} [{self.data}]"
 
     class Meta:
-        db_table = "po2_cobranca"
+        db_table = 'po2_cobranca'
         verbose_name = "Cobrança"
         ordering = ['-id']
 
@@ -570,9 +566,9 @@ class PedidoItemCobranca(models.Model):
     pedido_item = models.ForeignKey(
         PedidoItem,
         on_delete=models.PROTECT,
+        related_name='cobrancas',
         blank=False,
         null=False,
-        related_name='cobrancas',
     )
     cobranca = models.ForeignKey(
         Cobranca,
@@ -588,7 +584,7 @@ class PedidoItemCobranca(models.Model):
     )
 
     class Meta:
-        db_table = "po2_pedido_item_cobranca"
+        db_table = 'po2_pedido_item_cobranca'
         verbose_name = "Cobrança de item de pedido"
         verbose_name_plural = "Cobranças de itens de pedido"
 
@@ -612,12 +608,12 @@ class Lancamento(models.Model):
         default=0,
     )
     n_parcelas = models.PositiveSmallIntegerField(
-        'Nº de parcelas',
+        "Nº de parcelas",
         validators=[MinValueValidator(0), MaxValueValidator(100)],
         default=0,
     )
     informacao = models.CharField(
-        'Informação',
+        "Informação",
         max_length=50,
     )
     valor = models.DecimalField(
@@ -645,16 +641,16 @@ class Lancamento(models.Model):
         User,
         on_delete=models.PROTECT,
         verbose_name="usuário",
-        related_name="+",
+        related_name='+',
         default=logged_user,
     )
     quando = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'{self.id}: {self.data} {self.cliente}'
+        return f"{self.id}: {self.data} {self.cliente}"
 
     class Meta:
-        db_table = "po2_lancamento"
+        db_table = 'po2_lancamento'
         verbose_name = "Lançamento"
         ordering = ['-data', '-id']
 
@@ -662,7 +658,7 @@ class Lancamento(models.Model):
 class OrdemProducao(models.Model):
     admin_order = 1000
     numero = models.AutoField(
-        'Número',
+        "Número",
         primary_key=True
     )
     pedido_item = models.ForeignKey(
@@ -684,7 +680,7 @@ class OrdemProducao(models.Model):
         return f"OP {self.numero:04d}; {self.pedido_item}"
 
     class Meta:
-        db_table = "po2_op"
+        db_table = 'po2_op'
         verbose_name = "Ordem de produção"
         verbose_name_plural = "Ordens de produção"
         ordering = ['-numero']
@@ -704,12 +700,12 @@ class ApontamentoProducao(models.Model):
         null=False,
     )
     qtd_perda = models.IntegerField(
-        'quantidade de perda',
+        "quantidade de perda",
         validators=[MinValueValidator(0), MaxValueValidator(1_000_000)],
         default=0,
     )
     qtd_prod = models.IntegerField(
-        'quantidade produzida',
+        "quantidade produzida",
         validators=[MinValueValidator(0), MaxValueValidator(1_000_000)],
         default=0,
     )
@@ -721,10 +717,12 @@ class ApontamentoProducao(models.Model):
     objects = ApontamentoProducaoManager()
 
     def __str__(self):
-        return f"OP {self.op.numero:04d} {self.qtd_prod} ({self.qtd_perda}) {tz_local(self.apontado_em):%d/%m/%Y %H:%M:%S}"
-
+        return (
+            f"OP {self.op.numero:04d} {self.qtd_prod} ({self.qtd_perda}) "
+            f"{tz_local(self.apontado_em):%d/%m/%Y %H:%M:%S}"
+        )
     class Meta:
-        db_table = "po2_aponta_prod"
+        db_table = 'po2_aponta_prod'
         verbose_name = "Apontamento de produção"
         verbose_name_plural = "Apontamentos de produção"
         ordering = ['-op_id', 'apontado_em']
