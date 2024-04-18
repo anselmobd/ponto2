@@ -159,6 +159,12 @@ function cbAddCobranca(data, error) {
 }
 
 function doAddCobranca(callBack) {
+  if (comunicado.value.cliente_nf & !comunicado.value.nf) {
+    const answer = window.confirm('Padrão de cliente é gerar uma NF por cobrança. Retorna para informar NF?')
+    if (answer) {
+      return
+    }
+  }
   const payload= {
     "cliente": {
       "apelido": route.params.apelido,
@@ -244,6 +250,7 @@ function handleInserirComunicadoClick(event) {
   }).reduce((soma, valor) => soma + valor, 0);
   comunicado.value.comunicacao_id = pedido_itens.value[0].pedido.cliente.comunicacao;
   comunicado.value.parcelamento = pedido_itens.value[0].pedido.cliente.parcelamento;
+  comunicado.value.cliente_nf = pedido_itens.value[0].pedido.cliente.nf;
   comunicado.value.data = strDataAtual;
   status.value = 'c';
 }
@@ -377,14 +384,14 @@ onMounted(() => {
       </table>
     </section>
 
-    <section id="insere_comunicado">
+    <section id="insere_cobranca">
       <button
         :disabled="(!pedidos_selecionados.length) || (status != 'b')"
         class="px-2 py-1 rounded-xl bg-sky-700 font-bold text-slate-100"
         @click="handleInserirComunicadoClick"
-      >Comunicar cobrança</button>
+      >Inserir/comunicar cobrança</button>
       <div v-if="status == 'c'">
-        <h3 class="my-4 font-bold text-lg text-center">Inserindo comunicado</h3>
+        <h3 class="my-4 font-bold text-lg text-center">Inserindo/comunicando cobrança</h3>
         <table class="w-full">
           <thead>
             <tr>
