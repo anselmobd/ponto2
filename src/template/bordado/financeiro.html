@@ -7,4 +7,12 @@
 
 {% block content %}
   <h3 class="text-xl my-4 font-bold">Financeiro</h3>
+  <form action="{% url 'bordado:financeiro' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input class="button" type="submit" value="Busca"/>
+  </form>
+  {% if request.POST %}
+    <p>Pedido: {{pedido}}</p>
+  {% endif %}
 {% endblock %}

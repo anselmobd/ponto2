@@ -5,41 +5,30 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
-# from utils.views import totalize_data
-
-# import cd.queries as queries
-# import cd.forms
+from bordado.forms import FinanceiroForm
 
 
 class Financeiro(View):
 
     def __init__(self):
-        # self.Form_class = cd.forms.HistoricoForm
+        self.Form_class = FinanceiroForm
         self.template_name = 'bordado/financeiro.html'
-        self.title_name = 'Financeiro'
+        self.context = {'titulo': 'Financeiro'}
 
-    # def mount_context(self, cursor, op):
-    #     context = {
-    #         'op': op,
-    #     }
-
-    #     return context
+    def mount_context(self, form):
+        self.context.update({
+            'pedido': form.data['pedido'],
+        })
 
     def get(self, request, *args, **kwargs):
-        context = {'titulo': self.title_name}
-        # form = self.Form_class()
-        # context['form'] = form
-        return render(request, self.template_name, context)
+        self.context['form'] = self.Form_class()
+        return render(request, self.template_name, self.context)
 
-    # def post(self, request, *args, **kwargs):
-    #     context = {'titulo': self.title_name}
-    #     form = self.Form_class(request.POST)
-    #     form.data = form.data.copy()
-    #     if 'op' in kwargs and kwargs['op'] is not None:
-    #         form.data['op'] = kwargs['op']
-    #     if form.is_valid():
-    #         op = form.cleaned_data['op']
-    #         cursor = connection.cursor()
-    #         context.update(self.mount_context(cursor, op))
-    #     context['form'] = form
-    #     return render(request, self.template_name, context)
+    def post(self, request, *args, **kwargs):
+        form = self.Form_class(request.POST)
+        pprint(form.fields['pedido'].__dict__)
+        pprint(form.data['pedido'])
+        self.context['form'] = form
+        if form.is_valid():
+            self.mount_context(form)
+        return render(request, self.template_name, self.context)
