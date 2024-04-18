@@ -62,6 +62,7 @@ class ClienteDownSerializer(serializers.ModelSerializer):
             'forma_pagamento',
             'forma_pagamento_obj',
             'conta_corrente',
+            'nf',
             'contato_set',
         ]
 
