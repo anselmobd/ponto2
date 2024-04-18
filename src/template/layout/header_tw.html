@@ -16,12 +16,12 @@
     {% if request.user.is_authenticated %}
     <a
       class="router-link px-1 border-l border-sky-600
-      {% if app_link == 'bordado' %}
+      {% if app_link == 'consulta' %}
       router-link-active text-sky-600 font-bold
       {% endif %}
       "
       href="{% url 'bordado:index' %}"
-    >Bordado</z>
+    >Consulta</z>
     {% endif %}
     <a
       class="router-link px-1 border-l border-sky-600

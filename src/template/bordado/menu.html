@@ -2,11 +2,11 @@
 {% load static %}
 
 {% block header %}
-  {% include 'layout/header_tw.html' with app_link='bordado' %}
+  {% include 'layout/header_tw.html' with app_link='consulta' %}
 {% endblock %}
 
 {% block content %}
-  <h3 class="text-xl my-4 font-bold">Relatórios</h3>
+  <h3 class="text-xl my-4 font-bold">Consultas</h3>
   <ul class="list-disc ml-4">
     <li><a href="{% url 'bordado:financeiro' %}">Financeiro</a></li>
   </ul>
