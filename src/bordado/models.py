@@ -203,6 +203,10 @@ class Cliente(models.Model):
         verbose_name="Forma de pagamento",
         default=forma_pagamento_default_id,
     )
+    nf = models.BooleanField(
+        'Nota Fiscal por cobrança?',
+        default=True,
+    )
     usuario = models.ForeignKey(
         User,
         on_delete=models.PROTECT,
