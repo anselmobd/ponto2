@@ -344,7 +344,7 @@ onMounted(() => {
                   </div>
                 </section>
 
-                <section id="preferencias">
+                <section id="padroes">
                   <p class="font-semibold">
                     Padrões
                   </p>
@@ -376,6 +376,17 @@ onMounted(() => {
                       name="parcelamento"
                       id="parcelamento"
                       required
+                      >
+                    </div>
+                    <div class="flex flex-col items-center justify-center">
+                      <label class="block" for="nf">Nota Fiscal por cobrança</label>
+                      <p v-if="field_error?.nf" class="text-red-800">{{ field_error.nf }}</p>
+                      <input
+                        class="h-10 border mt-1 rounded px-1 bg-white"
+                        v-model="cliente.nf"
+                        type="checkbox"
+                        name="nf"
+                        id="nf"
                       >
                     </div>
                   </div>
