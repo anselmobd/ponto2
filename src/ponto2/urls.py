@@ -25,11 +25,6 @@ urlpatterns = [
 
     # Autenticação
     path(
-        'tw/login/',
-        auth_views.LoginView.as_view(template_name="layout/login.html"),
-        name='login',
-    ),
-    path(
         'encerrar/',
         auth_views.LogoutView.as_view(next_page="/"),
         name='encerrar',
