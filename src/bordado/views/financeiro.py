@@ -4,9 +4,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import connection
 from django.urls import reverse
 
-from o2lib.views.base.get_post import O2BaseGetPostView
 from o2lib.models.dictlist import queryset2dictlist
+from o2lib.models.row_field import PrepRows
 from o2lib.table_defs import TableDefs
+from o2lib.views.base.get_post import O2BaseGetPostView
 
 from bordado.forms import FinanceiroForm
 from bordado.models import (
@@ -27,9 +28,10 @@ class Financeiro(LoginRequiredMixin, O2BaseGetPostView):
         self.title_name = 'Financeiro'
         self.table_defs = TableDefs(
             {
-                'data parcela': [],
-                'n_parcelas': ['Nº de parcelas'],
-                'informacao': ['Informação'],
+                'data': [],
+                'informacao': ['Informação', 'c'],
+                'parcela': [None, 'c'],
+                'n_parcelas': ['Nºparcelas', 'c'],
                 'valor': [None, 'r'],
             },
             ['header', '+style'],
@@ -51,6 +53,13 @@ class Financeiro(LoginRequiredMixin, O2BaseGetPostView):
             except Cobranca.DoesNotExist:
                 ...
         data = queryset2dictlist(lancamento)
+
+        PrepRows(
+            data,
+        ).str_dash(
+            'informacao'
+        ).process()
+
         self.context.update({
             'data': data,
         })
