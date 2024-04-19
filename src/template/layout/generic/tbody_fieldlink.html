@@ -5,17 +5,17 @@
     <a href="{{ row|get_item:field_link }}"
     {% include "layout/field_target.html" with row=row field=field only %}>
     {% if row|get_item:field %}
-      {% include "layout/generics/field_decimals.html" with row=row field=field count=count decimals=decimals safe=safe only %}
+      {% include "layout/generic/field_decimals.html" with row=row field=field count=count decimals=decimals safe=safe only %}
     {% endif %}
     {% include "layout/field_glyphicon.html" with row=row field=field only %}</a>
   {% elif row|get_item:field_a %}
     <a href="{{ row|get_item:field_a }}"
     {% include "layout/field_target.html" with row=row field=field only %}>
     {% if row|get_item:field %}
-      {% include "layout/generics/field_decimals.html" with row=row field=field count=count decimals=decimals safe=safe only %}
+      {% include "layout/generic/field_decimals.html" with row=row field=field count=count decimals=decimals safe=safe only %}
     {% endif %}
   {% else %}
-    {% include "layout/generics/field_decimals.html" with row=row field=field count=count decimals=decimals safe=safe only %}
+    {% include "layout/generic/field_decimals.html" with row=row field=field count=count decimals=decimals safe=safe only %}
   {% endif %}
 {% endwith %}
 {% endwith %}

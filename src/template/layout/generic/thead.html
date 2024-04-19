@@ -1,7 +1,7 @@
 <thead>
   <tr>{% for info in data %}
     <th {% spaceless %}style="{% spaceless %}
-        {% include "layout/generics/tbody_style.html" with count=forloop.counter style=style only %}
+        {% include "layout/generic/tbody_style.html" with count=forloop.counter style=style only %}
         {% endspaceless %}"
         {% endspaceless %} class="{{thclass}}">{% spaceless %}
         {% if info|get_type == 'tuple' %}
