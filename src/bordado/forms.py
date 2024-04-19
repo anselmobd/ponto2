@@ -5,7 +5,7 @@ from django import forms
 from o2lib.form.widget_attrs import FormWidgetAttrs
 
 
-class FinanceiroForm(forms.Form):
+class LancamentoForm(forms.Form):
     a = FormWidgetAttrs()
 
     pedido_numero = forms.CharField(

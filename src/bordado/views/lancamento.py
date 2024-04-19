@@ -9,7 +9,7 @@ from o2lib.models.row_field import PrepRows
 from o2lib.table_defs import TableDefs
 from o2lib.views.base.get_post import O2BaseGetPostView
 
-from bordado.forms import FinanceiroForm
+from bordado.forms import LancamentoForm
 from bordado.models import (
     Cobranca,
     Lancamento,
@@ -21,7 +21,7 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
 
     def __init__(self):
         super().__init__()
-        self.Form_class = FinanceiroForm
+        self.Form_class = LancamentoForm
         self.cleaned_data2self = True
         self.cleaned_data2context = True
         self.template_name = 'bordado/lancamento.html'
