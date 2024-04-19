@@ -4,7 +4,7 @@ from rest_framework import routers
 from .views.main import (
     index_vue,
     index,
-    sobre_puro,
+    sobre,
 )
 from .views.lancamento import LancamentoView
 from .api.rest import (
@@ -46,6 +46,6 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('', index, name='index'),
     path('index_vue', index_vue, name='index_vue'),
-    path('sobre', sobre_puro, name='sobre_p'),
+    path('sobre', sobre, name='sobre'),
     path('lancamento', LancamentoView.as_view(), name='lancamento'),
 ]
