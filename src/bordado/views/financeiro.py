@@ -30,6 +30,9 @@ class Financeiro(LoginRequiredMixin, O2BaseGetPostView):
             {
                 'data': [],
                 'informacao': ['Informação', 'c'],
+                'cobranca__comunicacao__descricao': ['Comunicação', 'c'],
+                'cobranca__nf': ['NF', 'c'],
+                'cobranca': ['Cobrança', 'c'],
                 'parcela': [None, 'c'],
                 'n_parcelas': ['Nºparcelas', 'c'],
                 'valor': [None, 'r'],
@@ -52,12 +55,21 @@ class Financeiro(LoginRequiredMixin, O2BaseGetPostView):
                 lancamento = lancamento.filter(cobranca=cobranca)  # erro!
             except Cobranca.DoesNotExist:
                 ...
-        data = queryset2dictlist(lancamento)
 
+        data = queryset2dictlist(lancamento)
+        pprint(data)
+
+        data = lancamento.values(*self.table_defs.all_fields)
+        
         PrepRows(
             data,
         ).str_dash(
-            'informacao'
+            (
+                'informacao',
+                'cobranca__comunicacao__descricao',
+                'cobranca__nf',
+                'cobranca',
+            )
         ).process()
 
         self.context.update({
