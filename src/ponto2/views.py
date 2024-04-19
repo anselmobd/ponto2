@@ -6,6 +6,6 @@ from django.shortcuts import redirect, render
 __all__ = ['index']
 
 
-def index_puro(request):
+def index(request):
     # return redirect('bordado:index')
-    return render(request, 'principal_p.html', {})
+    return render(request, 'ponto2/index.html', {})

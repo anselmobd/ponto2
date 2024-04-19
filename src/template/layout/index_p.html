@@ -41,7 +41,7 @@
   <header class="header_div">
     <a
       class="header_a_logo"
-      href="{% url 'index_p' %}"
+      href="{% url 'index' %}"
     >
       RPR - Ponto2 <span class="text-sm">b</span>
     </a>
@@ -68,7 +68,7 @@
         </a>
       {% else %}
         <a
-          href="{% url 'login_p' %}?next={% url 'index_p' %}"
+          href="{% url 'login_p' %}?next={% url 'index' %}"
           type="button"
         >
           Identificar-se

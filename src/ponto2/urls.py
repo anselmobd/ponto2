@@ -8,13 +8,11 @@ from rest_framework_simplejwt.views import (
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 
 from ponto2.admin import admin
-from ponto2.views import (
-    index_puro,
-)
+from ponto2.views import index
 
 
 urlpatterns = [
-    path('', index_puro, name='index_p'),
+    path('', index, name='index'),
     path('admin/', admin.site.urls),
     path('bordado/', include('bordado.urls')),
 
