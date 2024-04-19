@@ -9,13 +9,11 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, Spec
 
 from ponto2.admin import admin
 from ponto2.views import (
-    index,
     index_puro,
 )
 
 
 urlpatterns = [
-    path('tw', index, name='index'),
     path('', index_puro, name='index_p'),
     path('admin/', admin.site.urls),
     path('bordado/', include('bordado.urls')),
