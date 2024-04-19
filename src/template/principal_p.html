@@ -1,6 +1,23 @@
 {% extends 'layout/index_p.html' %}
 {% load static %}
 
+{% block style %}
+<style>
+  .principal_logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+  .imagem-centralizada {
+    max-width: 100%;
+    max-height: 100%;
+  }
+</style>
+{% endblock %}
+
 {% block content %}
-  <img src="{% static 'img/logo_b.jpeg' %}" alt="Imagem representando RPR b" width="275" height="188">
+  <div class="principal_logo">
+    <img class="imagem-centralizada" src="{% static 'img/logo_b.jpeg' %}" alt="Imagem representando RPR b" width="275" height="188">
+  </div>
 {% endblock %}
