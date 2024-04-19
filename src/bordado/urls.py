@@ -51,5 +51,5 @@ urlpatterns = [
     path('old', index, name='index_old'),
     path('sobre_tw', sobre, name='sobre'),
     path('sobre', sobre_puro, name='sobre_p'),
-    path('financeiro', Lancamento.as_view(), name='financeiro'),
+    path('lancamento', Lancamento.as_view(), name='lancamento'),
 ]
