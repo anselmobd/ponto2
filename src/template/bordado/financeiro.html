@@ -1,12 +1,8 @@
-{% extends 'layout/index_tw.html' %}
+{% extends 'layout/index_p.html' %}
 {% load static %}
 
-{% block header %}
-  {% include 'layout/header_tw.html' with app_link='consulta' %}
-{% endblock %}
-
 {% block content %}
-  <h3 class="text-xl my-4 font-bold">Financeiro</h3>
+  <h3>Financeiro</h3>
   <form action="{% url 'bordado:financeiro' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}

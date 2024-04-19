@@ -8,11 +8,15 @@ from rest_framework_simplejwt.views import (
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 
 from ponto2.admin import admin
-from ponto2.views import index
+from ponto2.views import (
+    index,
+    index_puro,
+)
 
 
 urlpatterns = [
-    path('', index, name='index'),
+    path('tw', index, name='index'),
+    path('', index_puro, name='index_p'),
     path('admin/', admin.site.urls),
     path('bordado/', include('bordado.urls')),
 
@@ -25,7 +29,7 @@ urlpatterns = [
 
     # Autenticação
     path(
-        'accounts/login/',
+        'tw/login/',
         auth_views.LoginView.as_view(template_name="layout/login.html"),
         name='login',
     ),
@@ -33,5 +37,10 @@ urlpatterns = [
         'encerrar/',
         auth_views.LogoutView.as_view(next_page="/"),
         name='encerrar',
+    ),
+    path(
+        'accounts/login/',
+        auth_views.LoginView.as_view(template_name="layout/login_p.html"),
+        name='login_p',
     ),
 ]

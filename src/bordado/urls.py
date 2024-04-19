@@ -2,9 +2,11 @@ from django.urls import include, path
 from rest_framework import routers
 
 from .views.main import (
-    menu,
     index,
+    menu,
+    menu_puro,
     sobre,
+    sobre_puro,
 )
 from .views.financeiro import Financeiro
 from .api.rest import (
@@ -44,8 +46,10 @@ router.register(r'apontamento_producao', ApontamentoProducaoViewSet)
 app_name = 'bordado'
 urlpatterns = [
     path('api/', include(router.urls)),
-    path('', menu, name='index'),
+    path('tw', menu, name='index'),
+    path('', menu_puro, name='index_p'),
     path('old', index, name='index_old'),
-    path('sobre', sobre, name='sobre'),
+    path('sobre_tw', sobre, name='sobre'),
+    path('sobre', sobre_puro, name='sobre_p'),
     path('financeiro', Financeiro.as_view(), name='financeiro'),
 ]

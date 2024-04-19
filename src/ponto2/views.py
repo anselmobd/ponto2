@@ -9,3 +9,8 @@ __all__ = ['index']
 def index(request):
     # return redirect('bordado:index')
     return render(request, 'principal.html', {})
+
+
+def index_puro(request):
+    # return redirect('bordado:index')
+    return render(request, 'principal_p.html', {})

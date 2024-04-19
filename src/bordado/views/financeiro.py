@@ -1,5 +1,6 @@
 from pprint import pprint
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import connection
 from django.shortcuts import render
 from django.urls import reverse
@@ -9,7 +10,7 @@ from o2lib.views.base.get_post import O2BaseGetPostView
 from bordado.forms import FinanceiroForm
 
 
-class Financeiro(O2BaseGetPostView):
+class Financeiro(LoginRequiredMixin, O2BaseGetPostView):
 
     def __init__(self):
         super().__init__()
