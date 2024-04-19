@@ -6,7 +6,7 @@ from django.shortcuts import redirect, render
 __all__ = ['index', 'sobre', 'menu']
 
 
-def index(request):
+def index_vue(request):
     if request.user.is_authenticated:
         return render(request, 'bordado/index/main.html', {})
     else:
