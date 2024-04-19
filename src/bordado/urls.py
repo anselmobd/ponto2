@@ -8,7 +8,7 @@ from .views.main import (
     sobre,
     sobre_puro,
 )
-from .views.financeiro import Financeiro
+from .views.lancamento import Financeiro
 from .api.rest import (
     ApontamentoProducaoViewSet,
     BordadoViewSet,
