@@ -78,6 +78,12 @@
   </header>
 
   <main class="main_body">
+    <header>
+      {% block header %}
+        {% block header.open %}<h3>{% endblock header.open %}{% block header.content %}
+        {% endblock header.content %}{% block header.close %}</h3>{% endblock header.close %}
+      {% endblock %}
+    </header>
     {% block content %}{% endblock %}
   </main>
 

@@ -1,9 +1,10 @@
 {% extends 'layout/index_p.html' %}
 {% load static %}
 
+{% block header.content %}Consultas{% endblock header.content %}
+
 {% block content %}
-<h3>Consultas</h3>
 <ul>
-  <li><a href="{% url 'bordado:lancamento' %}">Financeiro</a></li>
+  <li><a href="{% url 'bordado:lancamento' %}">Lançamento</a></li>
 </ul>
 {% endblock %}
