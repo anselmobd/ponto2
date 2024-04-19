@@ -143,6 +143,10 @@ class TableDefs(object):
             result[col] = def_col
         return result
 
+    @property
+    def all_fields(self):
+        return list(self.definition.keys())
+
     def cols(self, *cols):
         if cols:
             self.cols_list = cols
