@@ -9,7 +9,7 @@
       {% for field_name in field_set %}{% spaceless %}
         {% for input in form %}{% spaceless %}
           {%if field_name == input.name%}{% spaceless %}
-            {% include "layout/form_inputs_report_value.html" with input=input only%}
+            {% include "layout/generics/form_inputs_report_value.html" with input=input only%}
           {% endspaceless %}{% endif %}
         {% endspaceless %}{% endfor %}
       {% endspaceless %}{% endfor %}
@@ -19,10 +19,10 @@
     {% if input.field.widget.input_type != 'hidden' %}{% spaceless %}
       {% if excludes %}{% spaceless %}
         {% if input.name not in excludes %}{% spaceless %}
-          {% include "layout/form_inputs_report_value.html" with input=input h=h only%}
+          {% include "layout/generics/form_inputs_report_value.html" with input=input h=h only%}
         {% endspaceless %}{% endif %}
       {% endspaceless %}{% else %}{% spaceless %}
-        {% include "layout/form_inputs_report_value.html" with input=input h=h only%}
+        {% include "layout/generics/form_inputs_report_value.html" with input=input h=h only%}
       {% endspaceless %}{% endif %}
     {% endspaceless %}{% endif %}
   {% endspaceless %}{% endfor %}
