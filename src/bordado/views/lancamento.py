@@ -17,15 +17,15 @@ from bordado.models import (
 )
 
 
-class Lancamento(LoginRequiredMixin, O2BaseGetPostView):
+class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
 
     def __init__(self):
         super().__init__()
         self.Form_class = FinanceiroForm
         self.cleaned_data2self = True
         self.cleaned_data2context = True
-        self.template_name = 'bordado/financeiro.html'
-        self.title_name = 'Financeiro'
+        self.template_name = 'bordado/lancamento.html'
+        self.title_name = 'Lançamento'
         self.table_defs = TableDefs(
             {
                 'cobranca__pedidoitemcobranca__pedido_item__pedido': ['Pedido', 'c'],

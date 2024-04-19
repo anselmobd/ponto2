@@ -8,7 +8,7 @@ from .views.main import (
     sobre,
     sobre_puro,
 )
-from .views.lancamento import Lancamento
+from .views.lancamento import LancamentoView
 from .api.rest import (
     ApontamentoProducaoViewSet,
     BordadoViewSet,
@@ -51,5 +51,5 @@ urlpatterns = [
     path('old', index, name='index_old'),
     path('sobre_tw', sobre, name='sobre'),
     path('sobre', sobre_puro, name='sobre_p'),
-    path('lancamento', Lancamento.as_view(), name='lancamento'),
+    path('lancamento', LancamentoView.as_view(), name='lancamento'),
 ]
