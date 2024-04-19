@@ -1,7 +1,7 @@
-{% extends 'bordado/menu_p.html' %}
+{% extends 'bordado/index.html' %}
 {% load static %}
 
-{% block header.content %}{{ titulo }} - <a href="{% url 'bordado:index_p' %}">{{ block.super }}</a>{% endblock header.content %}
+{% block header.content %}{{ titulo }} - <a href="{% url 'bordado:index' %}">{{ block.super }}</a>{% endblock header.content %}
 
 {% block style %}
   <style>

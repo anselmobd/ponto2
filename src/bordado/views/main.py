@@ -21,8 +21,8 @@ def sobre_puro(request):
     return render(request, 'bordado/sobre_p.html', {})
 
 
-def menu_puro(request):
+def index(request):
     if request.user.is_authenticated:
-        return render(request, 'bordado/menu_p.html', {})
+        return render(request, 'bordado/index.html', {})
     else:
         return redirect('bordado:sobre_p')
