@@ -3,7 +3,6 @@ from rest_framework import routers
 
 from .views.main import (
     index,
-    menu,
     menu_puro,
     sobre,
     sobre_puro,
@@ -46,7 +45,6 @@ router.register(r'apontamento_producao', ApontamentoProducaoViewSet)
 app_name = 'bordado'
 urlpatterns = [
     path('api/', include(router.urls)),
-    path('tw', menu, name='index'),
     path('', menu_puro, name='index_p'),
     path('old', index, name='index_old'),
     path('sobre_tw', sobre, name='sobre'),
