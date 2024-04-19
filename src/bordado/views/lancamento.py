@@ -17,7 +17,7 @@ from bordado.models import (
 )
 
 
-class Financeiro(LoginRequiredMixin, O2BaseGetPostView):
+class Lancamento(LoginRequiredMixin, O2BaseGetPostView):
 
     def __init__(self):
         super().__init__()
