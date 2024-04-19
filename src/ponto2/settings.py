@@ -74,6 +74,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
 
     'bordado',
+    'o2lib',
 ]
 
 MIDDLEWARE = [
