@@ -4,12 +4,13 @@ from django import forms
 
 
 class FinanceiroForm(forms.Form):
-    pedido = forms.CharField(
+    pedido_numero = forms.CharField(
         label='Pedido',
         widget=forms.TextInput(
             attrs={
                 'type': 'number',
                 'autofocus': 'autofocus',
             }
-        )
+        ),
+        required=False,
     )

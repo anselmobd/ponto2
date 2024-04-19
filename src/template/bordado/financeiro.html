@@ -9,6 +9,6 @@
     <input class="button" type="submit" value="Busca"/>
   </form>
   {% if request.POST %}
-    <p>Pedido: {{pedido}}</p>
+    {% include "layout/form_inputs_report.html" with form=form h=4 only %}
   {% endif %}
 {% endblock %}
