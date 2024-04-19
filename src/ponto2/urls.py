@@ -31,7 +31,7 @@ urlpatterns = [
     ),
     path(
         'accounts/login/',
-        auth_views.LoginView.as_view(template_name="layout/login_p.html"),
+        auth_views.LoginView.as_view(template_name="layout/login.html"),
         name='login_p',
     ),
 ]
