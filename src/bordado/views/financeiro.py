@@ -28,6 +28,7 @@ class Financeiro(LoginRequiredMixin, O2BaseGetPostView):
         self.title_name = 'Financeiro'
         self.table_defs = TableDefs(
             {
+                'cobranca__pedidoitemcobranca__pedido_item__pedido': ['Pedido', 'c'],
                 'data': [],
                 'informacao': ['Informação', 'c'],
                 'cobranca__comunicacao__descricao': ['Comunicação', 'c'],
@@ -46,13 +47,14 @@ class Financeiro(LoginRequiredMixin, O2BaseGetPostView):
         if self.pedido_numero:
             try:
                 pedido = Pedido.objects.get(numero=self.pedido_numero)
-                lancamento = lancamento.filter(pedido=pedido)  # erro!
+                lancamento = lancamento.filter(
+                    cobranca__pedidoitemcobranca__pedido_item__pedido=pedido)
             except Pedido.DoesNotExist:
                 ...
         if self.cobranca_id:
             try:
                 cobranca = Cobranca.objects.get(id=self.cobranca_id)
-                lancamento = lancamento.filter(cobranca=cobranca)  # erro!
+                lancamento = lancamento.filter(cobranca=cobranca)
             except Cobranca.DoesNotExist:
                 ...
 
