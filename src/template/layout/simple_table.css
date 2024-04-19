@@ -1,0 +1,38 @@
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+thead {
+    font-weight: bold;
+}
+th, td {
+  text-align: left;
+  padding: 2px;
+}
+tr:nth-child(even) {
+  background-color: #f2f2f2
+}
+div#divTable {
+  overflow-x: auto;
+}
+th.group, tr.group {
+  border-bottom: black;
+  border-bottom-style: dashed;
+  border-bottom-width: thin;
+}
+table:not(.layout) tbody tr:hover {
+  background-color: #DDD;
+}
+thead:not(.layout) th
+{
+  background-image: linear-gradient(white, #DDD);
+}
+thead th.sticky
+{
+  position: sticky;
+  z-index: 10;
+  top: 0px;
+}
+.glyphicon {
+    position: static;
+}
