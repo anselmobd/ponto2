@@ -1,0 +1,19 @@
+{% with field|add:'|DECIMALS' as field_decimals %}{% spaceless %}
+  {% with row|get_item:field_decimals as fdecimals %}
+    {% if fdecimals is not None %}
+      {{ row|get_item:field|floatformat:fdecimals|transp_decimals|safe }}
+    {% else %}
+      {% if decimals %}
+        {% with decimals|get_item:count as fdecimals %}
+          {% if fdecimals is not None %}
+            {{ row|get_item:field|floatformat:fdecimals|transp_decimals|safe }}
+          {% else %}
+            {% include "layout/field_safe.html" with row=row field=field safe=safe only %}
+          {% endif %}
+        {% endwith %}
+      {% else %}
+        {% include "layout/field_safe.html" with row=row field=field safe=safe only %}
+      {% endif %}
+    {% endif %}
+  {% endwith %}
+{% endspaceless %}{% endwith %}

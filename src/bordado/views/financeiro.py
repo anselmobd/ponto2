@@ -6,6 +6,7 @@ from django.urls import reverse
 
 from o2lib.views.base.get_post import O2BaseGetPostView
 from o2lib.models.dictlist import queryset2dictlist
+from o2lib.table_defs import TableDefs
 
 from bordado.forms import FinanceiroForm
 from bordado.models import (
@@ -24,6 +25,16 @@ class Financeiro(LoginRequiredMixin, O2BaseGetPostView):
         self.cleaned_data2context = True
         self.template_name = 'bordado/financeiro.html'
         self.title_name = 'Financeiro'
+        self.table_defs = TableDefs(
+            {
+                'data parcela': [],
+                'n_parcelas': ['Nº de parcelas'],
+                'informacao': ['Informação'],
+                'valor': [None, 'r'],
+            },
+            ['header', '+style'],
+            style = {'_': 'text-align'},
+        )
 
     def mount_context(self):
         lancamento = Lancamento.objects
@@ -43,3 +54,4 @@ class Financeiro(LoginRequiredMixin, O2BaseGetPostView):
         self.context.update({
             'data': data,
         })
+        self.table_defs.hfs_dict_context(self.context)

@@ -1,0 +1,50 @@
+<tbody>
+{% for row in data %}{% spaceless %}
+  {% if not group or group|length_is:"0" %}
+    {% if row|get_item:'|CLASS' %}
+      <tr class="{{ row|get_item:'|CLASS' }}">
+    {% else %}
+      <tr>
+    {% endif %}
+  {% else %}
+    <tr class="group">
+  {% endif %}
+  {% for field in fields %}
+
+    {% if group and field in group %}
+      {% if row|get_item:'rowspan' != 0 %}
+        <td rowspan="{{ row|get_item:'rowspan'|safe }}"
+      {% endif %}
+    {% else %}
+      <td
+    {% endif %}
+    {% if not group or field not in group or row|get_item:'rowspan' != 0 %}
+      {% with field|add:'|CLASS' as field_class %}
+        {% if row|get_item:field_class %}
+          {% if row|get_item:field_class|get_type == 'list' %}
+            class="
+              {% for classe in row|get_item:field_class %}
+                {{classe}}
+              {% endfor%}
+            "
+            {% else %}
+            class="{{ row|get_item:field_class }}"
+          {% endif %}
+        {% endif %}
+      {% endwith %}
+      {% with field|add:'|ID' as field_id %}
+        {% if row|get_item:field_id %}
+          id="{{ row|get_item:field_id }}"
+        {% endif %}
+      {% endwith %}
+      style="{% spaceless %}
+      {% include "layout/tbody_generic_td_style.html" with count=forloop.counter style=style row=row field=field only %}
+      {% endspaceless %}">{% spaceless %}
+      {% include "layout/tbody_generic_td_content.html" with row=row field=field safe=safe pre=pre count=forloop.counter decimals=decimals only %}
+      {% endspaceless %}</td>
+    {% endif %}
+  {% endfor %}
+  </tr>
+  {% endspaceless %}
+{% endfor %}
+</tbody>

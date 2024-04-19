@@ -1,0 +1,16 @@
+<thead>
+  <tr>{% for info in data %}
+    <th {% spaceless %}style="{% spaceless %}
+        {% include "layout/tbody_generic_style.html" with count=forloop.counter style=style only %}
+        {% endspaceless %}"
+        {% endspaceless %} class="{{thclass}}">{% spaceless %}
+        {% if info|get_type == 'tuple' %}
+          {{ info.0|safe }}
+        {% elif info|get_type == 'set' %}
+          {{ info|get_set_item:0|safe }}
+        {% else %}
+          {{ info }}
+        {% endif %}
+      {% endspaceless %}</th>{% endfor %}
+  </tr>
+</thead>
