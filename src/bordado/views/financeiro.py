@@ -5,9 +5,14 @@ from django.db import connection
 from django.urls import reverse
 
 from o2lib.views.base.get_post import O2BaseGetPostView
+from o2lib.models.dictlist import queryset2dictlist
 
 from bordado.forms import FinanceiroForm
-from bordado.models import Pedido
+from bordado.models import (
+    Cobranca,
+    Lancamento,
+    Pedido,
+)
 
 
 class Financeiro(LoginRequiredMixin, O2BaseGetPostView):
@@ -21,8 +26,20 @@ class Financeiro(LoginRequiredMixin, O2BaseGetPostView):
         self.title_name = 'Financeiro'
 
     def mount_context(self):
+        lancamento = Lancamento.objects
         if self.pedido_numero:
             try:
                 pedido = Pedido.objects.get(numero=self.pedido_numero)
+                lancamento = lancamento.filter(pedido=pedido)  # erro!
             except Pedido.DoesNotExist:
-                pedido = None
+                ...
+        if self.cobranca_id:
+            try:
+                cobranca = Cobranca.objects.get(id=self.cobranca_id)
+                lancamento = lancamento.filter(cobranca=cobranca)  # erro!
+            except Cobranca.DoesNotExist:
+                ...
+        data = queryset2dictlist(lancamento)
+        self.context.update({
+            'data': data,
+        })

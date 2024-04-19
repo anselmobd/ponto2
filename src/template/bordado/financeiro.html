@@ -10,5 +10,6 @@
   </form>
   {% if request.POST %}
     {% include "layout/form_inputs_report.html" with form=form h=4 only %}
+    {{data}}
   {% endif %}
 {% endblock %}

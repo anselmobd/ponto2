@@ -14,3 +14,12 @@ class FinanceiroForm(forms.Form):
         ),
         required=False,
     )
+    cobranca_id = forms.CharField(
+        label='Cobrança',
+        widget=forms.TextInput(
+            attrs={
+                'type': 'number',
+            }
+        ),
+        required=False,
+    )
