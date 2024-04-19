@@ -58,9 +58,6 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
             except Cobranca.DoesNotExist:
                 ...
 
-        data = queryset2dictlist(lancamento)
-        pprint(data)
-
         data = lancamento.values(*self.table_defs.all_fields)
         
         PrepRows(
