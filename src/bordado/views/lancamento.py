@@ -48,44 +48,50 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
         )
 
     def mount_context(self):
-        lancamento = Lancamento.objects.filter(
-            cliente__apelido__icontains=self.cliente_apelido)
-        # if self.cliente_apelido:
-        #     try:
-        #         cliente = Cliente.objects.get(apelido__icontains=self.cliente_apelido)
-        #         lancamento = lancamento.filter(
-        #             cliente=cliente)
-        #     except Cliente.DoesNotExist:
-        #         ...
+        self.context.update({
+            'errors': [],
+        })
+        lancamento = Lancamento.objects
+
+        if self.cliente_apelido:
+            try:
+                Cliente.objects.get(apelido__icontains=self.cliente_apelido)
+                lancamento = Lancamento.filter(
+                    cliente__apelido__icontains=self.cliente_apelido)
+            except Cliente.DoesNotExist:
+                self.context['errors'].append(f"Cliente com apelido contendo '{self.cliente_apelido}' não existe")
+
         if self.pedido_numero:
             try:
                 pedido = Pedido.objects.get(numero=self.pedido_numero)
                 lancamento = lancamento.filter(
                     **{self.PEDIDO: pedido})
             except Pedido.DoesNotExist:
-                ...
+                self.context['errors'].append(f"Pedido {self.pedido_numero} não existe")
+
         if self.cobranca_id:
             try:
                 cobranca = Cobranca.objects.get(id=self.cobranca_id)
                 lancamento = lancamento.filter(cobranca=cobranca)
             except Cobranca.DoesNotExist:
-                ...
+                self.context['errors'].append(f"Cobranca {self.cobranca_id} não existe")
 
         data = lancamento.values(*self.table_defs.all_fields)
-        
-        PrepRows(
-            data,
-        ).str_dash(
-            (
-                self.PEDIDO,
-                'informacao',
-                self.COMUNICACAO,
-                'cobranca__nf',
-                'cobranca',
-            )
-        ).process()
 
-        self.context.update({
-            'data': data,
-        })
-        self.table_defs.hfs_dict_context(self.context)
+        if not self.context['errors']:        
+            PrepRows(
+                data,
+            ).str_dash(
+                (
+                    self.PEDIDO,
+                    'informacao',
+                    self.COMUNICACAO,
+                    'cobranca__nf',
+                    'cobranca',
+                )
+            ).process()
+
+            self.context.update({
+                'data': data,
+            })
+            self.table_defs.hfs_dict_context(self.context)
