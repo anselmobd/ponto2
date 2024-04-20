@@ -13,6 +13,10 @@ class StopStepsException(Exception):
         super().__init__(f"Passos interrompidos. Motivo: {self.message}")
 
 
+class StepErrorException(Exception):
+    ...
+
+
 class CustomView(View):
     """
     Base para customizar views
@@ -124,6 +128,7 @@ class CustomView(View):
         atributo.update(retorno). Isso é útil, por exemplo, quando se quer que o 
         retorno seja adicionado ao context.
         """
+        ok = True
         for do_get in steps:
             try:
                 if isinstance(do_get, tuple):
@@ -144,4 +149,12 @@ class CustomView(View):
                     msg_erro: e,
                 })
                 return False
-        return True
+            except StepErrorException as e:
+                if msg_erro in self.context.update:
+                    self.context[msg_erro].append(e)
+                else:
+                    self.context.update({
+                        msg_erro: [e],
+                    })
+                ok = False
+        return ok
