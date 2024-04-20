@@ -11,6 +11,7 @@ from o2lib.views.base.get_post import O2BaseGetPostView
 
 from bordado.forms import LancamentoForm
 from bordado.models import (
+    Cliente,
     Cobranca,
     Lancamento,
     Pedido,
@@ -18,6 +19,9 @@ from bordado.models import (
 
 
 class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
+
+    PEDIDO = 'cobranca__pedidoitemcobranca__pedido_item__pedido'
+    COMUNICACAO = 'cobranca__comunicacao__descricao'
 
     def __init__(self):
         super().__init__()
@@ -28,10 +32,11 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
         self.title_name = 'Lançamento'
         self.table_defs = TableDefs(
             {
-                'cobranca__pedidoitemcobranca__pedido_item__pedido': ['Pedido', 'c'],
+                'cliente__apelido': ['Cliente'],
+                self.PEDIDO: ['Pedido', 'c'],
                 'data': [],
                 'informacao': ['Informação', 'c'],
-                'cobranca__comunicacao__descricao': ['Comunicação', 'c'],
+                self.COMUNICACAO: ['Comunicação', 'c'],
                 'cobranca__nf': ['NF', 'c'],
                 'cobranca': ['Cobrança', 'c'],
                 'parcela': [None, 'c'],
@@ -43,12 +48,20 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
         )
 
     def mount_context(self):
-        lancamento = Lancamento.objects
+        lancamento = Lancamento.objects.filter(
+            cliente__apelido__icontains=self.cliente_apelido)
+        # if self.cliente_apelido:
+        #     try:
+        #         cliente = Cliente.objects.get(apelido__icontains=self.cliente_apelido)
+        #         lancamento = lancamento.filter(
+        #             cliente=cliente)
+        #     except Cliente.DoesNotExist:
+        #         ...
         if self.pedido_numero:
             try:
                 pedido = Pedido.objects.get(numero=self.pedido_numero)
                 lancamento = lancamento.filter(
-                    cobranca__pedidoitemcobranca__pedido_item__pedido=pedido)
+                    **{self.PEDIDO: pedido})
             except Pedido.DoesNotExist:
                 ...
         if self.cobranca_id:
@@ -64,8 +77,9 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
             data,
         ).str_dash(
             (
+                self.PEDIDO,
                 'informacao',
-                'cobranca__comunicacao__descricao',
+                self.COMUNICACAO,
                 'cobranca__nf',
                 'cobranca',
             )
