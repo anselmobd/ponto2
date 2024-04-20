@@ -50,7 +50,7 @@ class CustomView(View):
 
         self.context = {}
 
-    def init_self(self, request, kwargs):
+    def init_self(self, request, **kwargs):
         """
         Inicializa variáveis do self:
             request
@@ -86,16 +86,15 @@ class CustomView(View):
         """
         return self.kwargs[field] if field in self.kwargs else None
 
-    def my_render(self):
+    def render_or_redirect(self):
         """
         Se self.redirect for definido, execute redirect.
         Senão, execute render com request, template_name e context
         """
         if self.redirect:
-            if isinstance(self.redirect, tuple):
-                return redirect(*self.redirect)
-            else:
-                return redirect(self.redirect)
+            if not isinstance(self.redirect, tuple):
+                self.redirect = (self.redirect, )
+            return redirect(*self.redirect)
         return render(self.request, self.template_name, self.context)
 
     def pre_mount_context(self):
@@ -116,8 +115,8 @@ class CustomView(View):
         Retorna booleano indicando sucesso da execução da lista inteira.
         Na primeira ocorrência de excessão a execução da lista é interompida.
         
-        Se os métodos levantarem uma exceção o texto desta vai para a chave
-        msg_erro do self.context
+        Se os métodos levantarem uma exceção StopStepsException, o texto desta
+        vai para a chave msg_erro do self.context
 
         Se, na lista, no lugar de um método, constar um tupla, entende-se que esta 
         contenha (método, atributo).
