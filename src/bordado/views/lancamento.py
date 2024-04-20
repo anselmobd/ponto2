@@ -47,24 +47,30 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
             style = {'_': 'text-align'},
         )
 
-    def mount_context(self):
-        self.context.update({
-            'errors': [],
-        })
-        lancamento = Lancamento.objects
+    def init_data_query(self):
+        self.query = Lancamento.objects
 
+    def filtro_cliente(self):
         if self.cliente_apelido:
             try:
                 Cliente.objects.get(apelido__icontains=self.cliente_apelido)
-                lancamento = Lancamento.filter(
+                self.query = Lancamento.filter(
                     cliente__apelido__icontains=self.cliente_apelido)
             except Cliente.DoesNotExist:
                 self.context['errors'].append(f"Cliente com apelido contendo '{self.cliente_apelido}' não existe")
 
+    def mount_context(self):
+        self.context.update({
+            'errors': [],
+        })
+
+        self.init_data_query()
+        self.filtro_cliente()
+
         if self.pedido_numero:
             try:
                 pedido = Pedido.objects.get(numero=self.pedido_numero)
-                lancamento = lancamento.filter(
+                self.query = self.query.filter(
                     **{self.PEDIDO: pedido})
             except Pedido.DoesNotExist:
                 self.context['errors'].append(f"Pedido {self.pedido_numero} não existe")
@@ -72,11 +78,11 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
         if self.cobranca_id:
             try:
                 cobranca = Cobranca.objects.get(id=self.cobranca_id)
-                lancamento = lancamento.filter(cobranca=cobranca)
+                self.query = self.query.filter(cobranca=cobranca)
             except Cobranca.DoesNotExist:
                 self.context['errors'].append(f"Cobranca {self.cobranca_id} não existe")
 
-        data = lancamento.values(*self.table_defs.all_fields)
+        data = self.query.values(*self.table_defs.all_fields)
 
         if not self.context['errors']:        
             PrepRows(
