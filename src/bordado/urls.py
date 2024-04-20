@@ -2,7 +2,6 @@ from django.urls import include, path
 from rest_framework import routers
 
 from .views.main import (
-    index_vue,
     index,
     sobre,
 )
@@ -45,7 +44,6 @@ app_name = 'bordado'
 urlpatterns = [
     path('api/', include(router.urls)),
     path('', index, name='index'),
-    path('index_vue', index_vue, name='index_vue'),
     path('sobre', sobre, name='sobre'),
     path('lancamento', LancamentoView.as_view(), name='lancamento'),
 ]
