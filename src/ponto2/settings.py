@@ -195,6 +195,8 @@ USE_I18N = True
 
 USE_TZ = True
 
+USE_THOUSAND_SEPARATOR = True
+
 FORMAT_MODULE_PATH = [
     'ponto2.formats',
 ]
