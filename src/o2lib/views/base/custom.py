@@ -8,12 +8,9 @@ from django.views import View
 class StopStepsException(Exception):
     '''
     '''
-    def __init__(self, val=""):
-        self.val = val
-        super().__init__()
-
-    def __str__(self):
-        return f"Passos interrompidos. Motivo: {self.val}"
+    def __init__(self, message=""):
+        self.message = message
+        super().__init__(f"Passos interrompidos. Motivo: {self.message}")
 
 
 class CustomView(View):
