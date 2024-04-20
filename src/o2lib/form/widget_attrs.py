@@ -27,6 +27,6 @@ class FormWidgetAttrs():
     placeholder_0_0 = {
         'placeholder': '0... 0... ...',
     }
-    placeholder_item = {
-        'placeholder': '0.00000.000.000000',
+    size_5 = {
+        'size': 5,
     }

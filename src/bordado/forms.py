@@ -19,13 +19,13 @@ class LancamentoForm(forms.Form):
         label='Pedido',
         required=False,
         widget=forms.TextInput(
-            attrs={**a.number}
+            attrs={**a.number, **a.placeholder_0, **a.size_5}
         ),
     )
     cobranca_id = forms.CharField(
         label='Cobrança',
         required=False,
         widget=forms.TextInput(
-            attrs={**a.number}
+            attrs={**a.number, **a.placeholder_0, **a.size_5}
         ),
     )
