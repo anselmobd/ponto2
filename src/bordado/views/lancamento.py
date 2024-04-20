@@ -50,23 +50,19 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
     def init_data_query(self):
         self.query = Lancamento.objects
 
-    def filtro_cliente(self):
+    def exec_data_query(self):
+        self.data = self.query.values(*self.table_defs.all_fields)
+
+    def filtra_cliente(self):
         if self.cliente_apelido:
             try:
                 Cliente.objects.get(apelido__icontains=self.cliente_apelido)
-                self.query = Lancamento.filter(
+                self.query = self.query.filter(
                     cliente__apelido__icontains=self.cliente_apelido)
             except Cliente.DoesNotExist:
                 self.context['errors'].append(f"Cliente com apelido contendo '{self.cliente_apelido}' não existe")
 
-    def mount_context(self):
-        self.context.update({
-            'errors': [],
-        })
-
-        self.init_data_query()
-        self.filtro_cliente()
-
+    def filtra_pedido(self):
         if self.pedido_numero:
             try:
                 pedido = Pedido.objects.get(numero=self.pedido_numero)
@@ -75,6 +71,7 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
             except Pedido.DoesNotExist:
                 self.context['errors'].append(f"Pedido {self.pedido_numero} não existe")
 
+    def filtra_cobranca(self):
         if self.cobranca_id:
             try:
                 cobranca = Cobranca.objects.get(id=self.cobranca_id)
@@ -82,22 +79,34 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
             except Cobranca.DoesNotExist:
                 self.context['errors'].append(f"Cobranca {self.cobranca_id} não existe")
 
-        data = self.query.values(*self.table_defs.all_fields)
+    def context_table(self):
+        PrepRows(
+            self.data,
+        ).str_dash(
+            (
+                self.PEDIDO,
+                'informacao',
+                self.COMUNICACAO,
+                'cobranca__nf',
+                'cobranca',
+            )
+        ).process()
+
+        self.context.update({
+            'data': self.data,
+        })
+        self.table_defs.hfs_dict_context(self.context)
+
+    def mount_context(self):
+        self.context.update({
+            'errors': [],
+        })
+
+        self.init_data_query()
+        self.filtra_cliente()
+        self.filtra_pedido()
+        self.filtra_cobranca()
+        self.exec_data_query()
 
         if not self.context['errors']:        
-            PrepRows(
-                data,
-            ).str_dash(
-                (
-                    self.PEDIDO,
-                    'informacao',
-                    self.COMUNICACAO,
-                    'cobranca__nf',
-                    'cobranca',
-                )
-            ).process()
-
-            self.context.update({
-                'data': data,
-            })
-            self.table_defs.hfs_dict_context(self.context)
+            self.context_table()
