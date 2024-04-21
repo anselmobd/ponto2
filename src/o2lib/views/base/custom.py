@@ -103,14 +103,14 @@ class CustomView(View):
         """
         pass
 
-    def do_steps(self, steps, msg_erro='msg_erro'):
+    def do_steps(self, *steps, msg_error='msg_error'):
         """Metodo de que recebe lista de metodos e os executa.
 
         Retorna booleano indicando sucesso da execução da lista inteira.
         Na primeira ocorrência de excessão a execução da lista é interompida.
         
         Se os métodos levantarem uma exceção StopStepsException, o texto desta
-        vai para a chave msg_erro do self.context
+        vai para a chave msg_error do self.context
 
         Se, na lista, no lugar de um método, constar um tupla, entende-se que esta 
         contenha (método, atributo).
@@ -139,15 +139,15 @@ class CustomView(View):
                     do_get()
             except StopStepsException as e:
                 self.context.update({
-                    msg_erro: e,
+                    msg_error: [e],
                 })
                 return False
             except StepErrorException as e:
-                if msg_erro in self.context.update:
-                    self.context[msg_erro].append(e)
+                if msg_error in self.context:
+                    self.context[msg_error].append(e)
                 else:
                     self.context.update({
-                        msg_erro: [e],
+                        msg_error: [e],
                     })
                 ok = False
         return ok
