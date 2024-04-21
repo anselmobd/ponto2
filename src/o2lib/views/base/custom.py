@@ -4,17 +4,10 @@ from django.apps import apps
 from django.shortcuts import redirect, render
 from django.views import View
 
-
-class StopStepsException(Exception):
-    '''
-    '''
-    def __init__(self, message=""):
-        self.message = message
-        super().__init__(f"Passos interrompidos. Motivo: {self.message}")
-
-
-class StepErrorException(Exception):
-    ...
+from o2lib.views.base.exception import (
+    StepErrorException,
+    StopStepsException, 
+)
 
 
 class CustomView(View):
