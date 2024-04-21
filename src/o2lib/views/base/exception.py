@@ -11,9 +11,7 @@ class StopStepsException(Exception):
     O método retornará False e colocará a mensagem, como único elemento da
     lista que está na chave msg_error (nome customizável) do dict context.
     '''
-    def __init__(self, message=""):
-        self.message = message
-        super().__init__(f"Processo interrompido: {self.message}")
+    ...
 
 
 class StepErrorException(Exception):
