@@ -51,45 +51,47 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
         )
 
     def init_query(self):
-        return Lancamento.objects
+        self.query = Lancamento.objects
 
     def exec_query(self):
-        result = self.query.values(*self.table_defs.all_fields)
-        if result:
-            return result
-        else:
-            raise StepErrorException(
+        self.data = self.query.values(*self.table_defs.all_fields)
+        if not self.data:
+            raise StopStepsException(
                 "Filtro definido não seleciona nenhum lançamento")
 
     def filtra_cliente(self):
         if self.cliente_apelido:
             try:
                 Cliente.objects.get(apelido__icontains=self.cliente_apelido)
+            except Cliente.DoesNotExist:
+                self.form.errors['cliente_apelido'] = [
+                    f"Cliente com apelido contendo '{self.cliente_apelido}' "
+                    "não existe"]
+                # raise StepErrorException("erro do filtro do cliente")
+            finally:
                 self.query = self.query.filter(
                     cliente__apelido__icontains=self.cliente_apelido)
-            except Cliente.DoesNotExist:
-                raise StepErrorException(
-                    f"Cliente com apelido contendo '{self.cliente_apelido}' "
-                    "não existe")
 
     def filtra_pedido(self):
         if self.pedido_numero:
             try:
-                pedido = Pedido.objects.get(numero=self.pedido_numero)
-                self.query = self.query.filter(
-                    **{self.PEDIDO: pedido})
+                Pedido.objects.get(numero=self.pedido_numero)
             except Pedido.DoesNotExist:
-                raise StepErrorException(
-                    f"Pedido {self.pedido_numero} não existe")
+                self.form.errors['pedido_numero'] = [
+                    f"Pedido {self.pedido_numero} não existe"]
+            finally:
+                self.query = self.query.filter(
+                    **{self.PEDIDO: self.pedido_numero})
 
     def filtra_cobranca(self):
         if self.cobranca_id:
             try:
-                cobranca = Cobranca.objects.get(id=self.cobranca_id)
-                self.query = self.query.filter(cobranca=cobranca)
+                Cobranca.objects.get(id=self.cobranca_id)
             except Cobranca.DoesNotExist:
-                raise StepErrorException(
-                    f"Cobranca {self.cobranca_id} não existe")
+                self.form.errors['cobranca_id'] = [
+                    f"Cobranca {self.cobranca_id} não existe"]
+            finally:
+                self.query = self.query.filter(cobranca_id=self.cobranca_id)
 
     def context_table(self):
         PrepRows(
@@ -110,11 +112,17 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
         self.table_defs.hfs_dict_context(self.context)
 
     def mount_context(self):
-        if self.steps.do(
-            ('query', self.init_query),
+        for passo in [
+            self.init_query,
             self.filtra_cliente,
             self.filtra_pedido,
             self.filtra_cobranca,
-            ('data', self.exec_query),
-        ):
-            self.context_table()
+            self.exec_query,
+            self.context_table,
+        ]:
+            try:
+                passo()
+            except (StopStepsException, StepErrorException) as e:
+                self.context['error_msgs'].append(e)
+                if isinstance(e, StopStepsException):
+                    break
