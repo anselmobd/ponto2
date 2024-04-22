@@ -4,6 +4,8 @@ from django import forms
 
 from o2lib.form.widget_attrs import FormWidgetAttrs
 
+__all__ = ['LancamentoForm']
+
 
 class LancamentoForm(forms.Form):
     a = FormWidgetAttrs()
@@ -29,3 +31,14 @@ class LancamentoForm(forms.Form):
             attrs={**a.number, **a.placeholder_0, **a.size_5}
         ),
     )
+    data_de = forms.DateField(
+        label="Data do lançamento: De",
+        required=False,
+        widget=forms.DateInput(attrs={'type': 'date'}),
+    )
+    data_ate = forms.DateField(
+        label="Até",
+        required=False,
+        widget=forms.DateInput(attrs={'type': 'date'}),
+    )
+
