@@ -124,8 +124,6 @@ class Steps():
                 result = execute()
                 if result is not None:
                     storage = self.get_data_storage(return_storage)
-                    print(return_storage)
-                    pprint(storage)
                     if isinstance(storage, dict):
                         if isinstance(result, dict):
                             storage.update(result)
