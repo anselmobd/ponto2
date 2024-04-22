@@ -1,9 +1,5 @@
 from pprint import pprint
 
-from django.apps import apps
-from django.shortcuts import redirect, render
-from django.views import View
-
 from o2lib.views.base.exception import (
     StepErrorException,
     StopStepsException, 
@@ -18,7 +14,8 @@ class Steps():
 
     """
 
-    def __init__(self, context=[], error_field='msg_error'):
+    def __init__(self,
+            instance, context_field='context', error_field='msg_error'):
         """
         Inicializa parâmetros:
         context
@@ -26,15 +23,15 @@ class Steps():
         error_field
             Nome da chave do context que guarda lista de mensagens de erro recebidas pelo método do_steps.
         """
+        self.instance = instance
         self.error_field = error_field
-        self.steps_context = context
+        self.context_field = context_field
 
     def add_error_field_msg(self, error_field, message, force_init=False):
-        if force_init or error_field not in self.steps_context:
-            self.steps_context.update({
-                error_field: [],
-            })
-        self.steps_context[error_field].append(message)
+        context = self.get_attr_reference(self.context_field, new_value=[])
+        if force_init or error_field not in context:
+            context[error_field] = []
+        context[error_field].append(message)
 
     def get_step_definition(self, step):
         return_storage = ''
@@ -50,23 +47,30 @@ class Steps():
             execute = step
         return return_storage, execute, error_field
 
-    def get_data_storage(self, return_storage):
-        keys = return_storage.split('.')
+    def get_attr_reference(self, key, new_value=None):
+        if not hasattr(self.instance, key):
+            setattr(self.instance, key, new_value)
+        return getattr(self.instance, key)
+
+    def split_address(self, address):
+        keys = address.split('.')
         if keys[0] == '':
-            keys[0] = 'context'
-        storage = getattr(self, keys[0], None)
+            keys[0] = self.context_field
+        return keys
+
+    def get_data_storage(self, return_storage):
+        keys = self.split_address(return_storage)
+        storage = self.get_attr_reference(keys[0])
         for key in keys[1:]:
             storage = storage[key]
         return storage
 
     def set_data_storage(self, return_storage, value):
-        keys = return_storage.split('.')
-        if keys[0] == '':
-            keys[0] = 'context'
+        keys = self.split_address(return_storage)
         if len(keys) == 1:
-            setattr(self, keys[0], value)
+            setattr(self.instance, keys[0], value)
         else:
-            storage = getattr(self, keys[0], None)
+            storage = self.get_attr_reference(keys[0])
             for key in keys[1:-1]:
                 if key not in storage:
                     storage[key] = dict()
@@ -120,12 +124,14 @@ class Steps():
                 result = execute()
                 if result is not None:
                     storage = self.get_data_storage(return_storage)
+                    print(return_storage)
+                    pprint(storage)
                     if isinstance(storage, dict):
                         if isinstance(result, dict):
                             storage.update(result)
                         else:
                             raise Exception(
-                                "return_storage é dict e result de callable"
+                                "return_storage é dict e result de callable "
                                 "não é dict. Não é possível fazer "
                                 "'dict.update'")
                     elif isinstance(storage, list):
