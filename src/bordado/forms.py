@@ -41,4 +41,13 @@ class LancamentoForm(forms.Form):
         required=False,
         widget=forms.DateInput(attrs={'type': 'date'}),
     )
-
+    CHOICES = [
+        (' ', 'Não filtra'),
+        ('c', 'Cobranças'),
+        ('r', 'Recebimentos'),
+    ]
+    tipo_lancamento = forms.ChoiceField(
+        label='Tipo de lançamento',
+        choices=CHOICES,
+        initial=' ',
+    )

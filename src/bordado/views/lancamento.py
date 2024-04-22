@@ -29,6 +29,7 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
     def __init__(self):
         super().__init__()
         self.Form_class = LancamentoForm
+        self.form_class_has_initial = True
         self.cleaned_data2self = True
         self.cleaned_data2context = True
         self.template_name = 'bordado/lancamento.html'
