@@ -41,7 +41,7 @@ class CustomView(View):
 
         self.context = {}
 
-        self.steps = Steps(self.context)
+        self.steps = Steps(self)
 
     def init_self(self, request, **kwargs):
         """
