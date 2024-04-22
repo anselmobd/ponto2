@@ -30,8 +30,9 @@ class CustomView(View):
         redirect
             String ou tupla que serão attibutos da execução de um redirect.
             Caso None, é executado um render.
-        error_field
-            Nome da chave do context que guarda lista de mensagens de erro recebidas pelo método do_steps.
+        # error_field
+        #     Nome da chave do context que guarda lista de mensagens de erro
+        #     recebidas pelo método do_steps.
         """
         super().__init__(*args, **kwargs)
         self.get_args = []
@@ -39,9 +40,9 @@ class CustomView(View):
         self.get_args2self = False
         self.redirect = None
 
-        self.context = {}
+        self.context = {'error_msgs': []}
 
-        self.steps = Steps(self)
+        # self.steps = Steps(self)
 
     def init_self(self, request, **kwargs):
         """
