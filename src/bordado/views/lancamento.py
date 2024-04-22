@@ -54,7 +54,7 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
     def exec_data_query(self):
         self.data = self.query.values(*self.table_defs.all_fields)
         if not self.data:
-            raise StepErrorException(
+            raise StopStepsException(
                 "Filtro definido não seleciona nenhum lançamento")
 
     def filtra_cliente(self):
