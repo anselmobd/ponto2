@@ -18,6 +18,8 @@ from bordado.models import (
     Pedido,
 )
 
+__all__ = ['LancamentoView']
+
 
 class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
 
@@ -48,13 +50,15 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
             style = {'_': 'text-align'},
         )
 
-    def init_data_query(self):
-        self.query = Lancamento.objects
+    def init_query(self):
+        return Lancamento.objects
 
-    def exec_data_query(self):
-        self.data = self.query.values(*self.table_defs.all_fields)
-        if not self.data:
-            raise StopStepsException(
+    def exec_query(self):
+        result = self.query.values(*self.table_defs.all_fields)
+        if result:
+            return result
+        else:
+            raise StepErrorException(
                 "Filtro definido não seleciona nenhum lançamento")
 
     def filtra_cliente(self):
@@ -106,11 +110,11 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
         self.table_defs.hfs_dict_context(self.context)
 
     def mount_context(self):
-        if self.do_steps(
-            self.init_data_query,
+        if self.steps.do(
+            ('query', self.init_query),
             self.filtra_cliente,
             self.filtra_pedido,
             self.filtra_cobranca,
-            self.exec_data_query
+            ('data', self.exec_query),
         ):
             self.context_table()
