@@ -93,6 +93,12 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
             finally:
                 self.query = self.query.filter(cobranca_id=self.cobranca_id)
 
+    def filtra_datas(self):
+        if self.data_de:
+            self.query = self.query.filter(data__gte=self.data_de)
+        if self.data_ate:
+            self.query = self.query.filter(data__lte=self.data_ate)
+
     def context_table(self):
         PrepRows(
             self.data,
@@ -117,6 +123,7 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
             self.filtra_cliente,
             self.filtra_pedido,
             self.filtra_cobranca,
+            self.filtra_datas,
             self.exec_query,
             self.context_table,
         ]:
