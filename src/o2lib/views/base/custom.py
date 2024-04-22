@@ -4,10 +4,10 @@ from django.apps import apps
 from django.shortcuts import redirect, render
 from django.views import View
 
-from o2lib.views.base.exception import (
-    StepErrorException,
-    StopStepsException, 
-)
+from o2lib.views.base.steps import Steps
+
+__all__ = ['CustomView']
+
 
 
 class CustomView(View):
@@ -18,31 +18,30 @@ class CustomView(View):
 
     def __init__(self, *args, **kwargs):
         """
-        Inicializa parâmetros, sendo:
-        
+        Inicializa parâmetros:
         get_args
-            uma lista de nomes de variáveis recebidas por GET
-        
+            Lista de nomes de variáveis recebidas por GET.
         get_args2context
-            um boolean indicando se as variáveis recebidas por GET
-            vão para o context
-        
+            Boolean indicando se as variáveis recebidas por GET vão para o
+            context.
         get_args2self
-            um boolean indicando se as variáveis recebidas por GET
-            vão para o self da view
-
+            Boolean indicando se as variáveis recebidas por GET vão para o
+            self da view.
         redirect
-            string ou tupla que serão attibutos da execução de um
-            redirect. Caso None, é executado um render.
-
+            String ou tupla que serão attibutos da execução de um redirect.
+            Caso None, é executado um render.
+        error_field
+            Nome da chave do context que guarda lista de mensagens de erro recebidas pelo método do_steps.
         """
-        super(CustomView, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.get_args = []
         self.get_args2context = False
         self.get_args2self = False
         self.redirect = None
 
         self.context = {}
+
+        self.steps = Steps(self.context)
 
     def init_self(self, request, **kwargs):
         """
@@ -102,52 +101,3 @@ class CustomView(View):
         Metodo de montagem de contexto
         """
         pass
-
-    def do_steps(self, *steps, msg_error='msg_error'):
-        """Metodo de que recebe lista de metodos e os executa.
-
-        Retorna booleano indicando sucesso da execução da lista inteira.
-        Na primeira ocorrência de excessão a execução da lista é interompida.
-        
-        Se os métodos levantarem uma exceção StopStepsException, o texto desta
-        vai para a chave msg_error do self.context
-
-        Se, na lista, no lugar de um método, constar um tupla, entende-se que esta 
-        contenha (método, atributo).
-
-        Na ausência de exceção, o retorno do método é atribuido ao atributo no self.
-
-        Caso tanto o atributo quanto o retorno forem dicionários, é feito um
-        atributo.update(retorno). Isso é útil, por exemplo, quando se quer que o 
-        retorno seja adicionado ao context.
-        """
-        ok = True
-        for do_get in steps:
-            try:
-                if isinstance(do_get, tuple):
-                    do, attrib = do_get
-                    result = do()
-                    value = getattr(self, attrib, None)
-                    if value:
-                        if isinstance(value, dict) and isinstance(result, dict):
-                            value.update(result)
-                        else:
-                            raise Exception(f"Atributo '{attrib}' já existe e não é caso de 'dict.update'")
-                    else:
-                        setattr(self, attrib, result)
-                else:
-                    do_get()
-            except StopStepsException as e:
-                self.context.update({
-                    msg_error: [e],
-                })
-                return False
-            except StepErrorException as e:
-                if msg_error in self.context:
-                    self.context[msg_error].append(e)
-                else:
-                    self.context.update({
-                        msg_error: [e],
-                    })
-                ok = False
-        return ok
