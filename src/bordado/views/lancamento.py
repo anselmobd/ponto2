@@ -100,6 +100,16 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
         if self.data_ate:
             self.query = self.query.filter(data__lte=self.data_ate)
 
+    def filtra_tipo(self):
+        if self.tipo_lancamento == '-':
+            self.context.update({
+                'form_report_excludes': ['tipo_lancamento'],
+            })
+        elif self.tipo_lancamento == 'c':
+            self.query = self.query.filter(cobranca__isnull=False)
+        elif self.tipo_lancamento == 'r':
+            self.query = self.query.filter(cobranca__isnull=True)
+
     def context_table(self):
         PrepRows(
             self.data,
@@ -125,6 +135,7 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
             self.filtra_pedido,
             self.filtra_cobranca,
             self.filtra_datas,
+            self.filtra_tipo,
             self.exec_query,
             self.context_table,
         ]:
