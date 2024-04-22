@@ -24,6 +24,7 @@ __all__ = ['LancamentoView']
 class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
 
     PEDIDO = 'cobranca__pedidoitemcobranca__pedido_item__pedido'
+    VALOR = 'cobranca__pedidoitemcobranca__valor'
     COMUNICACAO = 'cobranca__comunicacao__descricao'
 
     def __init__(self):
@@ -45,7 +46,7 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
                 'cobranca': ['Cobrança', 'c'],
                 'parcela': [None, 'c'],
                 'n_parcelas': ['Nºparcelas', 'c'],
-                'valor': [None, 'r'],
+                self.VALOR: ['Valor', 'r'],
             },
             ['header', '+style'],
             style = {'_': 'text-align'},
