@@ -49,19 +49,20 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
                 'cobranca__nf': ['NF', 'c'],
                 'cobranca': ['Cobrança', 'c'],
                 'parcela': [None, 'c'],
-                'n_parcelas': ['Nºparcelas', 'c'],
                 self.PEDIDO: ['Pedido', 'c'],
                 self.VALOR: ['Valor', 'r'],
             },
             ['header', '+style'],
             style = {'_': 'text-align'},
         )
+        self.extra_fields = ['n_parcelas', 'valor']
 
     def init_query(self):
         self.query = Lancamento.objects
 
     def exec_query(self):
-        self.data = self.query.values(*self.table_defs.all_fields, 'valor')
+        self.data = self.query.values(
+            *self.table_defs.all_fields, *self.extra_fields)
         if self.data:
             self.data = queryset2dictlist(self.data)
             ...
@@ -122,9 +123,12 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
     def context_table(self):
         for row in self.data:
             if row['cobranca']:
+                row['parcela'] = f"{row['parcela']}/{row['n_parcelas']}"
                 row[self.VALOR] = -row[self.VALOR]
             else:
+                row['parcela'] = '-'
                 row[self.VALOR] = row['valor']
+                row[f'{self.VALOR}|STYLE'] = 'color: darkgreen;'
 
         PrepRows(
             self.data,
@@ -154,7 +158,7 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
             {
                 'group': group,
                 'sum': sum_fields,
-                'descr': {'cliente__apelido': 'Total:'},
+                'descr': {self.PEDIDO: 'Total:'},
                 'global_sum': sum_fields,
                 'global_descr': {'cliente__apelido': 'Total geral:'},
                 'row_style':
