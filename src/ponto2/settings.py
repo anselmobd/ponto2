@@ -38,6 +38,9 @@ SECRET_KEY = env.str('SECRET_KEY', default=get_random_secret_key())
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
+DEBUG_CURSOR_EXECUTE = True
+DEBUG_CURSOR_EXECUTE_PRT = True
+
 ALLOWED_HOSTS = [
     '*',
     # # local dev

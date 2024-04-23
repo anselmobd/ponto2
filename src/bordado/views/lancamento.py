@@ -3,7 +3,9 @@ from pprint import pprint
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from o2lib.models.row_field import PrepRows
+from o2lib.models.dictlist import queryset2dictlist
 from o2lib.table_defs import TableDefs
+from o2lib.views.main import totalize_data
 from o2lib.views.base.get_post import O2BaseGetPostView
 from o2lib.views.base.exception import (
     StepErrorException,
@@ -38,7 +40,6 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
         self.table_defs = TableDefs(
             {
                 'cliente__apelido': ['Cliente'],
-                self.PEDIDO: ['Pedido', 'c'],
                 'data': [],
                 'informacao': ['Informação', 'c'],
                 self.COMUNICACAO: ['Comunicação', 'c'],
@@ -46,6 +47,7 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
                 'cobranca': ['Cobrança', 'c'],
                 'parcela': [None, 'c'],
                 'n_parcelas': ['Nºparcelas', 'c'],
+                self.PEDIDO: ['Pedido', 'c'],
                 self.VALOR: ['Valor', 'r'],
             },
             ['header', '+style'],
@@ -57,7 +59,10 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
 
     def exec_query(self):
         self.data = self.query.values(*self.table_defs.all_fields)
-        if not self.data:
+        if self.data:
+            self.data = queryset2dictlist(self.data)
+            ...
+        else:
             raise StopStepsException(
                 "Filtro definido não seleciona nenhum lançamento")
 
@@ -123,6 +128,19 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
                 'cobranca',
             )
         ).process()
+
+        sum_fields = [self.VALOR]
+        totalize_data(
+            self.data,
+            {
+                'sum': sum_fields,
+                'descr': {'cliente__apelido': 'Total:'},
+                'row_style':
+                    "font-weight: bold;"
+                    "background-image: linear-gradient(#DDD, white);",
+                'flags': ['NO_TOT_1'],
+            }
+        )
 
         self.context.update({
             'data': self.data,

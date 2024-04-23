@@ -49,16 +49,19 @@ def dictlist_split(dlist, rule):
 
 
 def record_keys(record):
+    pprint(record)
     return [
         key
-        for key in record.__dict__
-        if not isinstance(record.__dict__[key], ModelState)
+        # for key in record.__dict__
+        for key in record
+        if not isinstance(record[key], ModelState)
     ]
 
 
 def record_keys2dict(record, keys, fkey=lambda x: x):
     return {
-        fkey(key): record.__dict__[key]
+        # fkey(key): record.__dict__[key]
+        fkey(key): record[key]
         for key in keys
     }
 
