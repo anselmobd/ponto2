@@ -5,7 +5,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from o2lib.models.row_field import PrepRows
 from o2lib.models.dictlist import queryset2dictlist
 from o2lib.table_defs import TableDefs
-from o2lib.views.main import totalize_data
+from o2lib.views.main import (
+    group_rowspan,
+    totalize_grouped_data,
+)
 from o2lib.views.base.get_post import O2BaseGetPostView
 from o2lib.views.base.exception import (
     StepErrorException,
@@ -58,7 +61,7 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
         self.query = Lancamento.objects
 
     def exec_query(self):
-        self.data = self.query.values(*self.table_defs.all_fields)
+        self.data = self.query.values(*self.table_defs.all_fields, 'valor')
         if self.data:
             self.data = queryset2dictlist(self.data)
             ...
@@ -117,6 +120,12 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
             self.query = self.query.filter(cobranca__isnull=True)
 
     def context_table(self):
+        for row in self.data:
+            if row['cobranca']:
+                row[self.VALOR] = -row[self.VALOR]
+            else:
+                row[self.VALOR] = row['valor']
+
         PrepRows(
             self.data,
         ).str_dash(
@@ -129,21 +138,36 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
             )
         ).process()
 
+        group = [
+            'cliente__apelido',
+            'data',
+            'informacao',
+            self.COMUNICACAO,
+            'cobranca__nf',
+            'cobranca',
+            'parcela',
+            'n_parcelas',
+        ]
         sum_fields = [self.VALOR]
-        totalize_data(
+        totalize_grouped_data(
             self.data,
             {
+                'group': group,
                 'sum': sum_fields,
                 'descr': {'cliente__apelido': 'Total:'},
+                'global_sum': sum_fields,
+                'global_descr': {'cliente__apelido': 'Total geral:'},
                 'row_style':
                     "font-weight: bold;"
                     "background-image: linear-gradient(#DDD, white);",
                 'flags': ['NO_TOT_1'],
             }
         )
+        group_rowspan(self.data, group)
 
         self.context.update({
             'data': self.data,
+            'group': group,
         })
         self.table_defs.hfs_dict_context(self.context)
 
