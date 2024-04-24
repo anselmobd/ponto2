@@ -517,15 +517,15 @@ onMounted(() => {
             <th>Parcelamento</th>
           </tr>
           <tr v-if="cobrancas_error">
-            <th class="text-red-800" colspan="7">
+            <th colspan="8" class="text-red-800">
               {{ cobrancas_error }}
             </th>
           </tr>
           <tr v-if="cobrancas_carregando">
-            <td colspan="7">Carregando dados dos comunicados de cobrança...</td>
+            <td colspan="8">Carregando dados dos comunicados de cobrança...</td>
           </tr>
           <tr v-if="!cobrancas_carregando && (cobrancas.length == 0)">
-            <td colspan="7">Nenhum comunicado de cobrança encontrado</td>
+            <td colspan="8">Nenhum comunicado de cobrança encontrado</td>
           </tr>
         </thead>
         <tbody>
