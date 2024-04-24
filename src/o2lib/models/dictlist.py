@@ -49,7 +49,6 @@ def dictlist_split(dlist, rule):
 
 
 def record_keys(record):
-    pprint(record)
     return [
         key
         # for key in record.__dict__
