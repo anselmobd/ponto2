@@ -29,7 +29,6 @@ __all__ = ['LancamentoView']
 class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
 
     PEDIDO = 'cobranca__pedidoitemcobranca__pedido_item__pedido'
-    VALOR = 'cobranca__pedidoitemcobranca__valor'
     COMUNICACAO = 'cobranca__comunicacao__descricao'
 
     def __init__(self):
@@ -50,7 +49,7 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
                 'cobranca': ['Cobrança', 'c'],
                 'parcela': [None, 'c'],
                 self.PEDIDO: ['Pedido', 'c'],
-                self.VALOR: ['Valor', 'r'],
+                'valor': ['Valor', 'r'],
             },
             ['header', '+style'],
             style = {'_': 'text-align'},
@@ -129,11 +128,9 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
             if row['cobranca']:
                 row['informacao'] = row['cobranca__informacao']
                 row['parcela'] = f"{row['parcela']}/{row['n_parcelas']}"
-                row[self.VALOR] = -row[self.VALOR]
             else:
                 row['parcela'] = '-'
-                row[self.VALOR] = row['valor']
-                row[f'{self.VALOR}|STYLE'] = 'color: darkgreen;'
+                row['valor|STYLE'] = 'color: darkgreen;'
                 row['informacao|STYLE'] = 'color: darkgreen;'
 
         PrepRows(
@@ -158,7 +155,7 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
             'parcela',
             'n_parcelas',
         ]
-        sum_fields = [self.VALOR]
+        sum_fields = ['valor']
         totalize_grouped_data(
             self.data,
             {
