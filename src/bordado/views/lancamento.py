@@ -55,7 +55,11 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
             ['header', '+style'],
             style = {'_': 'text-align'},
         )
-        self.extra_fields = ['n_parcelas', 'valor']
+        self.extra_fields = [
+            'cobranca__informacao',
+            'n_parcelas',
+            'valor',
+        ]
 
     def init_query(self):
         self.query = Lancamento.objects
@@ -123,12 +127,14 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
     def context_table(self):
         for row in self.data:
             if row['cobranca']:
+                row['informacao'] = row['cobranca__informacao']
                 row['parcela'] = f"{row['parcela']}/{row['n_parcelas']}"
                 row[self.VALOR] = -row[self.VALOR]
             else:
                 row['parcela'] = '-'
                 row[self.VALOR] = row['valor']
                 row[f'{self.VALOR}|STYLE'] = 'color: darkgreen;'
+                row['informacao|STYLE'] = 'color: darkgreen;'
 
         PrepRows(
             self.data,
