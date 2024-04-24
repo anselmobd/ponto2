@@ -32,6 +32,6 @@ urlpatterns = [
     path(
         'accounts/login/',
         auth_views.LoginView.as_view(template_name="ponto2/login.html"),
-        name='login_p',
+        name='login',
     ),
 ]
