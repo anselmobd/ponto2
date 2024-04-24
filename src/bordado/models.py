@@ -549,11 +549,11 @@ class Cobranca(models.Model):
         default=logged_user,
     )
     quando = models.DateTimeField(auto_now=True)
-
+ 
     def __str__(self):
-        nf = f" ({self.nf})" if self.nf else ""
-        comunicacao = f" {self.comunicacao.descricao}" if self.comunicacao else ""
-        return f"{self.id}: {self.informacao}{comunicacao}{nf} [{self.data}]"
+        nf = f" (NF {self.nf})" if self.nf else ""
+        comunicacao = f" [{self.comunicacao.descricao}]" if self.comunicacao else ""
+        return f"{self.id}: {self.informacao}{comunicacao}{nf} - {self.data}"
 
     class Meta:
         db_table = 'po2_cobranca'
