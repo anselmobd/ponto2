@@ -29,6 +29,7 @@ __all__ = ['LancamentoView']
 class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
 
     PEDIDO = 'cobranca__pedidoitemcobranca__pedido_item__pedido'
+    VALOR = 'cobranca__pedidoitemcobranca__valor'
     COMUNICACAO = 'cobranca__comunicacao__descricao'
 
     def __init__(self):
@@ -49,7 +50,7 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
                 'cobranca': ['Cobrança', 'c'],
                 'parcela': [None, 'c'],
                 self.PEDIDO: ['Pedido', 'c'],
-                'valor': ['Valor', 'r'],
+                self.VALOR: ['Valor', 'r'],
             },
             ['header', '+style'],
             style = {'_': 'text-align'},
@@ -68,7 +69,6 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
             *self.table_defs.all_fields, *self.extra_fields)
         if self.data:
             self.data = queryset2dictlist(self.data)
-            ...
         else:
             raise StopStepsException(
                 "Filtro definido não seleciona nenhum lançamento")
@@ -129,6 +129,7 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
                 row['informacao'] = row['cobranca__informacao']
                 row['parcela'] = f"{row['parcela']}/{row['n_parcelas']}"
             else:
+                row[self.VALOR] = row['valor']
                 row['parcela'] = '-'
                 row['|STYLE'] = 'color: darkgreen;'
 
@@ -154,7 +155,7 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
             'parcela',
             'n_parcelas',
         ]
-        sum_fields = ['valor']
+        sum_fields = [self.VALOR]
         totalize_grouped_data(
             self.data,
             {
