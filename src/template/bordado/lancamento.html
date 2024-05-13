@@ -20,7 +20,7 @@
 {% endblock %}
 
 {% block content %}
-  <form action="{% url 'bordado:lancamento' %}" method="post">
+  <form class="noprint" action="{% url 'bordado:lancamento' %}" method="post">
     {% csrf_token %}
     {% include "layout/generic/form_field_control.html" with form=form only %}
     <input class="button" type="submit" value="Busca"/>
