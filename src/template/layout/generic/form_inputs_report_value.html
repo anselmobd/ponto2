@@ -1,5 +1,6 @@
 {% spaceless %}
 {% if input.value %}{% spaceless %}
+  {%if not first %}|{% endif %}
   {% if h %}<h{{h}}>{% endif %}
   {{input.label}}{%if input.label|last not in ":?" %}: {% endif %}{% spaceless %}
   {% endspaceless %}{% if input.field.widget.input_type == 'select' %}{% spaceless %}
