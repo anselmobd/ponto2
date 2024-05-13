@@ -40,7 +40,7 @@
       RPR - Ponto2 <span class="text-sm">b</span>
     </a>
 
-    <div>
+    <div class="noprint">
       {% if request.user.is_authenticated %}
       <a
         href="{% url 'bordado:index' %}"
@@ -51,7 +51,7 @@
       >Sobre</a>
     </div>
 
-    <div>
+    <div class="noprint">
       {% if request.user.is_authenticated %}
         <span>{{ request.user.username }}&ThickSpace;</span>
         <a
