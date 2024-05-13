@@ -130,8 +130,7 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
                 row['parcela'] = f"{row['parcela']}/{row['n_parcelas']}"
             else:
                 row['parcela'] = '-'
-                row['valor|STYLE'] = 'color: darkgreen;'
-                row['informacao|STYLE'] = 'color: darkgreen;'
+                row['|STYLE'] = 'color: darkgreen;'
 
         PrepRows(
             self.data,
