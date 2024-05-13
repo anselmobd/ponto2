@@ -126,6 +126,7 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
     def context_table(self):
         for row in self.data:
             if row['cobranca']:
+                row[self.VALOR] = -row[self.VALOR]
                 row['informacao'] = row['cobranca__informacao']
                 row['parcela'] = f"{row['parcela']}/{row['n_parcelas']}"
             else:
