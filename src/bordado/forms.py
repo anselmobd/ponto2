@@ -10,6 +10,12 @@ __all__ = ['LancamentoForm']
 class LancamentoForm(forms.Form):
     a = FormWidgetAttrs()
 
+    field_control = [
+        ['cliente_apelido', 'pedido_numero', 'cobranca_id'],
+        ['data_de', 'data_ate'],
+        ['tipo_lancamento'],
+    ]
+
     cliente_apelido = forms.CharField(
         label='Cliente',
         required=False,
@@ -51,3 +57,18 @@ class LancamentoForm(forms.Form):
         choices=CHOICES,
         initial='-',
     )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

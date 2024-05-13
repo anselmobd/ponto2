@@ -22,7 +22,7 @@
 {% block content %}
   <form action="{% url 'bordado:lancamento' %}" method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    {% include "layout/generic/form_field_control.html" with form=form only %}
     <input class="button" type="submit" value="Busca"/>
   </form>
   {% if request.POST %}
