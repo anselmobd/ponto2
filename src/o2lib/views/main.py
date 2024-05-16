@@ -27,8 +27,12 @@ def totalize_data(data, config, return_not_append=False):
 
     sum = {key: 0 for key in config['sum']}
     for row in data:
+        do_sum = True
+        if 'row_if' in config:
+            do_sum = row[config['row_if']]
         for key in sum:
-            sum[key] += row[key]
+            if do_sum:
+                sum[key] += row[key]
 
     if 'descr' in config:
         for key in config['descr']:
