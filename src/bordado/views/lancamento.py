@@ -7,7 +7,7 @@ from o2lib.models.dictlist import queryset2dictlist
 from o2lib.table_defs import TableDefs
 from o2lib.views.main import (
     group_rowspan,
-    totalize_grouped_data,
+    totalize_data,
 )
 from o2lib.views.base.get_post import O2BaseGetPostView
 from o2lib.views.base.exception import (
@@ -49,8 +49,9 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
                 'cobranca__nf': ['NF', 'c'],
                 'cobranca': ['Cobrança', 'c'],
                 'parcela': [None, 'c'],
+                'valor': ['Valor cobrança', 'r'],
                 self.PEDIDO: ['Pedido', 'c'],
-                self.VALOR: ['Valor', 'r'],
+                self.VALOR: ['Valor pedido', 'r'],
             },
             ['header', '+style'],
             style = {'_': 'text-align'},
@@ -58,7 +59,6 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
         self.extra_fields = [
             'cobranca__informacao',
             'n_parcelas',
-            'valor',
         ]
 
     def init_query(self):
@@ -130,8 +130,6 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
                 row['informacao'] = row['cobranca__informacao']
                 row['parcela'] = f"{row['parcela']}/{row['n_parcelas']}"
             else:
-                row[self.VALOR] = row['valor']
-                row['parcela'] = '-'
                 row['|STYLE'] = 'color: darkgreen;'
 
         PrepRows(
@@ -143,6 +141,8 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
                 self.COMUNICACAO,
                 'cobranca__nf',
                 'cobranca',
+                self.VALOR,
+                'parcela',
             )
         ).process()
 
@@ -155,23 +155,22 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
             'cobranca',
             'parcela',
             'n_parcelas',
+            'valor',
         ]
-        sum_fields = [self.VALOR]
-        totalize_grouped_data(
+        group_rowspan(self.data, group)
+        
+        totalize_data(
             self.data,
             {
-                'group': group,
-                'sum': sum_fields,
-                'descr': {self.PEDIDO: 'Total:'},
-                'global_sum': sum_fields,
-                'global_descr': {'cliente__apelido': 'Total geral:'},
+                'sum': ['valor'],
+                'descr': {'cliente__apelido': 'Total:'},
+                'row_if': 'rowspan',
                 'row_style':
                     "font-weight: bold;"
                     "background-image: linear-gradient(#DDD, white);",
                 'flags': ['NO_TOT_1'],
             }
         )
-        group_rowspan(self.data, group)
 
         self.context.update({
             'data': self.data,
