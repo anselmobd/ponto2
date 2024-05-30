@@ -16,6 +16,7 @@ from pathlib import Path
 
 from django.core.management.utils import get_random_secret_key
 
+
 env = environ.Env(
     DEBUG=(bool, False),
 )
@@ -164,10 +165,7 @@ SIMPLE_JWT = {
 }
 
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://192.168.1.64:88",
-]
+CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS')
 
 
 SPECTACULAR_SETTINGS = {
