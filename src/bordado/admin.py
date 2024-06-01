@@ -159,8 +159,9 @@ class PedidoAdmin(admin.ModelAdmin):
 @admin.register(PedidoItem)
 class PedidoItemAdmin(admin.ModelAdmin):
     list_display = [
-        'ordem',
+        'data',
         'pedido',
+        'ordem',
         'inserido_em',
         'bordado',
         'quantidade',
@@ -168,14 +169,16 @@ class PedidoItemAdmin(admin.ModelAdmin):
         'cancelado',
     ]
     list_display_links = [
-        'ordem',
+        'data',
         'pedido',
+        'ordem',
     ]
     list_filter = [
         'pedido__cliente',
         'pedido',
     ]
     fields = [
+        'data',
         'pedido',
         'ordem',
         'usuario',
