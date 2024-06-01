@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 export function dateTime2Text(date_time) {
   const date = date_time.toLocaleDateString(
     'pt-br',
@@ -12,14 +14,7 @@ export function dateTime2Text(date_time) {
 }
 
 export function date2Text(data) {
-  return data.toLocaleDateString(
-    'pt-br',
-    {
-      day: '2-digit',
-      month: '2-digit',
-      year: '2-digit'
-    }
-  );
+  return moment.utc(data).format('DD/MM/YY');
 }
 
 export function date2InputText(date) {  
