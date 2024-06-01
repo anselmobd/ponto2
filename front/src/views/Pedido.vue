@@ -326,6 +326,7 @@ watch(status, (newStatus) => {
           <th>Cliente<span v-if="pedido_itens_filtro_apelido" ><br/><span class="text-indigo-700">{{ pedido_itens_filtro_apelido }}</span><a href="#" class="button" @click="handleCancelaFiltroClick">&cross;</a></span></th>
           <th colspan="2">Bordado</th>
           <th>Ações</th>
+          <th title="Usuário e Data/Hora da inserção/alteração">🛈</th>
         </tr>
         <tr class="table__tr-input">
           <th colspan="3">
@@ -410,6 +411,7 @@ watch(status, (newStatus) => {
               :hidden="status != 'b'"
             >Filtro</button>
           </th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -484,6 +486,8 @@ watch(status, (newStatus) => {
               title="Financeiro"
             >💲</button>
           </td>
+          <td :title="pedido_item.usuario.username
+            +' - '+pedidoItemInseridoEmData(pedido_item)">🛈</td>
         </tr>
       </tbody>
     </table>
