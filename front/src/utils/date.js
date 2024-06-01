@@ -11,6 +11,17 @@ export function dateTime2Text(date_time) {
   return date + ' ' + time;
 }
 
+export function date2Text(data) {
+  return data.toLocaleDateString(
+    'pt-br',
+    {
+      day: '2-digit',
+      month: '2-digit',
+      year: '2-digit'
+    }
+  );
+}
+
 export function date2InputText(date) {  
   const year = date.getFullYear()
   const month = String(date.getMonth() + 1).padStart(2, '0')
