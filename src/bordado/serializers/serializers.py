@@ -135,6 +135,7 @@ class PedidoItemSerializer(serializers.ModelSerializer):
             'id',
             'pedido',
             'ordem',
+            'data',
             'inserido_em',
             'bordado',
             'quantidade',
