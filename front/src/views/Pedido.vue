@@ -420,7 +420,7 @@ watch(status, (newStatus) => {
       </thead>
       <tbody>
         <tr v-if="pedido_itens_loading">
-          <td colspan="6">
+          <td colspan="7">
             <span v-if="pedido_itens_next == 1 && !pedido_itens">Carregando</span>
             <span v-if="pedido_itens_next == 1 && pedido_itens">Recarregando</span>
             <span v-if="pedido_itens_next == 1"> os pedidos mais recentes...</span>
