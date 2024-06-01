@@ -483,8 +483,8 @@ class PedidoItem(models.Model):
 
     def __str__(self):
         return (
-            f"{self.id}: Pedido {self.pedido.numero:04d}; ordem {self.ordem}; "
-            f"{self.quantidade} * {self.bordado}"
+            f"{self.id}: {self.pedido.numero:04d}/{self.ordem} "
+            f"{self.quantidade}*'{self.bordado}'"
         )
 
     def save(self, *args, **kwargs):
