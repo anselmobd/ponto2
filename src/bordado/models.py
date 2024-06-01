@@ -433,7 +433,8 @@ class PedidoItem(models.Model):
         validators=[MinValueValidator(1), MaxValueValidator(100)],
         default=0,
     )
-    data = models.DateField(
+    data_pedido = models.DateField(
+        "Data do pedido",
         default=timezone.now
     )
     inserido_em = models.DateTimeField(auto_now_add=True)
