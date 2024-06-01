@@ -6,6 +6,7 @@ from django.core.validators import (
     MinValueValidator,
 )
 from django.db import models
+from django.utils import timezone
 
 from o2lib.classes.logged_in_user import SingletonLoggedInUser
 from o2lib.codes.cnpj import CNPJ
@@ -432,7 +433,9 @@ class PedidoItem(models.Model):
         validators=[MinValueValidator(1), MaxValueValidator(100)],
         default=0,
     )
-    data = models.DateField(auto_now_add=True)
+    data = models.DateField(
+        default=timezone.now
+    )
     inserido_em = models.DateTimeField(auto_now_add=True)
     bordado = models.ForeignKey(
         Bordado,
