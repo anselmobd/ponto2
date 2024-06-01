@@ -2,7 +2,7 @@
 import router from '@/router'
 import { ref, watch, nextTick, onMounted } from 'vue'
 import { storeToRefs } from 'pinia';
-import { dateTime2Text } from "../utils/date.js";
+import { dateTime2Text, date2Text } from "../utils/date.js";
 import { useAuthStore } from '../stores/auth.js';
 import { getPedidoItens, addClienteBordado, delClienteBordado } from '../api/pedidoItem.js';
 import { getClientes } from '../api/cliente.js';
@@ -278,6 +278,11 @@ function pedidoItemInseridoEmData(pedido_item) {
   return dateTime2Text(date);
 }
 
+function pedidoItemData(pedido_item) {
+  const data = new Date(pedido_item.data)
+  return date2Text(data);
+}
+
 function inputClienteFocus() {
   nextTick(() => {
     inputCliente.value.focus();
@@ -320,16 +325,15 @@ watch(status, (newStatus) => {
     <table class="w-full">
       <thead>
         <tr>
-          <th>Usuário</th>
-          <th>Data/Hora</th>
           <th>Pedido</th>
+          <th>Data</th>
           <th>Cliente<span v-if="pedido_itens_filtro_apelido" ><br/><span class="text-indigo-700">{{ pedido_itens_filtro_apelido }}</span><a href="#" class="button" @click="handleCancelaFiltroClick">&cross;</a></span></th>
           <th colspan="2">Bordado</th>
           <th>Ações</th>
           <th title="Usuário e Data/Hora da inserção/alteração">🛈</th>
         </tr>
         <tr class="table__tr-input">
-          <th colspan="3">
+          <th colspan="2">
             <span class="font-bold" v-if="status == 'i'">Inserindo</span>
             <span class="font-bold" v-if="status == 'f'">Filtrando</span>
           </th>
@@ -416,7 +420,7 @@ watch(status, (newStatus) => {
       </thead>
       <tbody>
         <tr v-if="pedido_itens_loading">
-          <td colspan="7">
+          <td colspan="6">
             <span v-if="pedido_itens_next == 1 && !pedido_itens">Carregando</span>
             <span v-if="pedido_itens_next == 1 && pedido_itens">Recarregando</span>
             <span v-if="pedido_itens_next == 1"> os pedidos mais recentes...</span>
@@ -427,8 +431,6 @@ watch(status, (newStatus) => {
           v-for="(pedido_item, index) in pedido_itens"
           :key="pedido_item.id"
         >
-          <td>{{pedido_item.usuario.username}}</td>
-          <td>{{pedidoItemInseridoEmData(pedido_item)}}</td>
           <td>
             <span
               v-if="!pedido_item.cobrancas.length || status != 'b'"
@@ -440,6 +442,7 @@ watch(status, (newStatus) => {
               title="Dados do fechamento do pedido"
             >{{pedido_item.id}}</router-link>
           </td>
+          <td>{{pedidoItemData(pedido_item)}}</td>
           <td>
             <span
               v-if="!pedido_item.pedido.cliente.vazio && status != 'b'"
