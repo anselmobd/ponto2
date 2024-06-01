@@ -140,7 +140,6 @@ function cbAddClienteBordado(data, error) {
 }
 
 function doAddClienteBordado() {
-  console.log("doAddClienteBordado");
   clearErrors();
   if (!cliente?.value?.input) {
     cliente.value.error = 'Campo cliente vazio.';

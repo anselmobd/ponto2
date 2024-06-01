@@ -78,7 +78,6 @@ export function addClienteBordado(
   bordado_codigo,
   callBack
 ) {
-  console.log(bordado_codigo);
   const params = new URLSearchParams();
   params.append('format', 'json');
   params.append('page_size', '999999');
