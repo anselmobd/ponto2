@@ -24,7 +24,7 @@ class PedidoItemDownSerializer(serializers.ModelSerializer):
             'id',
             'pedido',
             'ordem',
-            'data',
+            'data_pedido',
             'inserido_em',
             'bordado',
             'quantidade',
