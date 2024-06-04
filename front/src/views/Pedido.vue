@@ -2,7 +2,7 @@
 import router from '@/router'
 import { ref, watch, nextTick, onMounted } from 'vue'
 import { storeToRefs } from 'pinia';
-import { dateTime2Text, date2Text } from "../utils/date.js";
+import { dateTime2Text, date2Text, date2InputText } from "../utils/date.js";
 import { useAuthStore } from '../stores/auth.js';
 import { getPedidoItens, addClienteBordado, delClienteBordado } from '../api/pedidoItem.js';
 import { getClientes } from '../api/cliente.js';
@@ -19,6 +19,10 @@ const pedido_itens_filtro_apelido = ref(null);
 var pedido_itens_index = '';
 
 const status = ref('b'); // browsing inserting filtering
+const data_pedido = ref({
+  input: '',
+  error: '',
+});
 const cliente = ref({
   input: '',
   error: '',
@@ -44,6 +48,7 @@ const inputCodigo = ref(null)
 // get set refs
 
 function clearInputs(cliente_apelido = '') {
+  data_pedido.value.input = '';
   cliente.value.input = cliente_apelido;
   bordado.value.input = '';
   codigo.value.input = '';
@@ -180,6 +185,7 @@ function doDelClienteBordado(index) {
 function handleNovoClick(event) {
   event.preventDefault();
   clearInputs(pedido_itens_filtro_apelido.value);
+  data_pedido.value.input = date2InputText(new Date());
   status.value = 'i';
 }
 
@@ -332,9 +338,21 @@ watch(status, (newStatus) => {
           <th title="Usuário e Data/Hora da inserção/alteração">🛈</th>
         </tr>
         <tr class="table__tr-input">
-          <th colspan="2">
+          <th>
             <span class="font-bold" v-if="status == 'i'">Inserindo</span>
             <span class="font-bold" v-if="status == 'f'">Filtrando</span>
+          </th>
+          <th>
+            <span class="text-sm text-red-700 font-bold" v-if="data_pedido.error" >{{ data_pedido.error }}<br /></span>
+            <input
+              class="mx-0.5 border border-solid border-slate-500 disabled:border-slate-200 rounded disabled:text-gray-400"
+              v-model.trim="data_pedido.input"
+              :disabled="status != 'i'"
+              type="date"
+              name="data_pedido"
+              id="data_pedido"
+              ref="inputDataPedido"
+            >
           </th>
           <th>
             <span class="text-sm text-red-700 font-bold" v-if="cliente.error" >{{ cliente.error }}<br /></span>
