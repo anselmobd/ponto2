@@ -157,6 +157,7 @@ function doAddClienteBordado() {
   }
   if (cliente?.value?.input && bordado?.value?.input && codigo?.value?.input) {
     addClienteBordado(
+      data_pedido.value.input,
       cliente.value.input,
       bordado.value.input,
       codigo.value.input,
