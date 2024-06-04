@@ -94,6 +94,11 @@ class PedidoItemViewSet(viewsets.ModelViewSet):
         if 'cliente' in request.data:
             try:
                 errors = {}
+                if not request.data['data_pedido']:
+                    errors.update({
+                        'data_pedido': ["Data de pedido é obrigatória"]
+                    })
+                    raise TypeError
                 try:
                     cliente = Cliente.objects.get(
                         apelido=request.data['cliente']['apelido']
