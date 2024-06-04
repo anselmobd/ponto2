@@ -14,7 +14,7 @@ export function dateTime2Text(date_time) {
 }
 
 export function date2Text(data) {
-  return moment.utc(data).format('DD/MM/YY');
+  return moment.utc(data).format('DD/MM/YYYY');
 }
 
 export function date2InputText(date) {  
