@@ -435,7 +435,7 @@ class PedidoItem(models.Model):
     )
     data_pedido = models.DateField(
         "Data do pedido",
-        default=timezone.now
+        default=timezone.localdate
     )
     inserido_em = models.DateTimeField(auto_now_add=True)
     bordado = models.ForeignKey(
