@@ -278,7 +278,7 @@ function pedidoItemInseridoEmData(pedido_item) {
 }
 
 function pedidoItemData(pedido_item) {
-  const data = new Date(pedido_item.data)
+  const data = new Date(pedido_item.data_pedido)
   return date2Text(data);
 }
 
