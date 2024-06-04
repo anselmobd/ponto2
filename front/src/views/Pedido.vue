@@ -56,6 +56,7 @@ function clearInputs(cliente_apelido = '') {
 }
 
 function clearErrors() {
+  data_pedido.value.error = '';
   cliente.value.error = '';
   bordado.value.error = '';
   codigo.value.error = '';
@@ -131,6 +132,10 @@ function cbAddClienteBordado(data, error) {
     status.value = 'b';
   }
   if (error) {
+    console.log(error);
+    if ('data_pedido' in error) {
+      data_pedido.value.error = error.data_pedido.join('|');
+    }
     if ('apelido' in error) {
       cliente.value.error = error.apelido.join('|');
     }
