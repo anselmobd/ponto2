@@ -196,16 +196,17 @@ function handleCancelaClick(event) {
   status.value = 'b';
 }
 
-function handleSalvaFiltraClick(event) {
+function handleFiltraClick(event) {
   event.preventDefault();
-  if (status.value == 'i') {
-    doAddClienteBordado();
-  } else if (status.value == 'f') {
-    pedido_itens_filtro_apelido.value = cliente.value.input;
-    clearInputs();
-    status.value = 'b';
-    doGetFirstsPedidoItens();
-  }
+  pedido_itens_filtro_apelido.value = cliente.value.input;
+  clearInputs();
+  status.value = 'b';
+  doGetFirstsPedidoItens();
+}
+
+function handleSalvaClick(event) {
+  event.preventDefault();
+  doAddClienteBordado();
 }
 
 function handleFiltroClick(event) {
@@ -413,9 +414,14 @@ watch(status, (newStatus) => {
           <th>
             <button
               type="button"
-              @click="handleSalvaFiltraClick"
-              :hidden="status == 'b'"
-            ><span v-if="status == 'i'">Salva</span><span v-if="status == 'f'">Filtra</span></button>
+              @click="handleSalvaClick"
+              :hidden="status != 'i'"
+            >Salva</button>
+            <button
+              type="button"
+              @click="handleFiltraClick"
+              :hidden="status != 'f'"
+            >Filtra</button>
             <button
               type="button"
               @click="handleCancelaClick"
