@@ -73,6 +73,7 @@ export function getPedidoItem({
 }
 
 export function addClienteBordado(
+  data_pedido,
   cliente_apelido,
   bordado_nome,
   bordado_codigo,
@@ -85,6 +86,7 @@ export function addClienteBordado(
   axiosPrivate.post(
     '/bordado/api/pedido_item/',
     {
+      data_pedido: data_pedido,
       cliente: {apelido: cliente_apelido},
       bordado: {
         nome: bordado_nome,
