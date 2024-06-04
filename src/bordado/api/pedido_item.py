@@ -137,6 +137,7 @@ class PedidoItemViewSet(viewsets.ModelViewSet):
                 pedido.save()
 
                 pedido_item = PedidoItem(
+                    data_pedido=request.data['data_pedido'],
                     pedido=pedido,
                     ordem=1,
                     bordado=bordado,
