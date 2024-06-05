@@ -41,7 +41,12 @@ class PedidoItemViewSet(viewsets.ModelViewSet):
     serializer_class = PedidoItemSerializer
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['pedido__cliente__apelido', 'bordado__nome', 'bordado__codigo']
+    filterset_fields = {
+        'data_pedido': ['year', 'month', 'exact'],
+        'pedido__cliente__apelido': ['exact'],
+        'bordado__nome': ['exact'],
+        'bordado__codigo': ['exact'],
+    }
 
     def destroy(self, request, *args, **kwargs):
         if request.query_params.get('tipo', '-') == 'fechamento':
