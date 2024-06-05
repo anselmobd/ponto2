@@ -1,4 +1,6 @@
 import { axiosPrivate } from '../common/axiosPrivate.js';
+import { ddmmyyyyToDate, date2InputText } from "../utils/date.js";
+
 
 function avaliarNullComoVazio(valor) {
   return valor === null ? "" : valor;
@@ -7,6 +9,7 @@ function avaliarNullComoVazio(valor) {
 export function getPedidoItens({
   page=1,
   cliente_apelido=null,
+  data_pedido=null,
   bordado_nome=null,
   bordado_codigo=null,
   callBack=()=>{}
@@ -18,6 +21,21 @@ export function getPedidoItens({
   }
   if (cliente_apelido) {
     params.append('pedido__cliente__apelido', cliente_apelido);
+  }
+  if (data_pedido) {
+    const barras = data_pedido.split("/");
+    const quant_barras = barras.length - 1;
+    if (quant_barras == 2) {
+      params.append('data_pedido', date2InputText(ddmmyyyyToDate(data_pedido)));
+    } else if (quant_barras == 1) {
+      const year = parseInt(barras[1], 10);
+      params.append('data_pedido__year', year);
+      const month = parseInt(barras[0], 10);
+      params.append('data_pedido__month', month);
+    } else if (quant_barras == 0) {
+      const year = parseInt(barras[0], 10);
+      params.append('data_pedido__year', year);
+    }
   }
   if (bordado_nome) {
     params.append('bordado__nome', bordado_nome);
