@@ -7,6 +7,7 @@ from django.core.validators import (
 )
 from django.db import models
 from django.utils import timezone
+from django.utils.text import slugify
 
 from o2lib.classes.logged_in_user import SingletonLoggedInUser
 from o2lib.codes.cnpj import CNPJ
@@ -111,6 +112,12 @@ class Cliente(models.Model):
         "Nome/Razão Social",
         max_length=100,
         blank=True,
+    )
+    nome_slug = models.SlugField(
+        max_length=100,
+        # unique=True,
+        blank=True,
+        null=True,
     )
     fansasia = models.CharField(
         "Nome Fantasia",
@@ -225,6 +232,10 @@ class Cliente(models.Model):
 
     def __str__(self):
         return f"{self.apelido} ({self.cnpj})"
+
+    def save(self, *args, **kwargs):
+        self.nome_slug = slugify(self.nome)
+        super().save(*args, **kwargs)
 
     class Meta:
         db_table = 'po2_cliente'
