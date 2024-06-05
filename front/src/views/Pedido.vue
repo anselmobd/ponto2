@@ -16,9 +16,11 @@ const pedido_itens = ref(null);
 const pedido_itens_next = ref(1);
 const pedido_itens_loading = ref(false);
 const pedido_itens_filtro_apelido = ref(null);
+const pedido_itens_filtro_data_pedido = ref(null);
 var pedido_itens_index = '';
 
 const status = ref('b'); // browsing inserting filtering
+const filtro_data_pedido = ref('');
 const data_pedido = ref({
   input: '',
   error: '',
@@ -47,9 +49,10 @@ const inputCodigo = ref(null)
 
 // get set refs
 
-function clearInputs(cliente_apelido = '') {
+function clearInputs(set_cliente_apelido = '', set_filtro_data_pedido = '') {
+  filtro_data_pedido.value = set_filtro_data_pedido;
   data_pedido.value.input = '';
-  cliente.value.input = cliente_apelido;
+  cliente.value.input = set_cliente_apelido;
   bordado.value.input = '';
   codigo.value.input = '';
   pedido_itens_index = '';
@@ -94,6 +97,7 @@ function doGetPedidoItens(callBack) {
   getPedidoItens({
     page: pedido_itens_next.value,
     cliente_apelido: pedido_itens_filtro_apelido.value,
+    data_pedido: pedido_itens_filtro_data_pedido.value,
     callBack: callBack
   });
 }
@@ -205,6 +209,7 @@ function handleCancelaClick(event) {
 function handleFiltraClick(event) {
   event.preventDefault();
   pedido_itens_filtro_apelido.value = cliente.value.input;
+  pedido_itens_filtro_data_pedido.value = filtro_data_pedido.value;
   clearInputs();
   status.value = 'b';
   doGetFirstsPedidoItens();
@@ -217,13 +222,19 @@ function handleSalvaClick(event) {
 
 function handleFiltroClick(event) {
   event.preventDefault();
-  clearInputs();
+  clearInputs(pedido_itens_filtro_apelido.value, pedido_itens_filtro_data_pedido.value);
   status.value = 'f';
 }
 
-function handleCancelaFiltroClick(event) {
+function handleCancelaFiltroApelidoClick(event) {
   event.preventDefault();
   pedido_itens_filtro_apelido.value = null;
+  doGetFirstsPedidoItens();
+}
+
+function handleCancelaFiltroDataPedidoClick(event) {
+  event.preventDefault();
+  pedido_itens_filtro_data_pedido.value = null;
   doGetFirstsPedidoItens();
 }
 
@@ -338,8 +349,8 @@ watch(status, (newStatus) => {
       <thead>
         <tr>
           <th>Pedido</th>
-          <th>Data</th>
-          <th>Cliente<span v-if="pedido_itens_filtro_apelido" ><br/><span class="text-indigo-700">{{ pedido_itens_filtro_apelido }}</span><a href="#" class="button" @click="handleCancelaFiltroClick">&cross;</a></span></th>
+          <th>Data<span v-if="pedido_itens_filtro_data_pedido" ><br/><span class="text-indigo-700">{{ pedido_itens_filtro_data_pedido }}</span><a href="#" class="button" @click="handleCancelaFiltroDataPedidoClick">&cross;</a></span></th>
+          <th>Cliente<span v-if="pedido_itens_filtro_apelido" ><br/><span class="text-indigo-700">{{ pedido_itens_filtro_apelido }}</span><a href="#" class="button" @click="handleCancelaFiltroApelidoClick">&cross;</a></span></th>
           <th colspan="2">Bordado</th>
           <th>Ações</th>
           <th title="Usuário e Data/Hora da inserção/alteração">🛈</th>
@@ -351,7 +362,7 @@ watch(status, (newStatus) => {
           </th>
           <th>
             <span class="text-sm text-red-700 font-bold" v-if="data_pedido.error" >{{ data_pedido.error }}<br /></span>
-            <input
+            <input v-if="status != 'f'"
               class="mx-0.5 border border-solid border-slate-500 disabled:border-slate-200 rounded disabled:text-gray-400"
               v-model.trim="data_pedido.input"
               :disabled="status != 'i'"
@@ -359,6 +370,15 @@ watch(status, (newStatus) => {
               name="data_pedido"
               id="data_pedido"
               ref="inputDataPedido"
+            >
+            <input v-if="status == 'f'"
+              class="mx-0.5 border border-solid border-slate-500 rounded"
+              v-model.trim="filtro_data_pedido"
+              type="text"
+              size="10"
+              name="filtro_data_pedido"
+              id="filtro_data_pedido"
+              ref="inputFiltroDataPedido"
             >
           </th>
           <th>
