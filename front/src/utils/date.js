@@ -1,5 +1,21 @@
 import moment from 'moment';
 
+export function ddmmyyyyToDate(dateString) {
+  const parts = dateString.split('/');
+  const day = parseInt(parts[0], 10);
+  const month = parseInt(parts[1], 10) - 1;
+  const year = parseInt(parts[2], 10);
+
+  const data = new Date(year, month, day);
+
+  // Verifica se a data é válida
+  if (data.getFullYear() === year && data.getMonth() === month && data.getDate() === day) {
+      return data;
+  } else {
+      throw new Error('Data inválida');
+  }
+}
+
 export function dateTime2Text(date_time) {
   const date = date_time.toLocaleDateString(
     'pt-br',
