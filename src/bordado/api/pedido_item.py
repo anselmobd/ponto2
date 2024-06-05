@@ -1,3 +1,4 @@
+from datetime import datetime
 from pprint import pprint
 
 from django.db.models.deletion import ProtectedError
@@ -99,6 +100,20 @@ class PedidoItemViewSet(viewsets.ModelViewSet):
                         'data_pedido': ["Data de pedido é obrigatória"]
                     })
                     raise TypeError
+                try:
+                    data_pedido = datetime.strptime(
+                        request.data['data_pedido'], "%Y-%m-%d").date()
+                except ValueError as _:
+                    errors.update({
+                        'data_pedido': ["Data inválida"]
+                    })
+                    raise TypeError
+                if not ( 2010 < data_pedido.year < 2040 ):
+                    errors.update({
+                        'data_pedido': ["Ano inválido"]
+                    })
+                    raise TypeError
+
                 try:
                     cliente = Cliente.objects.get(
                         apelido=request.data['cliente']['apelido']
