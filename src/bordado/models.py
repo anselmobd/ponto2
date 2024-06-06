@@ -113,12 +113,6 @@ class Cliente(models.Model):
         max_length=100,
         blank=True,
     )
-    nome_slug = models.SlugField(
-        max_length=100,
-        # unique=True,
-        blank=True,
-        null=True,
-    )
     fansasia = models.CharField(
         "Nome Fantasia",
         max_length=100,
@@ -127,6 +121,12 @@ class Cliente(models.Model):
     apelido = models.CharField(
         max_length=30,
         unique=True,
+    )
+    apelido_slug = models.SlugField(
+        max_length=30,
+        # unique=True,
+        blank=True,
+        null=True,
     )
     cnpj9 = models.PositiveIntegerField(
         "CNPJ (raiz)",
@@ -234,7 +234,7 @@ class Cliente(models.Model):
         return f"{self.apelido} ({self.cnpj})"
 
     def save(self, *args, **kwargs):
-        self.nome_slug = slugify(self.nome)
+        self.apelido_slug = slugify(self.apelido)
         super().save(*args, **kwargs)
 
     class Meta:
