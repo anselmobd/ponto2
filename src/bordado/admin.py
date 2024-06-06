@@ -35,7 +35,10 @@ class ClienteAdmin(CustomModelAdmin):
     list_display = ['__str__', 'usuario', 'quando']
     search_fields = ['__str__']
     fields = [
-        'apelido',
+        (
+            'apelido',
+            'apelido_slug',
+        ),
         (
             'nome',
             'fansasia',
@@ -79,6 +82,7 @@ class ClienteAdmin(CustomModelAdmin):
         'uf': 'width: 3em;',
     }
     readonly_fields = [
+        'apelido_slug',
         'usuario',
         'quando',
     ]
