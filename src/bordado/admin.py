@@ -128,10 +128,10 @@ class DificuldadeBordadoAdmin(CustomModelAdmin):
 @admin.register(Bordado)
 class BordadoAdmin(admin.ModelAdmin):
     list_display = [
-        'nome', 'codigo', 'cliente', 'pontos', 'cores', 'tamanho_maximo', 'dificuldade'
+        'id', 'cliente', 'nome', 'codigo', 'pontos', 'cores', 'tamanho_maximo', 'dificuldade'
     ]
-    list_display_links = ['cliente', 'nome', 'codigo']
-    search_fields = ['cliente__apelido', 'cliente__cnpj9', 'nome', 'codigo']
+    list_display_links = ['id', 'cliente', 'nome', 'codigo']
+    search_fields = ['id', 'cliente__apelido_slug', 'nome', 'codigo']
     list_filter = ['cliente']
 
 
