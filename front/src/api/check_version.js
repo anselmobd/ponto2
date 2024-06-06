@@ -7,15 +7,14 @@ export function checkVersion() {
       console.log(serverVersion);
       const localVersion = import.meta.env.VITE_VERSION_DATE_TIME;
       console.log(localVersion);
-
       if (serverVersion !== localVersion) {
-        console.error('Versão alterada');
-        const answer = window.confirm('Versão atual "'+localVersion+'". Nova versão detectada "'+serverVersion+'". Recarregar a página agora?')
+        console.log('Versão alterada');
+        const answer = window.confirm('Versão atual "'+localVersion+'". Nova versão detectada "'+serverVersion+'". Recarregar a página agora?');
         if (answer) {
           window.location.reload(true);
         }
       } else {
-        console.error('Versão mantida');
+        console.log('Versão mantida');
       }
     })
     .catch(error => {
