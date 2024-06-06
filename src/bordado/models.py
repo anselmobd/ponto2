@@ -231,7 +231,7 @@ class Cliente(models.Model):
             return "!"
 
     def __str__(self):
-        return f"{self.apelido} ({self.cnpj})"
+        return self.apelido_slug
 
     def save(self, *args, **kwargs):
         self.apelido_slug = slugify(self.apelido)

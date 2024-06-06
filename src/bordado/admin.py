@@ -32,8 +32,8 @@ class CustomModelAdmin(admin.ModelAdmin):
 
 @admin.register(Cliente)
 class ClienteAdmin(CustomModelAdmin):
-    list_display = ['__str__', 'usuario', 'quando']
-    search_fields = ['__str__']
+    list_display = ['apelido_slug', 'apelido', 'cnpj', 'usuario', 'quando']
+    search_fields = ['apelido_slug', 'apelido', 'cnpj']
     fields = [
         (
             'apelido',
@@ -86,6 +86,7 @@ class ClienteAdmin(CustomModelAdmin):
         'usuario',
         'quando',
     ]
+    list_filter = ['usuario', 'quando']
 
 
 @admin.register(Contato)
