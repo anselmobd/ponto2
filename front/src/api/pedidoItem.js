@@ -8,6 +8,7 @@ function avaliarNullComoVazio(valor) {
 
 export function getPedidoItens({
   page=1,
+  page_size=30,
   cliente_apelido=null,
   data_pedido=null,
   bordado_nome=null,
@@ -19,6 +20,7 @@ export function getPedidoItens({
   if (page && page >1) {
     params.append('page', page);
   }
+  params.append('page_size', page_size);
   if (cliente_apelido) {
     params.append('pedido__cliente__apelido', cliente_apelido);
   }
