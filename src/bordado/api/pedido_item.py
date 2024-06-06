@@ -37,7 +37,7 @@ __all__ = [
 @extend_schema_view(
     **dict_keys_value(__ACTIONS, extend_schema(tags=['pedido_item'])))
 class PedidoItemViewSet(viewsets.ModelViewSet):
-    queryset = PedidoItem.objects.all().order_by('-data_pedido', '-pedido')
+    queryset = PedidoItem.objects.all().order_by('-data_pedido', '-pedido_id')
     serializer_class = PedidoItemSerializer
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
