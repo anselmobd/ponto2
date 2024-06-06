@@ -125,14 +125,6 @@ class PedidoItemCobrancaViewSet(viewsets.ModelViewSet):
 
 
 @extend_schema_view(
-    **dict_keys_value(__ACTIONS, extend_schema(tags=['pedido_bordado'])))
-class PedidoBordadoClientecreate(generics.CreateAPIView):
-    queryset = PedidoItem.objects.all().order_by('-inserido_em')
-    serializer_class = PedidoItemSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-
-@extend_schema_view(
     **dict_keys_value(__ACTIONS, extend_schema(tags=['apontamento_producao'])))
 class ApontamentoProducaoViewSet(viewsets.ModelViewSet):
     queryset = ApontamentoProducao.objects.all()
