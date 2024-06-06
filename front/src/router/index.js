@@ -8,6 +8,7 @@ import Login from '../views/Login.vue'
 import Fechando from '../views/Fechando.vue'
 import Financeiro from '../views/Financeiro.vue'
 import Cliente from '../views/Cliente.vue'
+import { checkVersion } from '../api/check_version.js';
 
 const routes = [
     {
@@ -54,6 +55,7 @@ const router = createRouter({
 
 router.beforeEach(async (to, from) => {
   const auth = useAuthStore();
+  checkVersion();
   let autenticado = false;
   if ( auth && auth.user && auth.user.name ) {
     autenticado = true;

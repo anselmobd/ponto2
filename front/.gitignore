@@ -1,5 +1,6 @@
 # Conf
 .env.production
+public/version.json
 
 # Logs
 logs
