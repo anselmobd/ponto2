@@ -280,6 +280,28 @@ function handleFinanceiroClick(event) {
   router.push({ name: 'financeiro', params: { apelido: apelido } });
 }
 
+function checkClienteSingleOption() {
+  const inputElement = inputCliente.value;
+  const datalistElement = datalistCliente.value;
+  console.log(inputElement.list);
+  
+  const input_value = inputElement.value.toLowerCase();
+  console.log(input_value);
+  
+  const options = datalistElement.getElementsByTagName('option');
+  console.log(options);
+
+  const filteredOptions = Array.from(options).filter(option =>
+    option.value.toLowerCase().includes(input_value)
+  );
+  console.log(filteredOptions);
+
+  if (filteredOptions.length === 1) {
+    console.log('set', filteredOptions[0].value);
+    cliente.value.input = filteredOptions[0].value;
+  }
+}
+
 // generic functions
 
 function pedidoItemParaTela(pedido_item) {
@@ -395,6 +417,7 @@ watch(status, (newStatus) => {
               ref="inputCliente"
               placeholder="Cliente"
               list="cliente-list"
+              @blur="checkClienteSingleOption"
             >
             <datalist id="cliente-list" ref="datalistCliente">
               <option v-for="cliente1 in cliente.list">{{cliente1}}</option>
