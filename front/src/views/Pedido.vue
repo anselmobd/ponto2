@@ -43,9 +43,10 @@ const codigo = ref({
 
 // componentes do template que serão referenciados
 
-const inputCliente = ref(null)
-const inputBordado = ref(null)
-const inputCodigo = ref(null)
+const inputCliente = ref(null);
+const datalistCliente = ref(null);
+const inputBordado = ref(null);
+const inputCodigo = ref(null);
 
 // get set refs
 
@@ -395,7 +396,7 @@ watch(status, (newStatus) => {
               placeholder="Cliente"
               list="cliente-list"
             >
-            <datalist id="cliente-list">
+            <datalist id="cliente-list" ref="datalistCliente">
               <option v-for="cliente1 in cliente.list">{{cliente1}}</option>
             </datalist>
           </th>
