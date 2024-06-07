@@ -8,6 +8,7 @@ import Login from '../views/Login.vue'
 import Fechando from '../views/Fechando.vue'
 import Financeiro from '../views/Financeiro.vue'
 import Cliente from '../views/Cliente.vue'
+import Bordado from '../views/Bordado.vue'
 import { checkVersion } from '../api/check_version.js';
 
 const routes = [
@@ -45,6 +46,11 @@ const routes = [
       path: "/cliente/:id",
       name: "cliente",
       component: Cliente,
+    },
+    {
+      path: "/bordado/:id",
+      name: "bordado",
+      component: Bordado,
     },
 ];
 
