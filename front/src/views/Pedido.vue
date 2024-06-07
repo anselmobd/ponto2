@@ -543,6 +543,7 @@ watch(status, (newStatus) => {
               class="router-link text-sky-800"
               title="Edita dados do bordado"
             >{{pedido_item.bordado.nome}}</router-link>
+            <span v-else>{{pedido_item.bordado.nome}}</span>
           </td>
           <td>{{pedido_item.bordado.codigo}}</td>
           <td>
