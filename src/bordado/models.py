@@ -354,6 +354,8 @@ class Bordado(models.Model):
     )
     nome = models.CharField(
         max_length=50,
+        blank=True,
+        null=True,
     )
     codigo = models.CharField(
         "código",
@@ -385,6 +387,11 @@ class Bordado(models.Model):
         cliente = f" - {self.cliente}" if self.cliente else ""
         codigo = f" - {self.codigo}" if self.codigo else ""
         return f"{self.nome}{codigo}{cliente}"
+
+    def save(self, *args, **kwargs):
+        if not self.nome:
+            self.nome = f"[{tz_local(timezone.now()):%H:%M:%S}]"
+        super().save(*args, **kwargs)
 
     class Meta:
         db_table = 'po2_bordado'
