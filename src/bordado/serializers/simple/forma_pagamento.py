@@ -1,4 +1,3 @@
-from django.contrib.auth.models import User
 from rest_framework import serializers
 
 from bordado.models import (
@@ -7,7 +6,7 @@ from bordado.models import (
 
 
 __all__ = [
-    'FormaPagamentoSerializer',
+    'FormaPagamentoSimpleSerializer',
 ]
 
 
