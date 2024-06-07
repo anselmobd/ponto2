@@ -156,17 +156,7 @@ function cbAddClienteBordado(data, error) {
 
 function doAddClienteBordado() {
   clearErrors();
-  if (!cliente?.value?.input) {
-    cliente.value.error = 'Campo cliente vazio.';
-  }
-  if (!bordado?.value?.input) {
-    bordado.value.error = 'Campo bordado vazio.';
-  }
-  // if (!codigo?.value?.input) {
-  //   codigo.value.error = 'Campo código vazio.';
-  // }
-  if (cliente?.value?.input && bordado?.value?.input ) {
-    // && codigo?.value?.input) {
+  if (cliente?.value?.input) {
     addClienteBordado(
       data_pedido.value.input,
       cliente.value.input,
@@ -174,6 +164,8 @@ function doAddClienteBordado() {
       codigo.value.input,
       cbAddClienteBordado
     );
+  } else {
+    cliente.value.error = 'Campo cliente vazio.';
   }
 }
 
