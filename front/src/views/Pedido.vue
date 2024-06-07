@@ -536,7 +536,14 @@ watch(status, (newStatus) => {
               title="Cria dados de cliente"
             >{{pedido_item.pedido.cliente.apelido}}</button>
           </td>
-          <td>{{pedido_item.bordado.nome}}</td>
+          <td>
+            <router-link
+              v-if="status == 'b'"
+              :to="{ name: 'bordado', params: { id: pedido_item.bordado.id } }"
+              class="router-link text-sky-800"
+              title="Edita dados do bordado"
+            >{{pedido_item.bordado.nome}}</router-link>
+          </td>
           <td>{{pedido_item.bordado.codigo}}</td>
           <td>
             <button
