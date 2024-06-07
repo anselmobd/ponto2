@@ -1,14 +1,17 @@
 from django.urls import include, path
 from rest_framework import routers
 
-from .views.main import (
+from bordado.views.main import (
     index,
     sobre,
 )
-from .views.lancamento import LancamentoView
-from .api.rest import (
-    ApontamentoProducaoViewSet,
+from bordado.views.lancamento import LancamentoView
+from bordado.api.bordado import (
+    BordadoFullViewSet,
     BordadoViewSet,
+)
+from bordado.api.rest import (
+    ApontamentoProducaoViewSet,
     ClienteViewSet,
     CobrancaViewSet,
     ContatoViewSet,
@@ -30,6 +33,7 @@ router.register(r'clientes', ClienteViewSet)
 router.register(r'contato', ContatoViewSet)
 router.register(r'dificuldade_bordado', DificuldadeBordadoViewSet)
 router.register(r'bordado', BordadoViewSet)
+router.register(r'bordado__full', BordadoFullViewSet, 'bordado full')
 router.register(r'pedido', PedidoViewSet)
 router.register(r'pedido_item', PedidoItemViewSet)
 router.register(r'tipo_comunicacao', TipoComunicacaoViewSet)
