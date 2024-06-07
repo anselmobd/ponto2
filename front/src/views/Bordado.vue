@@ -116,13 +116,14 @@ onMounted(() => {
             <form>
               <div class="grid grid-cols-1 gap-4">
                 <span v-if="bordado_error" class="text-red-800">{{ bordado_error }}</span>
+                <p v-if="field_error?.non_field_errors" class="text-red-800">{{ field_error.non_field_errors.join('|') }}</p>
                 <span v-if="bordado_salvo" class="text-green-800">{{ bordado_salvo }}</span>
 
                 <section id="nomes_section">
                   <div class="flex gap-4">
                     <div>
                       <label class="block" for="fansasia">Nome</label>
-                      <p v-if="field_error" class="text-red-800">{{ field_error }}</p>
+                      <p v-if="field_error?.nome" class="text-red-800">{{ field_error.nome }}</p>
                       <input
                       class="h-10 border mt-1 rounded px-4 bg-white"
                       v-model="bordado.nome"
