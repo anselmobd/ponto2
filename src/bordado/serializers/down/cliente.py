@@ -42,6 +42,7 @@ class ClienteDownSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'apelido',
+            'apelido_slug',
             'usuario',
             'quando',
             'nome',
