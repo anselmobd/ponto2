@@ -7,37 +7,33 @@ from drf_spectacular.utils import (
     extend_schema,
 )
 from rest_framework import (
-    generics,
     permissions,
     viewsets,
 )
 
 from o2lib.dict import dict_keys_value
 
+from bordado.api.bordado import BordadoViewSet
 from bordado.api.cobranca import CobrancaViewSet
 from bordado.api.pedido_item import PedidoItemViewSet
 from bordado.api.lancamento import LancamentoViewSet
 from bordado.api.rest_consts import __ACTIONS
 from bordado.models import (
     ApontamentoProducao,
-    Bordado,
     Cliente,
     Contato,
     DificuldadeBordado,
     FormaPagamento,
     OrdemProducao,
     Pedido,
-    PedidoItem,
     PedidoItemCobranca,
     TipoComunicacao,
 )
 from bordado.serializers import (
     ApontamentoProducaoSerializer,
-    BordadoSerializer,
     DificuldadeBordadoSerializer,
     OrdemProducaoSerializer,
     PedidoItemCobrancaSerializer,
-    PedidoItemSerializer,
     PedidoSerializer,
     UserSerializer,
 )
@@ -96,14 +92,6 @@ class DificuldadeBordadoViewSet(viewsets.ModelViewSet):
     queryset = DificuldadeBordado.objects.all()
     serializer_class = DificuldadeBordadoSerializer
     permission_classes = [permissions.IsAuthenticated]
-
-@extend_schema_view(
-    **dict_keys_value(__ACTIONS, extend_schema(tags=['bordado'])))
-class BordadoViewSet(viewsets.ModelViewSet):
-    queryset = Bordado.objects.all()
-    serializer_class = BordadoSerializer
-    permission_classes = [permissions.IsAuthenticated]
-    filterset_fields = ['cliente__apelido', 'nome']
 
 
 @extend_schema_view(
