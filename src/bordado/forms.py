@@ -58,17 +58,17 @@ class LancamentoForm(forms.Form):
         initial='-',
     )
 
+class FaturamentoForm(forms.Form):
+    a = FormWidgetAttrs()
 
+    field_control = [
+        ['cliente_apelido'],
+    ]
 
-
-
-
-
-
-
-
-
-
-
-
-
+    cliente_apelido = forms.CharField(
+        label='Cliente',
+        required=False,
+        widget=forms.TextInput(
+            attrs={**a.autofocus, **a.string}
+        ),
+    )

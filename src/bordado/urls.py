@@ -6,6 +6,7 @@ from bordado.views.main import (
     sobre,
 )
 from bordado.views.lancamento import LancamentoView
+from bordado.views.faturamento import FaturamentoView
 from bordado.api.bordado import (
     BordadoFullViewSet,
     BordadoViewSet,
@@ -49,5 +50,7 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('', index, name='index'),
     path('sobre', sobre, name='sobre'),
+
+    path('faturamento', FaturamentoView.as_view(), name='faturamento'),
     path('lancamento', LancamentoView.as_view(), name='lancamento'),
 ]

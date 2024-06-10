@@ -1,0 +1,43 @@
+{% extends 'bordado/index.html' %}
+{% load static %}
+
+{% block header.content %}{{ titulo }} - <a href="{% url 'bordado:index' %}">{{ block.super }}</a>{% endblock header.content %}
+
+{% block style %}
+  <style>
+    {% include 'layout/simple_table.css' %}
+    .errorlist {
+      color: darkred;
+      margin: 0.25rem;
+      padding-left: 1rem;
+    }
+    /* h6 utilizado na chamanda do generic/form_inputs_report */
+    h6 {
+      font-size: unset;
+      font-weight: normal;
+      margin: 0.25rem;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <form class="noprint" action="{% url 'bordado:faturamento' %}" method="post">
+    {% csrf_token %}
+    {% include "layout/generic/form_field_control.html" with form=form only %}
+    <input class="button" type="submit" value="Busca"/>
+  </form>
+  {% if request.POST %}
+    {% include "layout/generic/form_inputs_report.html" with form=form h=6 excludes=form_report_excludes only %}
+    {% if msg_error %}
+      <ul class="errorlist">
+        {% for error in msg_error %}
+          <li>{{ error }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    <table>
+      {% include "layout/generic/thead.html" with data=headers safe=safe style=style thclass='sticky' group=group only %}
+      {% include "layout/generic/tbody.html" with fields=fields data=data safe=safe style=style group=group only %}
+    </table>
+  {% endif %}
+{% endblock %}
