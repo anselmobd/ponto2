@@ -71,6 +71,11 @@ class FaturamentoView(LoginRequiredMixin, O2BaseGetPostView):
             raise StopStepsException(
                 "Filtro definido não seleciona nenhum lançamento")
 
+    def filtra_nf(self):
+        if self.nf:
+            self.query = self.query.filter(
+                    nf=self.nf)
+
     def filtra_cliente(self):
         if self.cliente_apelido:
             try:
@@ -125,6 +130,7 @@ class FaturamentoView(LoginRequiredMixin, O2BaseGetPostView):
         for passo in [
             self.init_query,
             self.filtra_cliente,
+            self.filtra_nf,
             self.com_faturamento,
             self.order_query,
             self.exec_query,

@@ -30,3 +30,6 @@ class FormWidgetAttrs():
     size_5 = {
         'size': 5,
     }
+    size_6 = {
+        'size': 6,
+    }

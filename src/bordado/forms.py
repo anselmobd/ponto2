@@ -62,13 +62,20 @@ class FaturamentoForm(forms.Form):
     a = FormWidgetAttrs()
 
     field_control = [
-        ['cliente_apelido'],
+        ['nf', 'cliente_apelido'],
     ]
 
+    nf = forms.CharField(
+        label='NF',
+        required=False,
+        widget=forms.TextInput(
+            attrs={**a.autofocus, **a.number, **a.placeholder_0, **a.size_6}
+        ),
+    )
     cliente_apelido = forms.CharField(
         label='Cliente',
         required=False,
         widget=forms.TextInput(
-            attrs={**a.autofocus, **a.string}
+            attrs={**a.string}
         ),
     )
