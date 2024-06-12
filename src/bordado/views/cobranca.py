@@ -51,6 +51,7 @@ class CobrancaView(LoginRequiredMixin, O2BaseGetPostView):
                 'nf': ['NF', 'c'],
                 # 'valor': ['Valor cobrança', 'r'],
                 'data': ['Data', 'c'],
+                'parcelamento': ['Parcelamento', 'c'],
                 self.PEDIDO: ['Pedido', 'c'],
                 self.QUANTIDADE: ['Quantidade', 'r'],
                 self.BORDADO_NOME: ['Bordado nome', 'c'],
@@ -111,8 +112,8 @@ class CobrancaView(LoginRequiredMixin, O2BaseGetPostView):
             'informacao',
             'comunicacao__descricao',
             'nf',
-            # 'valor',
             'data',
+            'parcelamento',
         ]
        
         group_rowspan(self.data, group)
