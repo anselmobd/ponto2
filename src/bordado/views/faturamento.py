@@ -29,14 +29,16 @@ class FaturamentoView(LoginRequiredMixin, O2BaseGetPostView):
     # PEDIDO = 'pedidoitemcobranca__pedido_item__pedido'
     # VALOR = 'pedidoitemcobranca__valor'
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, *args, **kwargs):
+        super(FaturamentoView, self).__init__(*args, **kwargs)
         self.Form_class = FaturamentoForm
         self.form_class_has_initial = True
         self.cleaned_data2self = True
         self.cleaned_data2context = True
         self.template_name = 'bordado/faturamento.html'
         self.title_name = 'Faturamento'
+        self.get_args = ['nf']
+
         self.table_defs = TableDefs(
             {
                 'cliente__apelido': ['Cliente'],
@@ -127,6 +129,9 @@ class FaturamentoView(LoginRequiredMixin, O2BaseGetPostView):
         self.table_defs.hfs_dict_context(self.context)
 
     def mount_context(self):
+        self.context.update({
+            'show_post': True,
+        })
         for passo in [
             self.init_query,
             self.filtra_cliente,

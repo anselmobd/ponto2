@@ -26,7 +26,7 @@
     {% include "layout/generic/form_field_control.html" with form=form only %}
     <input class="button" type="submit" value="Busca"/>
   </form>
-  {% if request.POST %}
+  {% if show_post %}
     {% include "layout/generic/form_inputs_report.html" with form=form h=6 excludes=form_report_excludes only %}
     {% if msg_error %}
       <ul class="errorlist">

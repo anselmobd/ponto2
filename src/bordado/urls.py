@@ -1,4 +1,4 @@
-from django.urls import include, path
+from django.urls import include, path, re_path
 from rest_framework import routers
 
 from bordado.views.main import (
@@ -51,6 +51,10 @@ urlpatterns = [
     path('', index, name='index'),
     path('sobre', sobre, name='sobre'),
 
-    path('faturamento', FaturamentoView.as_view(), name='faturamento'),
+    re_path(
+        r'^faturamento/(?P<nf>.+)?/?$',
+        FaturamentoView.as_view(),
+        name='faturamento',
+    ),
     path('lancamento', LancamentoView.as_view(), name='lancamento'),
 ]
