@@ -7,7 +7,7 @@ from o2lib.models.dictlist import queryset2dictlist
 from o2lib.table_defs import TableDefs
 from o2lib.views.main import (
     group_rowspan,
-    totalize_data,
+    totalize_grouped_data,
 )
 from o2lib.views.base.get_post import O2BaseGetPostView
 from o2lib.views.base.exception import (
@@ -26,6 +26,9 @@ __all__ = ['FaturamentoView']
 
 class FaturamentoView(LoginRequiredMixin, O2BaseGetPostView):
 
+    # PEDIDO = 'pedidoitemcobranca__pedido_item__pedido'
+    # VALOR = 'pedidoitemcobranca__valor'
+
     def __init__(self):
         super().__init__()
         self.Form_class = FaturamentoForm
@@ -39,6 +42,9 @@ class FaturamentoView(LoginRequiredMixin, O2BaseGetPostView):
                 'cliente__apelido': ['Cliente'],
                 'nf': ['NF', 'c'],
                 'id': ['Cobrança', 'c'],
+                'data': ['Data', 'c'],
+                # self.PEDIDO: ['Pedido', 'c'],
+                # self.VALOR: ['Valor pedido', 'r'],
                 'valor': ['Valor cobrança', 'r'],
             },
             ['header', '+style'],
@@ -50,7 +56,7 @@ class FaturamentoView(LoginRequiredMixin, O2BaseGetPostView):
 
     def order_query(self):
         self.query = self.query.order_by(
-            'cliente__apelido', '-nf', '-id'
+            'cliente__apelido', '-nf', '-data', '-id'
         )
 
     def com_faturamento(self):
@@ -91,20 +97,23 @@ class FaturamentoView(LoginRequiredMixin, O2BaseGetPostView):
             'nf',
             'cliente__apelido',
         ]
-        group_rowspan(self.data, group)
-        
-        totalize_data(
+       
+        totalize_grouped_data(
             self.data,
             {
+                'group': group,
                 'sum': ['valor'],
-                'descr': {'nf': 'Total:'},
+                'descr': {'nf': 'Valor NF:'},
+                'global_sum': ['valor'],
+                'global_descr': {'nf': 'Total:'},
                 'row_if': 'rowspan',
                 'row_style':
                     "font-weight: bold;"
                     "background-image: linear-gradient(#DDD, white);",
-                'flags': ['NO_TOT_1'],
+                # 'flags': ['NO_TOT_1'],
             }
         )
+        group_rowspan(self.data, group)
 
         self.context.update({
             'data': self.data,
