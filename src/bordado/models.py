@@ -1,3 +1,4 @@
+from decimal import Decimal
 from pprint import pprint
 
 from django.contrib.auth.models import User
@@ -470,20 +471,29 @@ class PedidoItem(models.Model):
         "Preço",
         max_digits=9,
         decimal_places=2,
-        validators=[MinValueValidator(0.01), MaxValueValidator(1_000_000)],
+        validators=[
+            MinValueValidator(Decimal(0.01)),
+            MaxValueValidator(Decimal(1_000_000)),
+        ],
         default=0,
     )
     programacao = models.DecimalField(
         "Pogramação",
         max_digits=9,
         decimal_places=2,
-        validators=[MinValueValidator(0.01), MaxValueValidator(1_000_000)],
+        validators=[
+            MinValueValidator(Decimal(0.01)),
+            MaxValueValidator(Decimal(1_000_000)),
+        ],
         default=0,
     )
     ajuste = models.DecimalField(
         max_digits=7,
         decimal_places=2,
-        validators=[MinValueValidator(-1_000), MaxValueValidator(1_000)],
+        validators=[
+            MinValueValidator(Decimal(-1_000)),
+            MaxValueValidator(Decimal(1_000)),
+        ],
         default=0,
     )
     cancelado = models.BooleanField(
@@ -538,7 +548,10 @@ class Cobranca(models.Model):
     valor = models.DecimalField(
         max_digits=9,
         decimal_places=2,
-        validators=[MinValueValidator(0.01), MaxValueValidator(1_000_000)],
+        validators=[
+            MinValueValidator(Decimal(0.01)),
+            MaxValueValidator(Decimal(1_000_000)),
+        ],
         default=0,
     )
     informacao = models.CharField(
@@ -602,7 +615,10 @@ class PedidoItemCobranca(models.Model):
     valor = models.DecimalField(
         max_digits=9,
         decimal_places=2,
-        validators=[MinValueValidator(0.01), MaxValueValidator(1_000_000)],
+        validators=[
+            MinValueValidator(Decimal(0.01)),
+            MaxValueValidator(Decimal(1_000_000)),
+        ],
         default=0,
     )
 
@@ -642,7 +658,10 @@ class Lancamento(models.Model):
     valor = models.DecimalField(
         max_digits=9,
         decimal_places=2,
-        validators=[MinValueValidator(-1_000_000), MaxValueValidator(1_000_000)],
+        validators=[
+            MinValueValidator(Decimal(-1_000_000)),
+            MaxValueValidator(Decimal(1_000_000)),
+        ],
         default=0,
     )
     calculando = models.BooleanField(
@@ -651,13 +670,19 @@ class Lancamento(models.Model):
     saldo_cliente = models.DecimalField(
         max_digits=9,
         decimal_places=2,
-        validators=[MinValueValidator(-1_000_000), MaxValueValidator(1_000_000)],
+        validators=[
+            MinValueValidator(Decimal(-1_000_000)),
+            MaxValueValidator(Decimal(1_000_000)),
+        ],
         default=0,
     )
     saldo_empresa = models.DecimalField(
         max_digits=9,
         decimal_places=2,
-        validators=[MinValueValidator(-1_000_000), MaxValueValidator(1_000_000)],
+        validators=[
+            MinValueValidator(Decimal(-1_000_000)),
+            MaxValueValidator(Decimal(1_000_000)),
+        ],
         default=0,
     )
     usuario = models.ForeignKey(
