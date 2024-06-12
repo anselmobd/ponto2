@@ -46,6 +46,7 @@ class PedidoItemViewSet(viewsets.ModelViewSet):
         'pedido__cliente__apelido': ['exact'],
         'bordado__nome': ['exact'],
         'bordado__codigo': ['exact'],
+        'cobrancas': ['isnull'],
     }
 
     def destroy(self, request, *args, **kwargs):
