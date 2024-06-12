@@ -13,6 +13,7 @@ export function getPedidoItens({
   data_pedido=null,
   bordado_nome=null,
   bordado_codigo=null,
+  tem_cobranca=null,
   callBack=()=>{}
 }) {
   const params = new URLSearchParams();
@@ -37,6 +38,13 @@ export function getPedidoItens({
     } else if (quant_barras == 0) {
       const year = parseInt(barras[0], 10);
       params.append('data_pedido__year', year);
+    }
+  }
+  if (tem_cobranca !== null) {
+    if (tem_cobranca) {
+      params.append('cobrancas__isnull', false);
+    } else {
+      params.append('cobrancas__isnull', true);
     }
   }
   if (bordado_nome) {
