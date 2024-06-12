@@ -144,6 +144,8 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
                 self.VALOR,
                 'parcela',
             )
+        ).a_blank(
+            'cobranca', 'bordado:cobranca'
         ).process()
 
         group = [
