@@ -71,7 +71,7 @@ class FaturamentoView(LoginRequiredMixin, O2BaseGetPostView):
             self.data = queryset2dictlist(self.data)
         else:
             raise StopStepsException(
-                "Filtro definido não seleciona nenhum lançamento")
+                "Filtro definido não seleciona nenhum faturamento")
 
     def filtra_nf(self):
         if self.nf:
