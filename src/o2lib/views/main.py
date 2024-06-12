@@ -93,6 +93,12 @@ def totalize_grouped_data(data, config):
     group_values = {}
     init_group = True
     for row_idx, row in enumerate(data):
+        do_sum = True
+        if 'row_if' in config:
+            do_sum = row[config['row_if']]
+        do_global_sum = True
+        if 'global_row_if' in config:
+            do_global_sum = row[config['global_row_if']]
 
         if not init_group:
             if list_key != [row[key] for key in config['group']]:
@@ -106,7 +112,8 @@ def totalize_grouped_data(data, config):
                 if 'flags' in config and 'NO_TOT_1' in config['flags']:
                     total = group_count > 1
                 if total:
-                    totrows[row_idx] = totrow
+                    if do_global_sum:
+                        totrows[row_idx] = totrow
                 init_group = True
 
         if init_group:
@@ -123,7 +130,8 @@ def totalize_grouped_data(data, config):
             init_group = False
 
         for key in sum:
-            sum[key] += row[key]
+            if do_sum:
+                sum[key] += row[key]
         group_count += 1
 
         if 'global_sum' in config:
