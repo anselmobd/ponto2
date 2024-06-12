@@ -2,6 +2,9 @@
 .env.production
 public/version.json
 
+# generic
+*.bak
+
 # Logs
 logs
 *.log
