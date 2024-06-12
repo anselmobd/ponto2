@@ -96,7 +96,9 @@ function doGetPedidoItens() {
   pedido_itens_carregando.value = true;
   pedido_itens_error.value = null;
   getPedidoItens({
+    page_size: 999999,
     cliente_apelido: route.params.apelido,
+    tem_cobranca: false,
     callBack: cbGetPedidoItens
   });
 }
