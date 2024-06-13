@@ -1,7 +1,9 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from pprint import pprint
 
+from django.db.models import OuterRef, Subquery, DateTimeField, Q
 from django.db.models.deletion import ProtectedError
+from django.utils.timezone import now, get_current_timezone
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import (
     permissions,
@@ -18,6 +20,7 @@ from bordado.models import (
     Cliente,
     Pedido,
     PedidoItem,
+    Cobranca,
 )
 from bordado.serializers import (
     PedidoItemSerializer,
@@ -48,6 +51,30 @@ class PedidoItemViewSet(viewsets.ModelViewSet):
         'bordado__codigo': ['exact'],
         'cobrancas': ['isnull'],
     }
+
+    def get_queryset(self):
+        queryset = PedidoItem.objects.all()
+        
+        tela_financeiro = self.request.query_params.get('tela_financeiro', None)
+        if tela_financeiro is not None:
+            # Subquery to get the latest quando for each cobranca
+            ultima_cobranca = Cobranca.objects.filter(
+                pedidoitemcobranca__pedido_item=OuterRef('pk')
+            ).order_by('-quando').values('quando')[:1]
+
+            # Filter queryset where the latest child quando foi a menos de 24 horas, ou não tem cobrancas
+            agora = now().astimezone(get_current_timezone())
+            ha24horas = agora - timedelta(hours=24)
+            queryset = queryset.annotate(
+                ultima_cobranca_quando=Subquery(
+                    ultima_cobranca,
+                    output_field=DateTimeField(),
+                )
+            ).filter(
+                Q(cobrancas__isnull=True) |
+                Q(ultima_cobranca_quando__gte=ha24horas)
+            )
+        return queryset
 
     def destroy(self, request, *args, **kwargs):
         if request.query_params.get('tipo', '-') == 'fechamento':
