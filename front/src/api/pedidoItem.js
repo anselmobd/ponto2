@@ -14,6 +14,7 @@ export function getPedidoItens({
   bordado_nome=null,
   bordado_codigo=null,
   tem_cobranca=null,
+  tela_financeiro=null,
   callBack=()=>{}
 }) {
   const params = new URLSearchParams();
@@ -22,6 +23,9 @@ export function getPedidoItens({
     params.append('page', page);
   }
   params.append('page_size', page_size);
+  if (tela_financeiro) {
+    params.append('tela_financeiro', true);
+  }
   if (cliente_apelido) {
     params.append('pedido__cliente__apelido', cliente_apelido);
   }

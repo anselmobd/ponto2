@@ -98,7 +98,7 @@ function doGetPedidoItens() {
   getPedidoItens({
     page_size: 999999,
     cliente_apelido: route.params.apelido,
-    tem_cobranca: false,
+    tela_financeiro: true,
     callBack: cbGetPedidoItens
   });
 }
