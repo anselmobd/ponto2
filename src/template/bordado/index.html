@@ -5,8 +5,15 @@
 
 {% block content %}
 <ul>
-  <li><a href="{% url 'bordado:cobranca' %}">Cobrança</a></li>
-  <li><a href="{% url 'bordado:faturamento' %}">Faturamento</a></li>
-  <li><a href="{% url 'bordado:lancamento' %}">Lançamento</a></li>
+  <li>Listagem</li>
+  <ul>
+    <li><a href="{% url 'bordado:cobranca' %}">Cobrança</a></li>
+    <li><a href="{% url 'bordado:faturamento' %}">Nota fiscal</a></li>
+    <li><a href="{% url 'bordado:lancamento' %}">Lançamento</a></li>
+  </ul>
+  <li>Análise</li>
+  <ul>
+    <li><a href="{% url 'bordado:analise_cobranca' %}">Cobrança</a></li>
+  </ul>
 </ul>
 {% endblock %}

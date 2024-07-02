@@ -5,6 +5,7 @@ from bordado.views.main import (
     index,
     sobre,
 )
+from bordado.views.analise.cobranca import AnaliseCobrancaView
 from bordado.views.cobranca import CobrancaView
 from bordado.views.faturamento import FaturamentoView
 from bordado.views.lancamento import LancamentoView
@@ -62,5 +63,14 @@ urlpatterns = [
         FaturamentoView.as_view(),
         name='faturamento',
     ),
-    path('lancamento', LancamentoView.as_view(), name='lancamento'),
+    path(
+        'lancamento',
+        LancamentoView.as_view(),
+        name='lancamento',
+    ),
+    path(
+        'analise_cobranca',
+        AnaliseCobrancaView.as_view(),
+        name='analise_cobranca',
+    ),
 ]
