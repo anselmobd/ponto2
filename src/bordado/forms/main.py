@@ -1,0 +1,109 @@
+from pprint import pprint
+
+from django import forms
+
+from o2lib.form.widget_attrs import FormWidgetAttrs
+
+__all__ = [
+    'LancamentoForm',
+    'FaturamentoForm',
+    'CobrancaForm',
+]
+
+
+class LancamentoForm(forms.Form):
+    a = FormWidgetAttrs()
+
+    field_control = [
+        ['cliente_apelido', 'pedido_numero', 'cobranca_id'],
+        ['data_de', 'data_ate'],
+        ['tipo_lancamento'],
+    ]
+
+    cliente_apelido = forms.CharField(
+        label='Cliente',
+        required=False,
+        widget=forms.TextInput(
+            attrs={**a.autofocus, **a.string}
+        ),
+    )
+    pedido_numero = forms.CharField(
+        label='Pedido',
+        required=False,
+        widget=forms.TextInput(
+            attrs={**a.number, **a.placeholder_0, **a.size_5}
+        ),
+    )
+    cobranca_id = forms.CharField(
+        label='Cobrança',
+        required=False,
+        widget=forms.TextInput(
+            attrs={**a.number, **a.placeholder_0, **a.size_5}
+        ),
+    )
+    data_de = forms.DateField(
+        label="Data do lançamento: De",
+        required=False,
+        widget=forms.DateInput(attrs={'type': 'date'}),
+    )
+    data_ate = forms.DateField(
+        label="Até",
+        required=False,
+        widget=forms.DateInput(attrs={'type': 'date'}),
+    )
+    CHOICES = [
+        ('-', 'Não filtra'),
+        ('c', 'Cobranças'),
+        ('r', 'Recebimentos'),
+    ]
+    tipo_lancamento = forms.ChoiceField(
+        label='Tipo de lançamento',
+        choices=CHOICES,
+        initial='-',
+    )
+
+
+class FaturamentoForm(forms.Form):
+    a = FormWidgetAttrs()
+
+    field_control = [
+        ['nf', 'cliente_apelido'],
+    ]
+
+    nf = forms.CharField(
+        label='NF',
+        required=False,
+        widget=forms.TextInput(
+            attrs={**a.autofocus, **a.number, **a.placeholder_0, **a.size_6}
+        ),
+    )
+    cliente_apelido = forms.CharField(
+        label='Cliente',
+        required=False,
+        widget=forms.TextInput(
+            attrs={**a.string}
+        ),
+    )
+
+
+class CobrancaForm(forms.Form):
+    a = FormWidgetAttrs()
+
+    field_control = [
+        ['numero', 'cliente_apelido'],
+    ]
+
+    numero = forms.CharField(
+        label='Número',
+        required=False,
+        widget=forms.TextInput(
+            attrs={**a.autofocus, **a.number, **a.placeholder_0, **a.size_6}
+        ),
+    )
+    cliente_apelido = forms.CharField(
+        label='Cliente',
+        required=False,
+        widget=forms.TextInput(
+            attrs={**a.string}
+        ),
+    )
