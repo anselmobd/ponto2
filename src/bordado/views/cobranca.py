@@ -27,6 +27,8 @@ __all__ = ['CobrancaView']
 
 class CobrancaView(LoginRequiredMixin, O2BaseGetPostView):
 
+    CLIENTE = 'cliente__apelido'
+    COMUNICACAO = 'comunicacao__descricao'
     PEDIDO = 'pedidoitemcobranca__pedido_item__pedido'
     QUANTIDADE = 'pedidoitemcobranca__pedido_item__quantidade'
     BORDADO_NOME = 'pedidoitemcobranca__pedido_item__bordado__nome'
@@ -45,10 +47,10 @@ class CobrancaView(LoginRequiredMixin, O2BaseGetPostView):
 
         self.table_defs = TableDefs(
             {
-                'cliente__apelido': ['Cliente'],
+                self.CLIENTE: ['Cliente'],
                 'id': ['Nº', 'c'],
                 'informacao': ['Informação'],
-                'comunicacao__descricao': ['Tipo'],
+                self.COMUNICACAO: ['Tipo'],
                 'nf': ['NF', 'c'],
                 # 'valor': ['Valor cobrança', 'r'],
                 'data': ['Data', 'c'],
@@ -68,7 +70,7 @@ class CobrancaView(LoginRequiredMixin, O2BaseGetPostView):
 
     def order_query(self):
         self.query = self.query.order_by(
-            'cliente__apelido', '-data', '-id'
+            self.CLIENTE, '-data', '-id'
         )
 
     def exec_query(self):
@@ -96,7 +98,7 @@ class CobrancaView(LoginRequiredMixin, O2BaseGetPostView):
                 # raise StepErrorException("erro do filtro do cliente")
             finally:
                 self.query = self.query.filter(
-                    cliente__apelido__icontains=self.cliente_apelido)
+                    **{f'{self.CLIENTE}__icontains': self.cliente_apelido})
 
     def context_table(self):
         PrepRows(
@@ -120,10 +122,10 @@ class CobrancaView(LoginRequiredMixin, O2BaseGetPostView):
         ).process()
 
         group = [
-            'cliente__apelido',
+            self.CLIENTE,
             'id',
             'informacao',
-            'comunicacao__descricao',
+            self.COMUNICACAO,
             'nf',
             'data',
             'parcelamento',
