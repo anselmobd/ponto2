@@ -298,6 +298,11 @@ class PedidoItemCobrancaAdmin(admin.ModelAdmin):
         'cobranca',
         'valor',
     ]
+    search_fields = [
+        'pedido_item__id',
+        'cobranca__id',
+        'valor',
+    ]
 
 
 @admin.register(Lancamento)
