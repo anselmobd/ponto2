@@ -79,16 +79,14 @@ class FaturamentoView(LoginRequiredMixin, O2BaseGetPostView):
 
     def filtra_cliente(self):
         if self.cliente_apelido:
-            try:
-                Cliente.objects.get(apelido__icontains=self.cliente_apelido)
-            except Cliente.DoesNotExist:
+            clientes = Cliente.objects.filter(
+                apelido__icontains=self.cliente_apelido)
+            if not clientes:
                 self.form.errors['cliente_apelido'] = [
                     f"Cliente com apelido contendo '{self.cliente_apelido}' "
                     "não existe"]
-                # raise StepErrorException("erro do filtro do cliente")
-            finally:
-                self.query = self.query.filter(
-                    cliente__apelido__icontains=self.cliente_apelido)
+            self.query = self.query.filter(
+                **{f'{self.CLIENTE}__icontains': self.cliente_apelido})
 
     def context_table(self):
         PrepRows(
