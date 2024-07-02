@@ -1,3 +1,5 @@
+from pprint import pprint
+
 from ponto2.admin import admin
 
 from .models import (
@@ -202,6 +204,58 @@ class PedidoItemAdmin(admin.ModelAdmin):
     ]
 
 
+class CobrancaDataAnoFilter(admin.SimpleListFilter):
+    title = 'Data / Ano'
+    parameter_name = 'cobranca_data_ano_filter'
+
+    def lookups(self, request, model_admin):
+        dados = Cobranca.objects.all().values('data__year')
+        anos = list(
+            set(
+                (row['data__year'], row['data__year'])
+                for row in dados
+            )
+        )
+        return anos
+
+    def queryset(self, request, queryset):
+        if self.value():
+            self.title = f'Data / Ano = {self.value()}'
+            return queryset.filter(data__year=self.value())
+        else:
+            self.title = 'Data / Ano'
+
+
+class DataMesFilter(admin.SimpleListFilter):
+    title = 'Data / Mês'
+    parameter_name = 'data_mes_filter'
+
+    _meses = {
+        '1': '01-Janeiro',
+        '2': '02-Fevereiro',
+        '3': '03-Março',
+        '4': '04-Abril',
+        '5': '05-Maio',
+        '6': '06-Junho',
+        '7': '07-Julho',
+        '8': '08-Agosto',
+        '9': '09-Setembro',
+        '10': '10-Outubro',
+        '11': '11-Novembro',
+        '12': '12-Dezembro',
+    }
+
+    def lookups(self, request, model_admin):
+        return self._meses.items()
+
+    def queryset(self, request, queryset):
+        if self.value():
+            self.title = f'Data / Mês = {self._meses[self.value()]}'
+            return queryset.filter(data__month=self.value())
+        else:
+            self.title = 'Data / Mês'
+
+
 @admin.register(Cobranca)
 class CobrancaAdmin(admin.ModelAdmin):
     list_display = [
@@ -219,6 +273,22 @@ class CobrancaAdmin(admin.ModelAdmin):
     readonly_fields = [
         'usuario',
         'quando',
+    ]
+    search_fields = [
+        'id',
+        'cliente__apelido_slug',
+        'informacao',
+        'comunicacao__descricao',
+        'nf',
+        'valor',
+        'usuario',
+    ]
+    list_filter = [
+        CobrancaDataAnoFilter,
+        DataMesFilter,
+        'usuario',
+        'comunicacao',
+        'cliente',
     ]
 
 
