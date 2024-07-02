@@ -1,3 +1,4 @@
+from decimal import Decimal
 from pprint import pprint
 
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -103,7 +104,19 @@ class CobrancaView(LoginRequiredMixin, O2BaseGetPostView):
         ).str_dash(
             (
                 'nf',
+                'informacao',
+                'parcelamento',
+                self.BORDADO_CODIGO,
             )
+        ).str(
+            (
+                self.PEDIDO,
+                self.QUANTIDADE,
+                self.BORDADO_NOME,
+            ),
+            '<Erro!>',
+        ).none(
+            self.VALOR, Decimal('0.00')
         ).process()
 
         group = [

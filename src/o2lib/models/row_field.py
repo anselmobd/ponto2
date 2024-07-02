@@ -153,10 +153,8 @@ class PrepRows():
     def _str_dash(self, row, field):
         self._str(row, field, default='-')
 
-    def _int_none(self, row, field, default=0):
+    def _none(self, row, field, default=0):
         if row[field] is None:
-            print('_int_none')
-            pprint(row)
             row[field] = default
 
     def custom_command(self, command, *args, **kwargs):
@@ -193,8 +191,8 @@ class PrepRows():
         self.custom_command(self._sn, *args, **kwargs)
         return self
 
-    def int_none(self, *args, **kwargs):
-        self.custom_command(self._int_none, *args, **kwargs)
+    def none(self, *args, **kwargs):
+        self.custom_command(self._none, *args, **kwargs)
         return self
 
     def process(self):
