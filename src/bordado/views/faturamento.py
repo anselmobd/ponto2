@@ -26,8 +26,7 @@ __all__ = ['FaturamentoView']
 
 class FaturamentoView(LoginRequiredMixin, O2BaseGetPostView):
 
-    # PEDIDO = 'pedidoitemcobranca__pedido_item__pedido'
-    # VALOR = 'pedidoitemcobranca__valor'
+    CLIENTE = 'cliente__apelido'
 
     def __init__(self, *args, **kwargs):
         super(FaturamentoView, self).__init__(*args, **kwargs)
@@ -41,7 +40,7 @@ class FaturamentoView(LoginRequiredMixin, O2BaseGetPostView):
 
         self.table_defs = TableDefs(
             {
-                'cliente__apelido': ['Cliente'],
+                self.CLIENTE: ['Cliente'],
                 'nf': ['NF', 'c'],
                 'id': ['Cobrança', 'c'],
                 'data': ['Data', 'c'],
@@ -111,9 +110,9 @@ class FaturamentoView(LoginRequiredMixin, O2BaseGetPostView):
             {
                 'group': group,
                 'sum': ['valor'],
-                'descr': {'nf': 'Valor NF:'},
+                'descr': {self.CLIENTE: 'Valor NF:'},
                 'global_sum': ['valor'],
-                'global_descr': {'nf': 'Total:'},
+                'global_descr': {self.CLIENTE: 'Total:'},
                 'row_if': 'rowspan',
                 'row_style':
                     "font-weight: bold;"
