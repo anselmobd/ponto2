@@ -281,7 +281,6 @@ class CobrancaAdmin(admin.ModelAdmin):
         'comunicacao__descricao',
         'nf',
         'valor',
-        'usuario',
     ]
     list_filter = [
         CobrancaDataAnoFilter,
