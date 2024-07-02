@@ -105,6 +105,7 @@ class FaturamentoView(LoginRequiredMixin, O2BaseGetPostView):
             'cliente__apelido',
         ]
        
+        group_rowspan(self.data, group)
         totalize_grouped_data(
             self.data,
             {
@@ -120,7 +121,6 @@ class FaturamentoView(LoginRequiredMixin, O2BaseGetPostView):
                 # 'flags': ['NO_TOT_1'],
             }
         )
-        group_rowspan(self.data, group)
 
         self.context.update({
             'data': self.data,
