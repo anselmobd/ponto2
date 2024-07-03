@@ -1,5 +1,11 @@
-import datetime
 from pprint import pprint
+from datetime import (
+    datetime,
+    timezone,
+    timedelta,
+)
+
+from django.utils.timezone import localtime
 
 
 __dow_info = {
@@ -20,11 +26,31 @@ __dow_info = {
 }
 
 
+def utc_now():
+    """Return datetime with time zone UTC"""
+    return datetime.now(timezone.utc)
+
+
+def tz_now():
+    """Return datetime with time zone based in Django TZ"""
+    return localtime()
+
+
+def tz_today():
+    """Return date today considering TZ"""
+    return tz_now().date()
+
+
+def tz_yesterday():
+    """Return date yesterday considering TZ"""
+    return (tz_today() - timedelta(days=1))
+
+
 def dow_info(dt, info, capitalize=False):
     dow = dt.weekday()
     result = __dow_info[dow][info]
     if capitalize:
-        result = result.capitalize()
+        return result.capitalize()
     return result
 
 
@@ -35,20 +61,12 @@ def ymd(data):
 
 def today_ymd():
     """Return today in format YYYY-MM-DD"""
-    return ymd(datetime.date.today())
-
-
-def yesterday():
-    """Return yesterday"""
-    return (
-        datetime.date.today()
-        - datetime.timedelta(days=1)
-    )
+    return ymd(tz_today())
 
 
 def yesterday_ymd():
     """Return yesterday in format YYYY-MM-DD"""
-    return ymd(yesterday())
+    return ymd(tz_yesterday())
 
 
 def dmy(data):
@@ -59,3 +77,26 @@ def dmy(data):
 def dmy_or_empty(data):
     """Return dmy or empty"""
     return dmy(data) if data else ''
+
+
+def strdmy2date(text):
+    """Convert string in format DD/MM/YYYY to date"""
+    return datetime.strptime(text, '%d/%m/%Y').date()
+
+
+def ano_atual():
+    """Return year of today, considering TZ"""
+    hoje = tz_today()
+    return hoje.year
+
+
+def mes_atual():
+    """Return month of today, considering TZ"""
+    hoje = tz_today()
+    return hoje.month
+
+
+def dia_atual():
+    """Return day of today, considering TZ"""
+    hoje = tz_today()
+    return hoje.day
