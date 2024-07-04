@@ -1,14 +1,13 @@
-from decimal import Decimal
 from pprint import pprint
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Sum, CharField, Value
+from django.db.models.functions import Concat
 
-from o2lib.models.row_field import PrepRows
 from o2lib.models.dictlist import queryset2dictlist
-from o2lib.table_defs import TableDefs
+from o2lib.table_defs import TableDefsHBpSD
 from o2lib.views.main import (
-    group_rowspan,
-    totalize_grouped_data,
+    totalize_data,
 )
 from o2lib.views.base.get_post import O2BaseGetPostView
 from o2lib.views.base.exception import (
@@ -22,17 +21,13 @@ from bordado.models import (
     Cobranca,
 )
 
+
 __all__ = ['AnaliseCobrancaView']
 
 
 class AnaliseCobrancaView(LoginRequiredMixin, O2BaseGetPostView):
 
     CLIENTE = 'cliente__apelido'
-    COMUNICACAO = 'comunicacao__descricao'
-    PEDIDO = 'pedidoitemcobranca__pedido_item__pedido'
-    QUANTIDADE = 'pedidoitemcobranca__pedido_item__quantidade'
-    BORDADO_NOME = 'pedidoitemcobranca__pedido_item__bordado__nome'
-    BORDADO_CODIGO = 'pedidoitemcobranca__pedido_item__bordado__codigo'
     VALOR = 'pedidoitemcobranca__valor'
 
     def __init__(self, *args, **kwargs):
@@ -44,42 +39,25 @@ class AnaliseCobrancaView(LoginRequiredMixin, O2BaseGetPostView):
         self.template_name = 'bordado/analise/cobranca.html'
         self.title_name = 'Analise de cobranças'
 
-        self.table_defs = TableDefs(
+        self.totaliza_fields = {
+            'c': self.CLIENTE,
+            'a': 'data__year',
+            'm': 'mes',
+        }
+        self.table_defs = TableDefsHBpSD(
             {
-                self.CLIENTE: ['Cliente'],
-                'id': ['Nº', 'c'],
-                'informacao': ['Informação'],
-                self.COMUNICACAO: ['Tipo'],
-                'nf': ['NF', 'c'],
-                # 'valor': ['Valor cobrança', 'r'],
-                'data': ['Data', 'c'],
-                'parcelamento': ['Parcelamento', 'c'],
-                self.PEDIDO: ['Pedido', 'c'],
-                self.QUANTIDADE: ['Quantidade', 'r'],
-                self.BORDADO_NOME: ['Bordado nome', 'c'],
-                self.BORDADO_CODIGO: ['Código', 'c'],
-                self.VALOR: ['Valor pedido', 'r'],
+                self.CLIENTE: ['Cliente', 'c'],
+                'data__year': ['Ano', 'a'],
+                'mes': ['Mês', 'm'],
+                'total': ['Valor pedido', '', 'r'],
             },
-            ['header', '+style'],
-            style = {'_': 'text-align'},
         )
+
+    def processa_parametros(self):
+        self.totaliza_field = self.totaliza_fields[self.totaliza]
 
     def init_query(self):
         self.query = Cobranca.objects
-
-    def order_query(self):
-        self.query = self.query.order_by(
-            self.CLIENTE, '-data', '-id'
-        )
-
-    def exec_query(self):
-        self.data = self.query.values(
-            *self.table_defs.all_fields)
-        if self.data:
-            self.data = queryset2dictlist(self.data)
-        else:
-            raise StopStepsException(
-                "Filtro definido não seleciona nenhuma cobrança")
 
     def filtra_ano(self):
         if self.ano:
@@ -93,85 +71,99 @@ class AnaliseCobrancaView(LoginRequiredMixin, O2BaseGetPostView):
 
     def filtra_cliente(self):
         if self.cliente_apelido:
-            clientes = Cliente.objects.filter(
-                apelido__icontains=self.cliente_apelido)
-            if not clientes:
-                self.form.errors['cliente_apelido'] = [
-                    f"Cliente com apelido contendo '{self.cliente_apelido}' "
-                    "não existe"]
+            try:
+                Cliente.objects.get(
+                    apelido=self.cliente_apelido)
+            except Cliente.DoesNotExist as e:
+                clientes = Cliente.objects.filter(
+                    apelido__icontains=self.cliente_apelido)
+                if clientes:
+                    if len(clientes) == 1:
+                        self.form.data['cliente_apelido'] = clientes[0].apelido
+                    else:
+                        apelidos = [cliente.apelido for cliente in clientes]
+                        self.form.errors['cliente_apelido'] = [
+                            "Mais de um cliente com apelido contendo "
+                            f"'{self.cliente_apelido}' "
+                            f"({', '.join(apelidos)})"
+                        ]
+                else:
+                    self.form.errors['cliente_apelido'] = [
+                        "Cliente com apelido contendo "
+                        f"'{self.cliente_apelido}' não existe"
+                    ]
             self.query = self.query.filter(
                 **{f'{self.CLIENTE}__icontains': self.cliente_apelido})
 
-    def context_table(self):
-        PrepRows(
-            self.data,
-        ).str_dash(
-            (
-                'nf',
-                'informacao',
-                'parcelamento',
-                self.BORDADO_CODIGO,
+    def values_query(self):
+        self.query = self.query.annotate(
+            mes=Concat(
+                'data__year',
+                Value('-'),
+                'data__month',
+                output_field=CharField()
             )
-        ).str(
-            (
-                self.PEDIDO,
-                self.QUANTIDADE,
-                self.BORDADO_NOME,
-            ),
-            '<Erro!>',
-        ).none(
-            self.VALOR, Decimal('0.00')
-        ).process()
+        )
+        self.query = self.query.values(
+            self.totaliza_field,
+        )
 
-        group = [
-            self.CLIENTE,
-            'id',
-            'informacao',
-            self.COMUNICACAO,
-            'nf',
-            'data',
-            'parcelamento',
-        ]
-       
-        group_rowspan(self.data, group)
-        totalize_grouped_data(
+    def order_query(self):
+        self.query = self.query.order_by(
+            self.totaliza_field,
+        )
+
+    def group_query(self):
+        self.query = self.query.annotate(
+            total=Sum(self.VALOR)
+        )
+
+    def exec_query(self):
+        self.data = queryset2dictlist(self.query)
+        if not self.data:
+            raise StopStepsException(
+                "Filtro definido não seleciona nenhuma cobrança")
+        pprint(self.data)
+
+    def context_table(self):
+        totalize_data(
             self.data,
             {
-                'group': group,
-                'sum': [self.VALOR],
-                'descr': {self.PEDIDO: 'Valor itens:'},
-                'global_sum': [self.VALOR],
-                'global_descr': {'nf': 'Total:'},
-                # 'global_row_if': 'rowspan',
+                'sum': ['total'],
+                'descr': {self.totaliza_field: 'Total:'},
                 'row_style':
                     "font-weight: bold;"
                     "background-image: linear-gradient(#DDD, white);",
-                'flags': ['NO_TOT_1'],
             }
         )
 
         self.context.update({
             'data': self.data,
-            'group': group,
         })
-        self.table_defs.hfs_dict_context(self.context)
+        self.table_defs.hfs_dict_context(
+            self.context,
+            bitmap=self.totaliza,
+        )
 
     def mount_context(self):
         self.context.update({
             'show_post': True,
         })
         for passo in [
+            self.processa_parametros,
             self.init_query,
             self.filtra_ano,
             self.filtra_mes,
             self.filtra_cliente,
+            self.values_query,
             self.order_query,
+            self.group_query,
             self.exec_query,
             self.context_table,
         ]:
             try:
                 passo()
             except (StopStepsException, StepErrorException) as e:
-                self.context['error_msgs'].append(e)
+                self.context['error_msgs'].append(str(e))
                 if isinstance(e, StopStepsException):
                     break

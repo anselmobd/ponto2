@@ -17,6 +17,7 @@ class AnaliseCobrancaForm(forms.Form):
     field_control = [
         ['ano', 'mes'],
         ['cliente_apelido'],
+        ['totaliza'],
     ]
 
     ano = forms.IntegerField(
@@ -37,3 +38,17 @@ class AnaliseCobrancaForm(forms.Form):
             attrs={**a.string, **a.autofocus}
         ),
     )
+
+    CHOICES = [
+        ('c', 'Por cliente'),
+        ('a', 'Por ano'),
+        ('m', 'Por mês'),
+    ]
+    totaliza = forms.ChoiceField(
+        choices=CHOICES,
+        initial='c',
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.data = self.data.copy()
