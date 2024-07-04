@@ -78,6 +78,8 @@ class AnaliseCobrancaView(LoginRequiredMixin, O2BaseGetPostView):
             try:
                 Cliente.objects.get(
                     apelido=self.cliente_apelido)
+                self.query = self.query.filter(
+                    **{self.CLIENTE: self.cliente_apelido})
             except Cliente.DoesNotExist as e:
                 clientes = Cliente.objects.filter(
                     apelido__icontains=self.cliente_apelido)
@@ -96,8 +98,8 @@ class AnaliseCobrancaView(LoginRequiredMixin, O2BaseGetPostView):
                         "Cliente com apelido contendo "
                         f"'{self.cliente_apelido}' não existe"
                     ]
-            self.query = self.query.filter(
-                **{f'{self.CLIENTE}__icontains': self.cliente_apelido})
+                self.query = self.query.filter(
+                    **{f'{self.CLIENTE}__icontains': self.cliente_apelido})
 
     def values_query(self):
         self.query = self.query.annotate(
