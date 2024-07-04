@@ -151,7 +151,7 @@ class AnaliseCobrancaView(LoginRequiredMixin, O2BaseGetPostView):
 
     def prep_table(self):
         valor_acumulado = 0
-        for i, row in enumerate(self.data[:-1]):
+        for i, row in enumerate(self.data[:-1], start=1):
             row['participacao'] = round(
                 row['total'] / self.valor_total * 100, 1)
             valor_acumulado += row['total']
