@@ -55,7 +55,7 @@ class AnaliseCobrancaForm(forms.Form):
     ]
     ordem = forms.ChoiceField(
         choices=CHOICES,
-        initial='i',
+        initial='v',
     )
 
     def __init__(self, *args, **kwargs):
