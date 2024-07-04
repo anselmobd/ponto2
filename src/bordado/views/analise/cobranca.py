@@ -1,3 +1,4 @@
+from decimal import Decimal
 from pprint import pprint
 
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -50,6 +51,9 @@ class AnaliseCobrancaView(LoginRequiredMixin, O2BaseGetPostView):
                 'data__year': ['Ano', 'a'],
                 'mes': ['Mês', 'm'],
                 'total': ['Valor', '', 'r'],
+                'participacao': ['Participação(%) 	', '', 'r'],
+                'acumulada': ['Acumulada(%) 	', '', 'r'],
+                'ordem': ['#', '', 'r'],
             },
         )
 
@@ -125,9 +129,8 @@ class AnaliseCobrancaView(LoginRequiredMixin, O2BaseGetPostView):
         if not self.data:
             raise StopStepsException(
                 "Filtro definido não seleciona nenhuma cobrança")
-        pprint(self.data)
 
-    def context_table(self):
+    def totalize_table(self):
         totalize_data(
             self.data,
             {
@@ -138,7 +141,23 @@ class AnaliseCobrancaView(LoginRequiredMixin, O2BaseGetPostView):
                     "background-image: linear-gradient(#DDD, white);",
             }
         )
+        total_row = self.data[-1]
+        self.valor_total = total_row['total']
+        total_row['participacao'] = ''
+        total_row['acumulada'] = ''
+        total_row['ordem'] = ''
 
+    def prep_table(self):
+        valor_acumulado = 0
+        for i, row in enumerate(self.data[:-1]):
+            row['participacao'] = round(
+                row['total'] / self.valor_total * 100, 1)
+            valor_acumulado += row['total']
+            row['acumulada'] = round(
+                valor_acumulado / self.valor_total * 100, 1)
+            row['ordem'] = i
+
+    def context_table(self):
         self.context.update({
             'data': self.data,
         })
@@ -161,6 +180,8 @@ class AnaliseCobrancaView(LoginRequiredMixin, O2BaseGetPostView):
             self.group_query,
             self.order_query,
             self.exec_query,
+            self.totalize_table,
+            self.prep_table,
             self.context_table,
         ]:
             try:
