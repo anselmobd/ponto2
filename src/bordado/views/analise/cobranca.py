@@ -81,10 +81,15 @@ class AnaliseCobrancaView(LoginRequiredMixin, O2BaseGetPostView):
             raise StopStepsException(
                 "Filtro definido não seleciona nenhuma cobrança")
 
-    def filtra_numero_cobranca(self):
-        if self.numero:
+    def filtra_ano(self):
+        if self.ano:
             self.query = self.query.filter(
-                    id=self.numero)
+                data__year=self.ano)
+
+    def filtra_mes(self):
+        if self.mes:
+            self.query = self.query.filter(
+                data__month=self.mes)
 
     def filtra_cliente(self):
         if self.cliente_apelido:
@@ -157,11 +162,12 @@ class AnaliseCobrancaView(LoginRequiredMixin, O2BaseGetPostView):
         })
         for passo in [
             self.init_query,
-            # self.filtra_cliente,
-            # self.filtra_numero_cobranca,
-            # self.order_query,
-            # self.exec_query,
-            # self.context_table,
+            self.filtra_ano,
+            self.filtra_mes,
+            self.filtra_cliente,
+            self.order_query,
+            self.exec_query,
+            self.context_table,
         ]:
             try:
                 passo()
