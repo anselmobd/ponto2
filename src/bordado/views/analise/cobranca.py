@@ -49,7 +49,7 @@ class AnaliseCobrancaView(LoginRequiredMixin, O2BaseGetPostView):
                 self.CLIENTE: ['Cliente', 'c'],
                 'data__year': ['Ano', 'a'],
                 'mes': ['Mês', 'm'],
-                'total': ['Valor pedido', '', 'r'],
+                'total': ['Valor', '', 'r'],
             },
         )
 
@@ -109,9 +109,11 @@ class AnaliseCobrancaView(LoginRequiredMixin, O2BaseGetPostView):
         )
 
     def order_query(self):
-        self.query = self.query.order_by(
-            self.totaliza_field,
-        )
+        if self.ordem == 'i':
+            order_by = self.totaliza_field
+        else:
+            order_by = '-total'
+        self.query = self.query.order_by(order_by)
 
     def group_query(self):
         self.query = self.query.annotate(
@@ -156,8 +158,8 @@ class AnaliseCobrancaView(LoginRequiredMixin, O2BaseGetPostView):
             self.filtra_mes,
             self.filtra_cliente,
             self.values_query,
-            self.order_query,
             self.group_query,
+            self.order_query,
             self.exec_query,
             self.context_table,
         ]:

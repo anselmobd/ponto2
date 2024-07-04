@@ -17,7 +17,7 @@ class AnaliseCobrancaForm(forms.Form):
     field_control = [
         ['ano', 'mes'],
         ['cliente_apelido'],
-        ['totaliza'],
+        ['totaliza', 'ordem'],
     ]
 
     ano = forms.IntegerField(
@@ -47,6 +47,15 @@ class AnaliseCobrancaForm(forms.Form):
     totaliza = forms.ChoiceField(
         choices=CHOICES,
         initial='c',
+    )
+
+    CHOICES = [
+        ('i', 'Pela informação totalizada'),
+        ('v', 'Pelo valor descrescente'),
+    ]
+    ordem = forms.ChoiceField(
+        choices=CHOICES,
+        initial='i',
     )
 
     def __init__(self, *args, **kwargs):
