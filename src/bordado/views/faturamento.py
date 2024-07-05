@@ -88,6 +88,20 @@ class FaturamentoView(LoginRequiredMixin, O2BaseGetPostView):
             self.query = self.query.filter(
                 **{f'{self.CLIENTE}__icontains': self.cliente_apelido})
 
+    def filtra_datas(self):
+        if self.data_de or self.data_ate:
+            if self.data_de == self.data_ate:
+                self.query = self.query.filter(
+                    data=self.data_de)
+                return
+
+            if self.data_de:
+                self.query = self.query.filter(
+                    data__gte=self.data_de)
+            if self.data_ate:
+                self.query = self.query.filter(
+                    data__lte=self.data_ate)
+
     def context_table(self):
         PrepRows(
             self.data,
@@ -133,6 +147,7 @@ class FaturamentoView(LoginRequiredMixin, O2BaseGetPostView):
             self.init_query,
             self.filtra_cliente,
             self.filtra_nf,
+            self.filtra_datas,
             self.com_faturamento,
             self.order_query,
             self.exec_query,
