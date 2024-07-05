@@ -15,6 +15,7 @@ class CobrancaForm(forms.Form):
 
     field_control = [
         ['numero', 'cliente_apelido'],
+        ['data_de', 'data_ate'],
     ]
 
     numero = forms.CharField(
@@ -30,4 +31,14 @@ class CobrancaForm(forms.Form):
         widget=forms.TextInput(
             attrs={**a.string}
         ),
+    )
+    data_de = forms.DateField(
+        label="Data da cobrança: De",
+        required=False,
+        widget=forms.DateInput(attrs={'type': 'date'}),
+    )
+    data_ate = forms.DateField(
+        label="Até",
+        required=False,
+        widget=forms.DateInput(attrs={'type': 'date'}),
     )
