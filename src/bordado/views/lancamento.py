@@ -15,7 +15,7 @@ from o2lib.views.base.exception import (
     StopStepsException, 
 )
 
-from bordado.forms import LancamentoForm
+from bordado.forms.listagem.lancamento import LancamentoForm
 from bordado.models import (
     Cliente,
     Cobranca,
