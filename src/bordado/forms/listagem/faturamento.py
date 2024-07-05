@@ -14,7 +14,7 @@ class FaturamentoForm(forms.Form):
     a = FormWidgetAttrs()
 
     field_control = [
-        ['nf', 'cliente_apelido'],
+        ['cliente_apelido', 'nf'],
     ]
 
     nf = forms.CharField(

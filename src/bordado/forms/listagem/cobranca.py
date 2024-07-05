@@ -14,12 +14,12 @@ class CobrancaForm(forms.Form):
     a = FormWidgetAttrs()
 
     field_control = [
-        ['numero', 'cliente_apelido'],
+        ['cliente_apelido', 'numero'],
         ['data_de', 'data_ate'],
     ]
 
     numero = forms.CharField(
-        label='Número',
+        label='Cobrança nº',
         required=False,
         widget=forms.TextInput(
             attrs={**a.autofocus, **a.number, **a.placeholder_0, **a.size_6}
