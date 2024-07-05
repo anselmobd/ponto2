@@ -18,18 +18,18 @@ class CobrancaForm(forms.Form):
         ['data_de', 'data_ate'],
     ]
 
-    numero = forms.CharField(
-        label='Cobrança nº',
-        required=False,
-        widget=forms.TextInput(
-            attrs={**a.autofocus, **a.number, **a.placeholder_0, **a.size_6}
-        ),
-    )
     cliente_apelido = forms.CharField(
         label='Cliente',
         required=False,
         widget=forms.TextInput(
-            attrs={**a.string}
+            attrs={**a.autofocus, **a.string}
+        ),
+    )
+    numero = forms.CharField(
+        label='Cobrança nº',
+        required=False,
+        widget=forms.TextInput(
+            attrs={**a.number, **a.placeholder_0, **a.size_6}
         ),
     )
     data_de = forms.DateField(

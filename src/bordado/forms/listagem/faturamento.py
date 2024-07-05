@@ -15,19 +15,30 @@ class FaturamentoForm(forms.Form):
 
     field_control = [
         ['cliente_apelido', 'nf'],
+        ['data_de', 'data_ate'],
     ]
 
-    nf = forms.CharField(
-        label='NF',
-        required=False,
-        widget=forms.TextInput(
-            attrs={**a.autofocus, **a.number, **a.placeholder_0, **a.size_6}
-        ),
-    )
     cliente_apelido = forms.CharField(
         label='Cliente',
         required=False,
         widget=forms.TextInput(
-            attrs={**a.string}
+            attrs={**a.autofocus, **a.string}
         ),
+    )
+    nf = forms.CharField(
+        label='NF',
+        required=False,
+        widget=forms.TextInput(
+            attrs={**a.number, **a.placeholder_0, **a.size_6}
+        ),
+    )
+    data_de = forms.DateField(
+        label="Data da cobrança: De",
+        required=False,
+        widget=forms.DateInput(attrs={'type': 'date'}),
+    )
+    data_ate = forms.DateField(
+        label="Até",
+        required=False,
+        widget=forms.DateInput(attrs={'type': 'date'}),
     )
