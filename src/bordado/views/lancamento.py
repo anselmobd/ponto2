@@ -40,7 +40,7 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
         self.cleaned_data2self = True
         self.cleaned_data2context = True
         self.template_name = 'bordado/lancamento.html'
-        self.title_name = 'Lançamento'
+        self.title_name = 'Listagem de lançamentos'
         self.table_defs = TableDefs(
             {
                 self.CLIENTE: ['Cliente'],

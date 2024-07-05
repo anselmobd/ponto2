@@ -35,7 +35,7 @@ class FaturamentoView(LoginRequiredMixin, O2BaseGetPostView):
         self.cleaned_data2self = True
         self.cleaned_data2context = True
         self.template_name = 'bordado/faturamento.html'
-        self.title_name = 'Faturamento'
+        self.title_name = 'Listagem de notas fiscais'
         self.get_args = ['nf']
 
         self.table_defs = TableDefs(
