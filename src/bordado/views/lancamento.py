@@ -28,6 +28,7 @@ __all__ = ['LancamentoView']
 
 class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
 
+    CLIENTE = 'cliente__apelido'
     PEDIDO = 'cobranca__pedidoitemcobranca__pedido_item__pedido'
     VALOR = 'cobranca__pedidoitemcobranca__valor'
     COMUNICACAO = 'cobranca__comunicacao__descricao'
@@ -42,7 +43,7 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
         self.title_name = 'Lançamento'
         self.table_defs = TableDefs(
             {
-                'cliente__apelido': ['Cliente'],
+                self.CLIENTE: ['Cliente'],
                 'data': [],
                 'informacao': ['Informação', 'c'],
                 self.COMUNICACAO: ['Comunicação', 'c'],
@@ -147,7 +148,7 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
         ).process()
 
         group = [
-            'cliente__apelido',
+            self.CLIENTE,
             'data',
             'informacao',
             self.COMUNICACAO,
@@ -163,7 +164,7 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
             self.data,
             {
                 'sum': ['valor'],
-                'descr': {'cliente__apelido': 'Total:'},
+                'descr': {self.CLIENTE: 'Total:'},
                 'row_if': 'rowspan',
                 'row_style':
                     "font-weight: bold;"
