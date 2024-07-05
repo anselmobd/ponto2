@@ -6,19 +6,19 @@ from o2lib.form.widget_attrs import FormWidgetAttrs
 
 
 __all__ = [
-    'FaturamentoForm',
+    'CobrancaForm',
 ]
 
 
-class FaturamentoForm(forms.Form):
+class CobrancaForm(forms.Form):
     a = FormWidgetAttrs()
 
     field_control = [
-        ['nf', 'cliente_apelido'],
+        ['numero', 'cliente_apelido'],
     ]
 
-    nf = forms.CharField(
-        label='NF',
+    numero = forms.CharField(
+        label='Número',
         required=False,
         widget=forms.TextInput(
             attrs={**a.autofocus, **a.number, **a.placeholder_0, **a.size_6}
