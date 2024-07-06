@@ -74,32 +74,36 @@ class AnaliseCobrancaView(LoginRequiredMixin, O2BaseGetPostView):
                 data__month=self.mes)
 
     def filtra_cliente(self):
+
+        def do_filtra():
+            self.query = self.query.filter(
+                **{self.CLIENTE: self.cliente_apelido})
+            self.form.data['cliente_apelido'] = self.cliente_apelido
+
         if self.cliente_apelido:
             try:
-                Cliente.objects.get(
-                    apelido=self.cliente_apelido)
-                self.query = self.query.filter(
-                    **{self.CLIENTE: self.cliente_apelido})
-            except Cliente.DoesNotExist as e:
+                cliente = Cliente.objects.get(
+                    apelido__iexact=self.cliente_apelido)
+                self.cliente_apelido = cliente.apelido
+                do_filtra()
+            except Cliente.DoesNotExist as _:
                 clientes = Cliente.objects.filter(
                     apelido__icontains=self.cliente_apelido)
-                if clientes:
-                    if len(clientes) == 1:
-                        self.form.data['cliente_apelido'] = clientes[0].apelido
-                    else:
-                        apelidos = [cliente.apelido for cliente in clientes]
-                        self.form.errors['cliente_apelido'] = [
-                            "Mais de um cliente com apelido contendo "
-                            f"'{self.cliente_apelido}' "
-                            f"({', '.join(apelidos)})"
-                        ]
+                if len(clientes) == 1:
+                    self.cliente_apelido = clientes[0].apelido
+                    do_filtra()
+                elif len(clientes) > 1:
+                    apelidos = [cliente.apelido for cliente in clientes]
+                    self.form.errors['cliente_apelido'] = [
+                        "Mais de um cliente com apelido contendo "
+                        f"'{self.cliente_apelido}' "
+                        f"({', '.join(apelidos)})"
+                    ]
                 else:
                     self.form.errors['cliente_apelido'] = [
                         "Cliente com apelido contendo "
                         f"'{self.cliente_apelido}' não existe"
                     ]
-                self.query = self.query.filter(
-                    **{f'{self.CLIENTE}__icontains': self.cliente_apelido})
 
     def values_query(self):
         self.query = self.query.annotate(
