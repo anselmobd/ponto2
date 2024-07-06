@@ -178,7 +178,7 @@ class AnaliseCobrancaView(LoginRequiredMixin, O2BaseGetPostView):
             mes = int(ano_mes[1])
         data_de = date(ano, mes if mes else 1, 1)
         dia = 31
-        while True:
+        while dia != 0:
             try:
                 data_ate = date(ano, mes if mes else 12, dia)
                 break
