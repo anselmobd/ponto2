@@ -1,9 +1,11 @@
-from decimal import Decimal
+from datetime import date
 from pprint import pprint
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Sum, CharField, Value
 from django.db.models.functions import Concat
+from django.http import QueryDict
+from django.urls import reverse
 
 from o2lib.models.dictlist import queryset2dictlist
 from o2lib.table_defs import TableDefsHBpSD
@@ -153,6 +155,40 @@ class AnaliseCobrancaView(LoginRequiredMixin, O2BaseGetPostView):
         total_row['acumulada'] = ''
         total_row['ordem'] = ''
 
+    def mount_url_query(self, row):
+        qdict = QueryDict('', mutable=True)
+
+        if self.cliente_apelido:
+            qdict['cliente_apelido'] = self.cliente_apelido
+        else:
+            if self.totaliza == 'c':
+                qdict['cliente_apelido'] = row[self.CLIENTE]
+
+        ano = None
+        mes = None
+        if self.ano:
+            ano = int(self.ano)
+        if self.mes:
+            mes = int(self.mes)
+        if self.totaliza == 'a':
+            ano = row['data__year']
+        if self.totaliza == 'm':
+            ano_mes = row['mes'].split('-')
+            ano = int(ano_mes[0])
+            mes = int(ano_mes[1])
+        data_de = date(ano, mes if mes else 1, 1)
+        dia = 31
+        while True:
+            try:
+                data_ate = date(ano, mes if mes else 12, dia)
+                break
+            except ValueError as _:
+                dia -= 1
+        qdict['data_de'] = data_de
+        qdict['data_ate'] = data_ate
+
+        return qdict.urlencode()
+
     def prep_table(self):
         valor_acumulado = 0
         for i, row in enumerate(self.data[:-1], start=1):
@@ -162,6 +198,12 @@ class AnaliseCobrancaView(LoginRequiredMixin, O2BaseGetPostView):
             row['acumulada'] = round(
                 valor_acumulado / self.valor_total * 100, 1)
             row['ordem'] = i
+
+            row[f"{self.totaliza_field}|TARGET"] = 'blank'
+            row[f"{self.totaliza_field}|A"] = "?".join([
+                reverse('bordado:cobranca', args=[]),
+                self.mount_url_query(row),
+            ])
 
     def context_table(self):
         self.context.update({
