@@ -44,8 +44,6 @@ class FaturamentoView(LoginRequiredMixin, O2BaseGetPostView):
                 'nf': ['NF', 'c'],
                 'id': ['Cobrança', 'c'],
                 'data': ['Data', 'c'],
-                # self.PEDIDO: ['Pedido', 'c'],
-                # self.VALOR: ['Valor pedido', 'r'],
                 'valor': ['Valor cobrança', 'r'],
             },
             ['header', '+style'],
@@ -145,14 +143,13 @@ class FaturamentoView(LoginRequiredMixin, O2BaseGetPostView):
             {
                 'group': group,
                 'sum': ['valor'],
-                'descr': {self.CLIENTE: 'Valor NF:'},
+                'descr': {self.CLIENTE: "Valor NF:"},
                 'global_sum': ['valor'],
-                'global_descr': {self.CLIENTE: 'Total:'},
+                'global_descr': {self.CLIENTE: "Total:"},
                 'row_if': 'rowspan',
                 'row_style':
                     "font-weight: bold;"
                     "background-image: linear-gradient(#DDD, white);",
-                # 'flags': ['NO_TOT_1'],
             }
         )
 
