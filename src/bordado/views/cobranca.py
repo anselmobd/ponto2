@@ -13,7 +13,7 @@ from o2lib.views.main import (
 from o2lib.views.base.get_post import O2BaseGetPostView
 from o2lib.views.base.exception import (
     StepErrorException,
-    StopStepsException, 
+    StopStepsException,
 )
 
 from bordado.forms.listagem.cobranca import CobrancaForm
@@ -42,7 +42,7 @@ class CobrancaView(LoginRequiredMixin, O2BaseGetPostView):
         self.cleaned_data2self = True
         self.cleaned_data2context = True
         self.template_name = 'bordado/cobranca.html'
-        self.title_name = 'Listagem de cobranças'
+        self.title_name = "Listagem de cobranças"
         self.get_args = ['numero']
         self.get_vars2form = True
 
@@ -53,7 +53,6 @@ class CobrancaView(LoginRequiredMixin, O2BaseGetPostView):
                 'informacao': ['Informação'],
                 self.COMUNICACAO: ['Tipo'],
                 'nf': ['NF', 'c'],
-                # 'valor': ['Valor cobrança', 'r'],
                 'data': ['Data', 'c'],
                 'parcelamento': ['Parcelamento', 'c'],
                 self.PEDIDO: ['Pedido', 'c'],
@@ -103,7 +102,6 @@ class CobrancaView(LoginRequiredMixin, O2BaseGetPostView):
                     data__lte=self.data_ate)
 
     def filtra_cliente(self):
-
         def do_filtra():
             self.query = self.query.filter(
                 **{self.CLIENTE: self.cliente_apelido})
@@ -121,18 +119,21 @@ class CobrancaView(LoginRequiredMixin, O2BaseGetPostView):
                 if len(clientes) == 1:
                     self.cliente_apelido = clientes[0].apelido
                     do_filtra()
-                elif len(clientes) > 1:
-                    apelidos = [cliente.apelido for cliente in clientes]
-                    self.form.errors['cliente_apelido'] = [
-                        "Mais de um cliente com apelido contendo "
-                        f"'{self.cliente_apelido}' "
-                        f"({', '.join(apelidos)})"
-                    ]
                 else:
-                    self.form.errors['cliente_apelido'] = [
-                        "Cliente com apelido contendo "
-                        f"'{self.cliente_apelido}' não existe"
-                    ]
+                    if len(clientes) > 1:
+                        apelidos = [cliente.apelido for cliente in clientes]
+                        msg_erro = (
+                            "Mais de um cliente com apelido contendo "
+                            f"'{self.cliente_apelido}' "
+                            f"({', '.join(apelidos)})"
+                        )
+                    else:
+                        msg_erro = (
+                            "Cliente com apelido contendo "
+                            f"'{self.cliente_apelido}' não existe"
+                        )
+                    self.form.errors['cliente_apelido'] = [msg_erro]
+                    raise StopStepsException("Filtro de cliente mal definido")
 
     def context_table(self):
         PrepRows(
@@ -164,7 +165,7 @@ class CobrancaView(LoginRequiredMixin, O2BaseGetPostView):
             'data',
             'parcelamento',
         ]
-       
+
         group_rowspan(self.data, group)
         totalize_grouped_data(
             self.data,
