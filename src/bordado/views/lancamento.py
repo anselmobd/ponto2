@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from o2lib.models.row_field import PrepRows
 from o2lib.models.dictlist import queryset2dictlist
-from o2lib.table_defs import TableDefs
+from o2lib.table_defs import TableDefsHBpSD
 from o2lib.views.main import (
     group_rowspan,
     totalize_data,
@@ -41,21 +41,19 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
         self.cleaned_data2context = True
         self.template_name = 'bordado/lancamento.html'
         self.title_name = "Listagem de lançamentos"
-        self.table_defs = TableDefs(
+        self.table_defs = TableDefsHBpSD(
             {
                 self.CLIENTE: ['Cliente'],
                 'data': [],
-                'informacao': ['Informação', 'c'],
-                self.COMUNICACAO: ['Comunicação', 'c'],
-                'cobranca__nf': ['NF', 'c'],
-                'cobranca': ['Cobrança', 'c'],
-                'parcela': [None, 'c'],
-                'valor': ['Valor cobrança', 'r'],
-                self.PEDIDO: ['Pedido', 'c'],
-                self.VALOR: ['Valor pedido', 'r'],
+                'informacao': ['Informação', '', 'c'],
+                self.COMUNICACAO: ['Comunicação', '', 'c'],
+                'cobranca__nf': ['NF', '', 'c'],
+                'cobranca': ['Cobrança', '', 'c'],
+                'parcela': [None, '', 'c'],
+                'valor': ['Valor cobrança', '', 'r'],
+                self.PEDIDO: ['Pedido', '-c', 'c'],
+                self.VALOR: ['Valor pedido', '-c', 'r'],
             },
-            ['header', '+style'],
-            style = {'_': 'text-align'},
         )
         self.extra_fields = [
             'cobranca__informacao',
@@ -152,7 +150,8 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
                 row['informacao'] = row['cobranca__informacao']
                 row['parcela'] = f"{row['parcela']}/{row['n_parcelas']}"
             else:
-                row['|STYLE'] = 'color: darkgreen;'
+                if self.tipo_lancamento != 'r':
+                    row['|STYLE'] = 'color: darkgreen;'
 
         PrepRows(
             self.data,
@@ -170,40 +169,46 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
             'cobranca', 'bordado:cobranca'
         ).process()
 
-    def group_totalize_table(self):
-
-        self.group = [
-            self.CLIENTE,
-            'data',
-            'informacao',
-            self.COMUNICACAO,
-            'cobranca__nf',
-            'cobranca',
-            'parcela',
-            'n_parcelas',
-            'valor',
-        ]
-        group_rowspan(self.data, self.group)
+    def group_table(self):
+        if self.tipo_lancamento != 'r':
+            self.group = [
+                self.CLIENTE,
+                'data',
+                'informacao',
+                self.COMUNICACAO,
+                'cobranca__nf',
+                'cobranca',
+                'parcela',
+                'n_parcelas',
+                'valor',
+            ]
+            group_rowspan(self.data, self.group)
+        else:
+            self.group = []
         
-        totalize_data(
-            self.data,
-            {
-                'sum': ['valor'],
-                'descr': {self.CLIENTE: 'Total:'},
-                'row_if': 'rowspan',
-                'row_style':
-                    "font-weight: bold;"
-                    "background-image: linear-gradient(#DDD, white);",
-                'flags': ['NO_TOT_1'],
-            }
-        )
+    def totalize_table(self):
+        totalize_config = {
+            'sum': ['valor'],
+            'descr': {self.CLIENTE: 'Total:'},
+            # 'row_if': 'rowspan',
+            'row_style':
+                "font-weight: bold;"
+                "background-image: linear-gradient(#DDD, white);",
+            'flags': ['NO_TOT_1'],
+        }
+        if self.tipo_lancamento != 'r':
+            totalize_config['row_if'] = 'rowspan'
+        totalize_data(self.data, totalize_config)
 
     def context_table(self):
         self.context.update({
             'data': self.data,
             'group': self.group,
         })
-        self.table_defs.hfs_dict_context(self.context)
+        self.table_defs.hfs_dict_context(
+            self.context,
+            bitmap=self.tipo_lancamento,
+        )
 
     def mount_context(self):
         for passo in [
@@ -215,7 +220,8 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
             self.filtra_tipo,
             self.exec_query,
             self.prep_table,
-            self.group_totalize_table,
+            self.group_table,
+            self.totalize_table,
             self.context_table,
         ]:
             try:
