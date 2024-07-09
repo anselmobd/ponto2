@@ -76,7 +76,6 @@ class AnaliseCobrancaView(LoginRequiredMixin, O2BaseGetPostView):
                 data__month=self.mes)
 
     def filtra_cliente(self):
-
         def do_filtra():
             self.query = self.query.filter(
                 **{self.CLIENTE: self.cliente_apelido})
@@ -94,18 +93,21 @@ class AnaliseCobrancaView(LoginRequiredMixin, O2BaseGetPostView):
                 if len(clientes) == 1:
                     self.cliente_apelido = clientes[0].apelido
                     do_filtra()
-                elif len(clientes) > 1:
-                    apelidos = [cliente.apelido for cliente in clientes]
-                    self.form.errors['cliente_apelido'] = [
-                        "Mais de um cliente com apelido contendo "
-                        f"'{self.cliente_apelido}' "
-                        f"({', '.join(apelidos)})"
-                    ]
                 else:
-                    self.form.errors['cliente_apelido'] = [
-                        "Cliente com apelido contendo "
-                        f"'{self.cliente_apelido}' não existe"
-                    ]
+                    if len(clientes) > 1:
+                        apelidos = [cliente.apelido for cliente in clientes]
+                        msg_erro = (
+                            "Mais de um cliente com apelido contendo "
+                            f"'{self.cliente_apelido}' "
+                            f"({', '.join(apelidos)})"
+                        )
+                    else:
+                        msg_erro = (
+                            "Cliente com apelido contendo "
+                            f"'{self.cliente_apelido}' não existe"
+                        )
+                    self.form.errors['cliente_apelido'] = [msg_erro]
+                    raise StopStepsException("Filtro de cliente mal definido")
 
     def values_query(self):
         self.query = self.query.annotate(
