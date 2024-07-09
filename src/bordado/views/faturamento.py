@@ -57,7 +57,7 @@ class FaturamentoView(LoginRequiredMixin, O2BaseGetPostView):
 
     def order_query(self):
         self.query = self.query.order_by(
-            'cliente__apelido', '-nf', '-data', '-id'
+            self.CLIENTE, '-nf', '-data', '-id'
         )
 
     def com_faturamento(self):
@@ -78,15 +78,39 @@ class FaturamentoView(LoginRequiredMixin, O2BaseGetPostView):
                     nf=self.nf)
 
     def filtra_cliente(self):
-        if self.cliente_apelido:
-            clientes = Cliente.objects.filter(
-                apelido__icontains=self.cliente_apelido)
-            if not clientes:
-                self.form.errors['cliente_apelido'] = [
-                    f"Cliente com apelido contendo '{self.cliente_apelido}' "
-                    "não existe"]
+        def do_filtra():
             self.query = self.query.filter(
-                **{f'{self.CLIENTE}__icontains': self.cliente_apelido})
+                **{self.CLIENTE: self.cliente_apelido})
+            self.form.data['cliente_apelido'] = self.cliente_apelido
+
+        if self.cliente_apelido:
+            try:
+                cliente = Cliente.objects.get(
+                    apelido__iexact=self.cliente_apelido)
+                self.cliente_apelido = cliente.apelido
+                do_filtra()
+            except Cliente.DoesNotExist as _:
+                clientes = Cliente.objects.filter(
+                    apelido__icontains=self.cliente_apelido)
+                if len(clientes) == 1:
+                    self.cliente_apelido = clientes[0].apelido
+                    do_filtra()
+                else:
+                    if len(clientes) > 1:
+                        apelidos = [cliente.apelido for cliente in clientes]
+                        msg_erro = (
+                            "Mais de um cliente com apelido contendo "
+                            f"'{self.cliente_apelido}' "
+                            f"({', '.join(apelidos)})"
+                        )
+                    else:
+                        msg_erro = (
+                            "Cliente com apelido contendo "
+                            f"'{self.cliente_apelido}' não existe"
+                        )
+                    self.form.errors['cliente_apelido'] = [msg_erro]
+                    raise StopStepsException(msg_erro)
+
 
     def filtra_datas(self):
         if self.data_de or self.data_ate:
@@ -113,7 +137,7 @@ class FaturamentoView(LoginRequiredMixin, O2BaseGetPostView):
 
         group = [
             'nf',
-            'cliente__apelido',
+            self.CLIENTE,
         ]
        
         group_rowspan(self.data, group)
