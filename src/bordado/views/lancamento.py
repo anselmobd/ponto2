@@ -145,7 +145,7 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
         elif self.tipo_lancamento == 'r':
             self.query = self.query.filter(cobranca__isnull=True)
 
-    def context_table(self):
+    def prep_table(self):
         for row in self.data:
             if row['cobranca']:
                 row[self.VALOR] = -row[self.VALOR]
@@ -170,7 +170,9 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
             'cobranca', 'bordado:cobranca'
         ).process()
 
-        group = [
+    def group_totalize_table(self):
+
+        self.group = [
             self.CLIENTE,
             'data',
             'informacao',
@@ -181,7 +183,7 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
             'n_parcelas',
             'valor',
         ]
-        group_rowspan(self.data, group)
+        group_rowspan(self.data, self.group)
         
         totalize_data(
             self.data,
@@ -196,9 +198,10 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
             }
         )
 
+    def context_table(self):
         self.context.update({
             'data': self.data,
-            'group': group,
+            'group': self.group,
         })
         self.table_defs.hfs_dict_context(self.context)
 
@@ -211,6 +214,8 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
             self.filtra_datas,
             self.filtra_tipo,
             self.exec_query,
+            self.prep_table,
+            self.group_totalize_table,
             self.context_table,
         ]:
             try:
