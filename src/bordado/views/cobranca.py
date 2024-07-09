@@ -60,6 +60,8 @@ class CobrancaView(LoginRequiredMixin, O2BaseGetPostView):
                 self.BORDADO_NOME: ['Bordado nome', 'c'],
                 self.BORDADO_CODIGO: ['Código', 'c'],
                 self.VALOR: ['Valor pedido', 'r'],
+                'usuario__username': ["Usuário"],
+                'quando': [],
             },
             ['header', '+style'],
             style = {'_': 'text-align'},
