@@ -109,8 +109,7 @@ class FaturamentoView(LoginRequiredMixin, O2BaseGetPostView):
                             f"'{self.cliente_apelido}' não existe"
                         )
                     self.form.errors['cliente_apelido'] = [msg_erro]
-                    raise StopStepsException(msg_erro)
-
+                    raise StopStepsException("Filtro de cliente mal definido")
 
     def filtra_datas(self):
         if self.data_de or self.data_ate:
