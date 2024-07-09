@@ -40,7 +40,7 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
         self.cleaned_data2self = True
         self.cleaned_data2context = True
         self.template_name = 'bordado/lancamento.html'
-        self.title_name = 'Listagem de lançamentos'
+        self.title_name = "Listagem de lançamentos"
         self.table_defs = TableDefs(
             {
                 self.CLIENTE: ['Cliente'],
@@ -75,15 +75,38 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView):
                 "Filtro definido não seleciona nenhum lançamento")
 
     def filtra_cliente(self):
-        if self.cliente_apelido:
-            clientes = Cliente.objects.filter(
-                apelido__icontains=self.cliente_apelido)
-            if not clientes:
-                self.form.errors['cliente_apelido'] = [
-                    f"Cliente com apelido contendo '{self.cliente_apelido}' "
-                    "não existe"]
+        def do_filtra():
             self.query = self.query.filter(
-                **{f'{self.CLIENTE}__icontains': self.cliente_apelido})
+                **{self.CLIENTE: self.cliente_apelido})
+            self.form.data['cliente_apelido'] = self.cliente_apelido
+
+        if self.cliente_apelido:
+            try:
+                cliente = Cliente.objects.get(
+                    apelido__iexact=self.cliente_apelido)
+                self.cliente_apelido = cliente.apelido
+                do_filtra()
+            except Cliente.DoesNotExist as _:
+                clientes = Cliente.objects.filter(
+                    apelido__icontains=self.cliente_apelido)
+                if len(clientes) == 1:
+                    self.cliente_apelido = clientes[0].apelido
+                    do_filtra()
+                else:
+                    if len(clientes) > 1:
+                        apelidos = [cliente.apelido for cliente in clientes]
+                        msg_erro = (
+                            "Mais de um cliente com apelido contendo "
+                            f"'{self.cliente_apelido}' "
+                            f"({', '.join(apelidos)})"
+                        )
+                    else:
+                        msg_erro = (
+                            "Cliente com apelido contendo "
+                            f"'{self.cliente_apelido}' não existe"
+                        )
+                    self.form.errors['cliente_apelido'] = [msg_erro]
+                    raise StopStepsException("Filtro de cliente mal definido")
 
     def filtra_pedido(self):
         if self.pedido_numero:
