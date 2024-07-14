@@ -14,8 +14,8 @@ from o2lib.views.base.get_post import O2BaseGetPostView
 from o2lib.views.base.exception import StopStepsException
 
 from bordado.forms.listagem.cobranca import CobrancaForm
-from bordado.views.base.filtro import FiltroParaView
 from bordado.models import Cobranca
+from bordado.views.base.filtro import FiltroParaView
 
 
 __all__ = ['CobrancaView']
