@@ -7,7 +7,7 @@ from bordado.views.main import (
 )
 from bordado.views.analise.cobranca import AnaliseCobrancaView
 from bordado.views.cobranca import CobrancaView
-from bordado.views.faturamento import FaturamentoView
+from bordado.views.nota_fiscal import FaturamentoView
 from bordado.views.lancamento import LancamentoView
 from bordado.api.bordado import (
     BordadoFullViewSet,
