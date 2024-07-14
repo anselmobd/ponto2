@@ -57,6 +57,7 @@ class PedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
         self.mount_steps = [
             self.init_query,
             self.filtra_cliente__apelido,
+            (self.filtra_valor, ['numero']*2),
             self.order_query,
             self.exec_query,
             self.context_table,
