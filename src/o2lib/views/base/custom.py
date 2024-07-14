@@ -119,8 +119,8 @@ class CustomView(View):
         Se os métodos levantarem uma exceção, o texto desta vai para a chave
         msg_erro do self.context
 
-        Se, na lista, no lugar de um método, constar um tupla, entende-se que
-        esta contenha (método, atributo).
+        Se, na lista, no lugar de um método, constar um tupla, espera-se que
+        esta contenha: método e args:list e/ou kwargs:dict e/ou atributo:str.
 
         Na ausência de exceção, o retorno do método é atribuido ao atributo no
         self.
@@ -133,11 +133,27 @@ class CustomView(View):
             steps = self.mount_steps
         if msg_erro not in self.context:
             self.context[msg_erro] = []
+
+        def umount(values):
+            args = []
+            kwargs = {}
+            attrib = ''
+            for value in values:
+                if isinstance(value, list):
+                    args = value
+                elif isinstance(value, dict):
+                    kwargs = value
+                elif isinstance(value, str):
+                    attrib = value
+                else:
+                    do = value
+            return do, args, kwargs, attrib
+
         for do_get in steps:
             try:
                 if isinstance(do_get, tuple):
-                    do, attrib = do_get
-                    result = do()
+                    do, args, kwargs, attrib = umount(do_get)
+                    result = do(*args, **kwargs)
                     value = getattr(self, attrib, None)
                     if value:
                         if isinstance(value, dict) and isinstance(result, dict):
