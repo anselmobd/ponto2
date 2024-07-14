@@ -192,9 +192,6 @@ class CobrancaView(LoginRequiredMixin, O2BaseGetPostView):
         self.table_defs.hfs_dict_context(self.context)
 
     def mount_context(self):
-        self.context.update({
-            'show_post': True,
-        })
         self.do_steps(
             [
                 self.init_query,
