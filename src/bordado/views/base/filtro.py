@@ -69,9 +69,12 @@ class FiltroParaView():
             )
 
     def filtra_valor_de_ate(
-            self,data_field='data', form_fields=('data_de', 'data_ate')):
-        valor_de = self.form.data[form_fields[0]]
-        valor_ate = self.form.data[form_fields[1]]
+            self,
+            data_field='data',
+            form_field_de='data_de',
+            form_field_ate='data_ate'):
+        valor_de = self.form.data[form_field_de]
+        valor_ate = self.form.data[form_field_ate]
         if valor_de or valor_ate:
             if valor_de == valor_ate:
                 self.query = self.query.filter(
