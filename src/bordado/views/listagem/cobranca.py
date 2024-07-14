@@ -11,17 +11,12 @@ from o2lib.views.main import (
     totalize_grouped_data,
 )
 from o2lib.views.base.get_post import O2BaseGetPostView
-from o2lib.views.base.exception import (
-    StepErrorException,
-    StopStepsException,
-)
+from o2lib.views.base.exception import StopStepsException
 
 from bordado.forms.listagem.cobranca import CobrancaForm
 from bordado.views.base.filtro import FiltroParaView
-from bordado.models import (
-    Cliente,
-    Cobranca,
-)
+from bordado.models import Cobranca
+
 
 __all__ = ['CobrancaView']
 
@@ -71,8 +66,8 @@ class CobrancaView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
         self.mount_steps = [
             self.init_query,
             self.filtra_cliente__apelido,
-            self.filtra_numero_cobranca,
-            self.filtra_datas,
+            self.filtra_valor,  # id cobranca == numero
+            self.filtra_valor_de_ate,  # data cobrança entre data_de e data_ate
             self.order_query,
             self.exec_query,
             self.context_table,
@@ -94,25 +89,6 @@ class CobrancaView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
         else:
             raise StopStepsException(
                 "Filtro definido não seleciona nenhuma cobrança")
-
-    def filtra_numero_cobranca(self):
-        if self.numero:
-            self.query = self.query.filter(
-                    id=self.numero)
-
-    def filtra_datas(self):
-        if self.data_de or self.data_ate:
-            if self.data_de == self.data_ate:
-                self.query = self.query.filter(
-                    data=self.data_de)
-                return
-
-            if self.data_de:
-                self.query = self.query.filter(
-                    data__gte=self.data_de)
-            if self.data_ate:
-                self.query = self.query.filter(
-                    data__lte=self.data_ate)
 
     def context_table(self):
         PrepRows(
