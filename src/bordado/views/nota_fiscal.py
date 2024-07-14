@@ -15,7 +15,7 @@ from o2lib.views.base.exception import (
     StopStepsException, 
 )
 
-from bordado.forms.listagem.faturamento import NotaFiscalForm
+from bordado.forms.listagem.nota_fiscal import NotaFiscalForm
 from bordado.models import (
     Cliente,
     Cobranca,
