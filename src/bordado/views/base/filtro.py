@@ -1,0 +1,62 @@
+from pprint import pprint
+
+from o2lib.views.base.exception import (
+    StopStepsException,
+)
+
+from bordado.models import (
+    Cliente,
+)
+
+__all__ = ['FiltroParaView']
+
+
+class FiltroParaView():
+    """
+    FiltroParaView define métodos de filtros que pressupõem existencia de algos atributos:
+
+    self.query: A query a ser filtrada
+    self.form: O form da view
+    """
+
+    def filtra_cliente__apelido(self):
+        cliente_apelido = self.form.data['cliente_apelido']
+
+        def do_filtra():
+            self.query = self.query.filter(
+                cliente__apelido = cliente_apelido)
+            self.form.data['cliente_apelido'] = cliente_apelido
+
+        if cliente_apelido:
+            try:
+                cliente = Cliente.objects.get(
+                    apelido__iexact=cliente_apelido)
+                cliente_apelido = cliente.apelido
+                do_filtra()
+            except Cliente.DoesNotExist as _:
+                clientes = Cliente.objects.filter(
+                    apelido__icontains=cliente_apelido)
+                if len(clientes) == 1:
+                    cliente_apelido = clientes[0].apelido
+                    do_filtra()
+                else:
+                    if len(clientes) > 1:
+                        qtd_lista_clientes = 10
+                        apelidos = [
+                            cliente.apelido
+                            for cliente in clientes[:qtd_lista_clientes]
+                        ]
+                        if len(clientes) > qtd_lista_clientes:
+                            apelidos.append('...')
+                        msg_erro = (
+                            "Mais de um cliente com apelido contendo "
+                            f"'{cliente_apelido}' "
+                            f"({', '.join(apelidos)})"
+                        )
+                    else:
+                        msg_erro = (
+                            "Cliente com apelido contendo "
+                            f"'{cliente_apelido}' não existe"
+                        )
+                    self.form.errors['cliente_apelido'] = [msg_erro]
+                    raise StopStepsException("Filtro de cliente mal definido")
