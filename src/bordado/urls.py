@@ -6,9 +6,9 @@ from bordado.views.main import (
     sobre,
 )
 from bordado.views.analise.cobranca import AnaliseCobrancaView
-from bordado.views.cobranca import CobrancaView
-from bordado.views.nota_fiscal import NotaFiscalView
-from bordado.views.lancamento import LancamentoView
+from bordado.views.listagem.cobranca import CobrancaView
+from bordado.views.listagem.nota_fiscal import NotaFiscalView
+from bordado.views.listagem.lancamento import LancamentoView
 from bordado.api.bordado import (
     BordadoFullViewSet,
     BordadoViewSet,
