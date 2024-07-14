@@ -60,3 +60,29 @@ class FiltroParaView():
                         )
                     self.form.errors['cliente_apelido'] = [msg_erro]
                     raise StopStepsException("Filtro de cliente mal definido")
+
+    def filtra_valor(self, data_field='id', form_field='numero'):
+        valor = self.form.data[form_field]
+        if valor:
+            self.query = self.query.filter(
+                **{data_field: valor}
+            )
+
+    def filtra_valor_de_ate(
+            self,data_field='data', form_fields=('data_de', 'data_ate')):
+        valor_de = self.form.data[form_fields[0]]
+        valor_ate = self.form.data[form_fields[1]]
+        if valor_de or valor_ate:
+            if valor_de == valor_ate:
+                self.query = self.query.filter(
+                    **{data_field: valor_de}
+                )
+                return
+            if valor_de:
+                self.query = self.query.filter(
+                    **{f"{data_field}__gte": valor_de}
+                )
+            if valor_ate:
+                self.query = self.query.filter(
+                    **{f"{data_field}__lte": valor_ate}
+                )
