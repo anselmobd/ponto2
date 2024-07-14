@@ -66,7 +66,10 @@ class FiltroParaView():
                     self.form.errors['cliente_apelido'] = [msg_erro]
                     raise StopStepsException("Filtro de cliente mal definido")
 
-    def filtra_valor(self, data_field='id', form_field='numero'):
+    def filtra_valor(self, data_field=None, form_field=None):
+        if None in [data_field, form_field]:
+            raise StopStepsException(
+                "Método filtra_valor precisa receber data_field e form_field")
         valor = self.form.data[form_field]
         if valor:
             self.query = self.query.filter(

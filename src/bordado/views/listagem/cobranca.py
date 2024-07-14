@@ -66,7 +66,7 @@ class CobrancaView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
         self.mount_steps = [
             self.init_query,
             self.filtra_cliente__apelido,
-            self.filtra_valor,  # id cobranca == numero
+            (self.filtra_valor, ['id', 'numero']),
             self.filtra_valor_de_ate,  # data cobrança entre data_de e data_ate
             self.order_query,
             self.exec_query,
