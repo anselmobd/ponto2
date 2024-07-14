@@ -26,6 +26,8 @@ class PedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
     DATA = 'pedidoitem__data_pedido'
     BORDADO_NOME = 'pedidoitem__bordado__nome'
     BORDADO_CODIGO = 'pedidoitem__bordado__codigo'
+    USUARIO = 'pedidoitem__usuario__username'
+    QUANDO = 'pedidoitem__inserido_em'
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -45,8 +47,8 @@ class PedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
                 self.CLIENTE: ['Cliente'],
                 self.BORDADO_NOME: ['Bordado nome', 'c'],
                 self.BORDADO_CODIGO: ['Código', 'c'],
-                # 'usuario__username': ["Usuário"],
-                # 'quando': [],
+                self.USUARIO: ["Usuário"],
+                self.QUANDO: ["Quando"],
             },
             ['header', '+style'],
             style = {'_': 'text-align'},
