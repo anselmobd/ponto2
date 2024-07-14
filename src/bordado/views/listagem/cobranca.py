@@ -67,6 +67,16 @@ class CobrancaView(LoginRequiredMixin, O2BaseGetPostView):
             style = {'_': 'text-align'},
         )
 
+        self.mount_steps = [
+            self.init_query,
+            self.filtra_cliente,
+            self.filtra_numero_cobranca,
+            self.filtra_datas,
+            self.order_query,
+            self.exec_query,
+            self.context_table,
+        ]
+
     def init_query(self):
         self.query = Cobranca.objects
 
@@ -190,16 +200,3 @@ class CobrancaView(LoginRequiredMixin, O2BaseGetPostView):
             'group': group,
         })
         self.table_defs.hfs_dict_context(self.context)
-
-    def mount_context(self):
-        self.do_steps(
-            [
-                self.init_query,
-                self.filtra_cliente,
-                self.filtra_numero_cobranca,
-                self.filtra_datas,
-                self.order_query,
-                self.exec_query,
-                self.context_table,
-            ],
-        )
