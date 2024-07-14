@@ -42,7 +42,7 @@ class CobrancaView(LoginRequiredMixin, O2BaseGetPostView):
         self.cleaned_data2self = True
         self.cleaned_data2context = True
         self.template_name = 'bordado/cobranca.html'
-        self.title_name = "Listagem de cobranças"
+        self.title_name = "Cobrança - Listagem"
         self.get_args = ['numero']
         self.get_vars2form = True
 
