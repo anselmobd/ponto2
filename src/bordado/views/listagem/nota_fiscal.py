@@ -50,6 +50,17 @@ class NotaFiscalView(LoginRequiredMixin, O2BaseGetPostView):
             style = {'_': 'text-align'},
         )
 
+        self.mount_steps = [
+            self.init_query,
+            self.filtra_cliente,
+            self.filtra_nf,
+            self.filtra_datas,
+            self.com_faturamento,
+            self.order_query,
+            self.exec_query,
+            self.context_table,
+        ]
+
     def init_query(self):
         self.query = Cobranca.objects
 
@@ -158,24 +169,3 @@ class NotaFiscalView(LoginRequiredMixin, O2BaseGetPostView):
             'group': group,
         })
         self.table_defs.hfs_dict_context(self.context)
-
-    def mount_context(self):
-        self.context.update({
-            'show_post': True,
-        })
-        for passo in [
-            self.init_query,
-            self.filtra_cliente,
-            self.filtra_nf,
-            self.filtra_datas,
-            self.com_faturamento,
-            self.order_query,
-            self.exec_query,
-            self.context_table,
-        ]:
-            try:
-                passo()
-            except (StopStepsException, StepErrorException) as e:
-                self.context['error_msgs'].append(e)
-                if isinstance(e, StopStepsException):
-                    break
