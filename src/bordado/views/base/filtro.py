@@ -20,6 +20,11 @@ class FiltroParaView():
     """
 
     def filtra_cliente__apelido(self):
+        """
+        filtra_cliente__apelido supõe:
+        data_field na self.query = cliente__apelido
+        form_field = cliente_apelido
+        """
         cliente_apelido = self.form.data['cliente_apelido']
 
         def do_filtra():
