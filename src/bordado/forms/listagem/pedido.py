@@ -16,6 +16,7 @@ class PedidoForm(forms.Form):
     field_control = [
         ['cliente_apelido', 'numero'],
         ['data_de', 'data_ate'],
+        ['entrega_de', 'entrega_ate'],
     ]
 
     cliente_apelido = forms.CharField(
@@ -38,6 +39,16 @@ class PedidoForm(forms.Form):
         widget=forms.DateInput(attrs={'type': 'date'}),
     )
     data_ate = forms.DateField(
+        label="Até",
+        required=False,
+        widget=forms.DateInput(attrs={'type': 'date'}),
+    )
+    entrega_de = forms.DateField(
+        label="Data de entrega: De",
+        required=False,
+        widget=forms.DateInput(attrs={'type': 'date'}),
+    )
+    entrega_ate = forms.DateField(
         label="Até",
         required=False,
         widget=forms.DateInput(attrs={'type': 'date'}),
