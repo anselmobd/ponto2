@@ -7,7 +7,7 @@ from bordado.views.main import (
 )
 from bordado.views.analise.cobranca import AnaliseCobrancaView
 from bordado.views.cobranca import CobrancaView
-from bordado.views.nota_fiscal import FaturamentoView
+from bordado.views.nota_fiscal import NotaFiscalView
 from bordado.views.lancamento import LancamentoView
 from bordado.api.bordado import (
     BordadoFullViewSet,
@@ -60,7 +60,7 @@ urlpatterns = [
     ),
     re_path(
         r'^faturamento/(?P<nf>.+)?/?$',
-        FaturamentoView.as_view(),
+        NotaFiscalView.as_view(),
         name='faturamento',
     ),
     path(

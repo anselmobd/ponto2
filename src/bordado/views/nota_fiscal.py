@@ -15,22 +15,22 @@ from o2lib.views.base.exception import (
     StopStepsException, 
 )
 
-from bordado.forms.listagem.faturamento import FaturamentoForm
+from bordado.forms.listagem.faturamento import NotaFiscalForm
 from bordado.models import (
     Cliente,
     Cobranca,
 )
 
-__all__ = ['FaturamentoView']
+__all__ = ['NotaFiscalView']
 
 
-class FaturamentoView(LoginRequiredMixin, O2BaseGetPostView):
+class NotaFiscalView(LoginRequiredMixin, O2BaseGetPostView):
 
     CLIENTE = 'cliente__apelido'
 
     def __init__(self, *args, **kwargs):
-        super(FaturamentoView, self).__init__(*args, **kwargs)
-        self.Form_class = FaturamentoForm
+        super(NotaFiscalView, self).__init__(*args, **kwargs)
+        self.Form_class = NotaFiscalForm
         self.form_class_has_initial = True
         self.cleaned_data2self = True
         self.cleaned_data2context = True
