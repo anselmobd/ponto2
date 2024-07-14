@@ -78,24 +78,19 @@ class O2BaseGetPostView(CustomView):
         pass
 
     def get(self, request, *args, **kwargs):
-        print('request')
-        pprint(request.GET)
         self.init_self(request, **kwargs)
 
-        pprint(kwargs)
         call_post = False
         if self.get_args2form:
             for arg in self.get_args:
                 if self.get_arg(arg) is not None:
                     call_post = True
-        pprint(kwargs)
         if self.get_vars2form:
             if request.GET:
                 for key, value in dict(request.GET).items():
                     kwargs[key] = value[0]
                     self.get_args.append(key)
                 call_post = True
-        pprint(kwargs)
         if call_post:
             return self.post(request, *args, **kwargs)
 
