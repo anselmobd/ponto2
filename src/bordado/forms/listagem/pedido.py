@@ -17,6 +17,7 @@ class PedidoForm(forms.Form):
         ['cliente_apelido', 'numero'],
         ['data_de', 'data_ate'],
         ['entrega_de', 'entrega_ate'],
+        ['fechamento'],
     ]
 
     cliente_apelido = forms.CharField(
@@ -52,6 +53,16 @@ class PedidoForm(forms.Form):
         label="Até",
         required=False,
         widget=forms.DateInput(attrs={'type': 'date'}),
+    )
+    CHOICES = [
+        ('-', 'Não filtra'),
+        ('f', 'Fechado'),
+        ('n', 'Não fechado'),
+    ]
+    fechamento = forms.ChoiceField(
+        label='Quando ao fechamento',
+        choices=CHOICES,
+        initial='-',
     )
 
     def __init__(self, *args, **kwargs):

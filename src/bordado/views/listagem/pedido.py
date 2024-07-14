@@ -71,6 +71,7 @@ class PedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             (self.filtra_valor_de_ate, [self.DATA, 'data_de', 'data_ate']),
             (self.filtra_valor_de_ate, [
                 self.ENTREGA, 'entrega_de', 'entrega_ate']),
+            self.filtra_fechamento,
             self.order_query,
             self.exec_query,
             self.context_table,
@@ -78,6 +79,16 @@ class PedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
 
     def init_query(self):
         self.query = Pedido.objects
+
+    def filtra_fechamento(self):
+        if self.fechamento == '-':
+            self.context.update({
+                'form_report_excludes': ['fechamento'],
+            })
+        elif self.fechamento == 'f':
+            self.query = self.query.filter(entrega__isnull=False)
+        elif self.fechamento == 'n':
+            self.query = self.query.filter(entrega__isnull=True)
 
     def order_query(self):
         self.query = self.query.order_by(
