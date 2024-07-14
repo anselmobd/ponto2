@@ -195,18 +195,14 @@ class CobrancaView(LoginRequiredMixin, O2BaseGetPostView):
         self.context.update({
             'show_post': True,
         })
-        for passo in [
-            self.init_query,
-            self.filtra_cliente,
-            self.filtra_numero_cobranca,
-            self.filtra_datas,
-            self.order_query,
-            self.exec_query,
-            self.context_table,
-        ]:
-            try:
-                passo()
-            except (StopStepsException, StepErrorException) as e:
-                self.context['error_msgs'].append(e)
-                if isinstance(e, StopStepsException):
-                    break
+        self.do_steps(
+            [
+                self.init_query,
+                self.filtra_cliente,
+                self.filtra_numero_cobranca,
+                self.filtra_datas,
+                self.order_query,
+                self.exec_query,
+                self.context_table,
+            ],
+        )
