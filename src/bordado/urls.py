@@ -53,6 +53,7 @@ urlpatterns = [
     path('', index, name='index'),
     path('sobre', sobre, name='sobre'),
 
+    # Listagem
     re_path(
         r'^cobranca/(?P<numero>.+)?/?$',
         CobrancaView.as_view(),
@@ -68,6 +69,8 @@ urlpatterns = [
         LancamentoView.as_view(),
         name='lancamento',
     ),
+
+    # Análise
     path(
         'analise_cobranca',
         AnaliseCobrancaView.as_view(),
