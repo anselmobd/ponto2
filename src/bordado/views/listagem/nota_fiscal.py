@@ -20,11 +20,13 @@ from bordado.models import (
     Cliente,
     Cobranca,
 )
+from bordado.views.base.filtro import FiltroParaView
+
 
 __all__ = ['NotaFiscalView']
 
 
-class NotaFiscalView(LoginRequiredMixin, O2BaseGetPostView):
+class NotaFiscalView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
 
     CLIENTE = 'cliente__apelido'
 
@@ -52,7 +54,7 @@ class NotaFiscalView(LoginRequiredMixin, O2BaseGetPostView):
 
         self.mount_steps = [
             self.init_query,
-            self.filtra_cliente,
+            self.filtra_cliente__apelido,
             self.filtra_nf,
             self.filtra_datas,
             self.com_faturamento,
@@ -85,40 +87,6 @@ class NotaFiscalView(LoginRequiredMixin, O2BaseGetPostView):
         if self.nf:
             self.query = self.query.filter(
                     nf=self.nf)
-
-    def filtra_cliente(self):
-        def do_filtra():
-            self.query = self.query.filter(
-                **{self.CLIENTE: self.cliente_apelido})
-            self.form.data['cliente_apelido'] = self.cliente_apelido
-
-        if self.cliente_apelido:
-            try:
-                cliente = Cliente.objects.get(
-                    apelido__iexact=self.cliente_apelido)
-                self.cliente_apelido = cliente.apelido
-                do_filtra()
-            except Cliente.DoesNotExist as _:
-                clientes = Cliente.objects.filter(
-                    apelido__icontains=self.cliente_apelido)
-                if len(clientes) == 1:
-                    self.cliente_apelido = clientes[0].apelido
-                    do_filtra()
-                else:
-                    if len(clientes) > 1:
-                        apelidos = [cliente.apelido for cliente in clientes]
-                        msg_erro = (
-                            "Mais de um cliente com apelido contendo "
-                            f"'{self.cliente_apelido}' "
-                            f"({', '.join(apelidos)})"
-                        )
-                    else:
-                        msg_erro = (
-                            "Cliente com apelido contendo "
-                            f"'{self.cliente_apelido}' não existe"
-                        )
-                    self.form.errors['cliente_apelido'] = [msg_erro]
-                    raise StopStepsException("Filtro de cliente mal definido")
 
     def filtra_datas(self):
         if self.data_de or self.data_ate:
