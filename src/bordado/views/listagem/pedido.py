@@ -58,6 +58,7 @@ class PedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             self.init_query,
             self.filtra_cliente__apelido,
             (self.filtra_valor, ['numero']*2),
+            (self.filtra_valor_de_ate, [self.DATA, 'data_de', 'data_ate']),
             self.order_query,
             self.exec_query,
             self.context_table,
