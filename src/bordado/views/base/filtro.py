@@ -43,32 +43,35 @@ class FiltroParaView():
                 cliente_apelido = cliente.apelido
                 do_filtra()
             except Cliente.DoesNotExist as _:
+                partes = cliente_apelido.split(' ')
+                regex = r".*\s.*".join(partes)
                 clientes = Cliente.objects.filter(
-                    apelido__icontains=cliente_apelido)
+                    apelido__iregex=regex)
                 if len(clientes) == 1:
                     cliente_apelido = clientes[0].apelido
                     do_filtra()
+                    return
+
+                if len(clientes) > 1:
+                    qtd_lista_clientes = 10
+                    apelidos = [
+                        cliente.apelido
+                        for cliente in clientes[:qtd_lista_clientes]
+                    ]
+                    if len(clientes) > qtd_lista_clientes:
+                        apelidos.append('...')
+                    msg_erro = (
+                        "Mais de um cliente com apelido contendo "
+                        f"'{cliente_apelido}' "
+                        f"({', '.join(apelidos)})"
+                    )
                 else:
-                    if len(clientes) > 1:
-                        qtd_lista_clientes = 10
-                        apelidos = [
-                            cliente.apelido
-                            for cliente in clientes[:qtd_lista_clientes]
-                        ]
-                        if len(clientes) > qtd_lista_clientes:
-                            apelidos.append('...')
-                        msg_erro = (
-                            "Mais de um cliente com apelido contendo "
-                            f"'{cliente_apelido}' "
-                            f"({', '.join(apelidos)})"
-                        )
-                    else:
-                        msg_erro = (
-                            "Cliente com apelido contendo "
-                            f"'{cliente_apelido}' não existe"
-                        )
-                    self.form.errors['cliente_apelido'] = [msg_erro]
-                    raise StopStepsException("Filtro de cliente mal definido")
+                    msg_erro = (
+                        "Cliente com apelido contendo "
+                        f"'{cliente_apelido}' não existe"
+                    )
+                self.form.errors['cliente_apelido'] = [msg_erro]
+                raise StopStepsException("Filtro de cliente mal definido")
 
     def filtra_valor(self, data_field, form_field):
         valor = (
