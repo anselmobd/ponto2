@@ -55,14 +55,15 @@ class PedidoForm(forms.Form):
         widget=forms.DateInput(attrs={'type': 'date'}),
     )
     CHOICES = [
-        ('-', 'Não filtra'),
+        ('', 'Não filtra'),
         ('f', 'Fechado'),
         ('n', 'Não fechado'),
     ]
     fechamento = forms.ChoiceField(
         label='Quanto ao fechamento',
         choices=CHOICES,
-        initial='-',
+        initial='',
+        required=False,
     )
 
     def __init__(self, *args, **kwargs):
