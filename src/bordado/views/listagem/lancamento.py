@@ -10,19 +10,16 @@ from o2lib.views.main import (
     totalize_data,
 )
 from o2lib.views.base.get_post import O2BaseGetPostView
-from o2lib.views.base.exception import (
-    StepErrorException,
-    StopStepsException, 
-)
+from o2lib.views.base.exception import StopStepsException
 
 from bordado.forms.listagem.lancamento import LancamentoForm
 from bordado.models import (
-    Cliente,
     Cobranca,
     Lancamento,
     Pedido,
 )
 from bordado.views.base.filtro import FiltroParaView
+
 
 __all__ = ['LancamentoView']
 
@@ -160,7 +157,7 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             group_rowspan(self.data, self.group)
         else:
             self.group = []
-        
+
     def totalize_table(self):
         totalize_config = {
             'sum': ['valor'],
