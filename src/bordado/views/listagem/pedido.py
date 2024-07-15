@@ -86,7 +86,7 @@ class PedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
         self.query = Pedido.objects
 
     def filtra_fechamento(self):
-        if self.fechamento == '-':
+        if self.fechamento == '':
             self.context.update({
                 'form_report_excludes': ['fechamento'],
             })
