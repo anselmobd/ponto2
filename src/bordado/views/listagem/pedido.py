@@ -2,7 +2,7 @@ from decimal import Decimal
 from pprint import pprint
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Value
+from django.db.models import F
 
 from o2lib.models.row_field import PrepRows
 from o2lib.models.dictlist import queryset2dictlist
@@ -102,7 +102,11 @@ class PedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
 
     def annotate_query(self):
         self.query = self.query.annotate(
-            valor=Value(0)
+            valor=(
+                F(self.QUANTIDADE) * F(self.PRECO) +
+                F(self.PROGRAMACAO) +
+                F(self.AJUSTE)
+            )
         )
             
     def exec_query(self):
@@ -128,13 +132,6 @@ class PedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             ),
             '<Erro!>',
         ).process()
-
-        for row in self.data:
-            row['valor'] = (
-                row[self.QUANTIDADE] * row[self.PRECO] +
-                row[self.PROGRAMACAO] +
-                row[self.AJUSTE]
-            )
 
     def totalize_table(self):
         totalize_data(
