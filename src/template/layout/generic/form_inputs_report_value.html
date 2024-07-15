@@ -1,8 +1,8 @@
 {% spaceless %}
 {% if input.value %}{% spaceless %}
-  {%if not first %}|{% endif %}
+  <!-- { %if not first % }|{ % endif % } -->
   {% if h %}<h{{h}}>{% endif %}
-  {{input.label}}{%if input.label|last not in ":?" %}: {% endif %}{% spaceless %}
+  {{input.label}}{%if input.label|last not in ":?" %}: {% endif %}<b>{% spaceless %}
   {% endspaceless %}{% if input.field.widget.input_type == 'select' %}{% spaceless %}
     {% for choice in input.field.choices %}{% spaceless %}
       {% if choice.0|safe == input.value|safe %}{% spaceless %}
@@ -12,6 +12,6 @@
   {% endspaceless %}{% else %}{% spaceless %}
     {{input.value}}
   {% endspaceless %}{% endif %}{% spaceless %}
-  {% endspaceless %}{% if h %}</h{{h}}>{% else %}&nbsp;{% endif %}
+  {% endspaceless %}</b>{% if h %}</h{{h}}>{% else %} &nbsp;&nbsp;{% endif %}
 {% endspaceless %}{% endif %}
 {% endspaceless %}
