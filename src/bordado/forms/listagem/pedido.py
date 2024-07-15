@@ -60,7 +60,7 @@ class PedidoForm(forms.Form):
         ('n', 'Não fechado'),
     ]
     fechamento = forms.ChoiceField(
-        label='Quando ao fechamento',
+        label='Quanto ao fechamento',
         choices=CHOICES,
         initial='-',
     )
