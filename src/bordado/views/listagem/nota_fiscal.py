@@ -36,7 +36,7 @@ class NotaFiscalView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
         self.form_class_has_initial = True
         self.cleaned_data2self = True
         self.cleaned_data2context = True
-        self.template_name = 'bordado/nota_fiscal.html'
+        self.template_name = 'bordado/listagem/nota_fiscal.html'
         self.title_name = 'Nota fiscal - Listagem'
         self.get_args = ['nf']
 

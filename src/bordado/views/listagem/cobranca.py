@@ -37,7 +37,7 @@ class CobrancaView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
         self.form_class_has_initial = True
         self.cleaned_data2self = True
         self.cleaned_data2context = True
-        self.template_name = 'bordado/cobranca.html'
+        self.template_name = 'bordado/listagem/cobranca.html'
         self.title_name = "Cobrança - Listagem"
         self.get_args = ['numero']
         self.get_vars2form = True
