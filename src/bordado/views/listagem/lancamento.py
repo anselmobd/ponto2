@@ -61,6 +61,20 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             'n_parcelas',
         ]
 
+        self.mount_steps = [
+            self.init_query,
+            self.filtra_cliente__apelido,
+            self.filtra_pedido,
+            self.filtra_cobranca,
+            self.filtra_datas,
+            self.filtra_tipo,
+            self.exec_query,
+            self.prep_table,
+            self.group_table,
+            self.totalize_table,
+            self.context_table,
+        ]
+
     def init_query(self):
         self.query = Lancamento.objects
 
@@ -176,24 +190,3 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             self.context,
             bitmap=self.tipo_lancamento,
         )
-
-    def mount_context(self):
-        for passo in [
-            self.init_query,
-            self.filtra_cliente__apelido,
-            self.filtra_pedido,
-            self.filtra_cobranca,
-            self.filtra_datas,
-            self.filtra_tipo,
-            self.exec_query,
-            self.prep_table,
-            self.group_table,
-            self.totalize_table,
-            self.context_table,
-        ]:
-            try:
-                passo()
-            except (StopStepsException, StepErrorException) as e:
-                self.context['error_msgs'].append(e)
-                if isinstance(e, StopStepsException):
-                    break
