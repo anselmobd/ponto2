@@ -217,9 +217,6 @@ class AnaliseCobrancaView(LoginRequiredMixin, O2BaseGetPostView):
         )
 
     def mount_context(self):
-        self.context.update({
-            'show_post': True,
-        })
         for passo in [
             self.processa_parametros,
             self.init_query,
