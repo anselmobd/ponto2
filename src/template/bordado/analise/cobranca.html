@@ -31,9 +31,9 @@
   </form>
   {% if form_method == 'POST' %}
     {% include "layout/generic/form_inputs_report.html" with form=form h=6 excludes=form_report_excludes only %}
-    {% if error_msgs %}
+    {% if msg_erro %}
       <ul class="errorlist">
-        {% for error in error_msgs %}
+        {% for error in msg_erro %}
           <li>{{ error }}</li>
         {% endfor %}
       </ul>

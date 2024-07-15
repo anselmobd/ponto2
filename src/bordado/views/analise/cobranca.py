@@ -59,6 +59,21 @@ class AnaliseCobrancaView(LoginRequiredMixin, O2BaseGetPostView):
             },
         )
 
+        self.mount_steps = [
+            self.processa_parametros,
+            self.init_query,
+            self.filtra_ano,
+            self.filtra_mes,
+            self.filtra_cliente,
+            self.values_query,
+            self.group_query,
+            self.order_query,
+            self.exec_query,
+            self.totalize_table,
+            self.prep_table,
+            self.context_table,
+        ]
+
     def processa_parametros(self):
         self.totaliza_field = self.totaliza_fields[self.totaliza]
 
@@ -215,25 +230,3 @@ class AnaliseCobrancaView(LoginRequiredMixin, O2BaseGetPostView):
             self.context,
             bitmap=self.totaliza,
         )
-
-    def mount_context(self):
-        for passo in [
-            self.processa_parametros,
-            self.init_query,
-            self.filtra_ano,
-            self.filtra_mes,
-            self.filtra_cliente,
-            self.values_query,
-            self.group_query,
-            self.order_query,
-            self.exec_query,
-            self.totalize_table,
-            self.prep_table,
-            self.context_table,
-        ]:
-            try:
-                passo()
-            except (StopStepsException, StepErrorException) as e:
-                self.context['error_msgs'].append(str(e))
-                if isinstance(e, StopStepsException):
-                    break
