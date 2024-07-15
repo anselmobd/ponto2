@@ -10,16 +10,10 @@ from o2lib.views.main import (
     totalize_grouped_data,
 )
 from o2lib.views.base.get_post import O2BaseGetPostView
-from o2lib.views.base.exception import (
-    StepErrorException,
-    StopStepsException, 
-)
+from o2lib.views.base.exception import StopStepsException
 
 from bordado.forms.listagem.nota_fiscal import NotaFiscalForm
-from bordado.models import (
-    Cliente,
-    Cobranca,
-)
+from bordado.models import Cobranca
 from bordado.views.base.filtro import FiltroParaView
 
 
@@ -55,11 +49,13 @@ class NotaFiscalView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
         self.mount_steps = [
             self.init_query,
             self.filtra_cliente__apelido,
-            self.filtra_nf,
-            self.filtra_datas,
+            (self.filtra_valor, ['nf']*2),
+            (self.filtra_valor_de_ate, ['data', 'data_de', 'data_ate']),
             self.com_faturamento,
             self.order_query,
             self.exec_query,
+            self.prep_table,
+            self.totalize_table,
             self.context_table,
         ]
 
@@ -83,26 +79,7 @@ class NotaFiscalView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             raise StopStepsException(
                 "Filtro definido não seleciona nenhum faturamento")
 
-    def filtra_nf(self):
-        if self.nf:
-            self.query = self.query.filter(
-                    nf=self.nf)
-
-    def filtra_datas(self):
-        if self.data_de or self.data_ate:
-            if self.data_de == self.data_ate:
-                self.query = self.query.filter(
-                    data=self.data_de)
-                return
-
-            if self.data_de:
-                self.query = self.query.filter(
-                    data__gte=self.data_de)
-            if self.data_ate:
-                self.query = self.query.filter(
-                    data__lte=self.data_ate)
-
-    def context_table(self):
+    def prep_table(self):
         PrepRows(
             self.data,
         ).str_dash(
@@ -111,16 +88,16 @@ class NotaFiscalView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             )
         ).process()
 
-        group = [
+    def totalize_table(self):
+        self.group = [
             'nf',
             self.CLIENTE,
         ]
-       
-        group_rowspan(self.data, group)
+        group_rowspan(self.data, self.group)
         totalize_grouped_data(
             self.data,
             {
-                'group': group,
+                'group': self.group,
                 'sum': ['valor'],
                 'descr': {self.CLIENTE: "Valor NF:"},
                 'global_sum': ['valor'],
@@ -132,8 +109,9 @@ class NotaFiscalView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             }
         )
 
+    def context_table(self):
         self.context.update({
             'data': self.data,
-            'group': group,
+            'group': self.group,
         })
         self.table_defs.hfs_dict_context(self.context)
