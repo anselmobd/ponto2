@@ -2,6 +2,7 @@ from decimal import Decimal
 from pprint import pprint
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Value
 
 from o2lib.models.row_field import PrepRows
 from o2lib.models.dictlist import queryset2dictlist
@@ -59,6 +60,7 @@ class PedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
                 self.PRECO: ["Preço", 'r'],
                 self.PROGRAMACAO: ["Programação", 'r'],
                 self.AJUSTE: ["Ajuste", 'r'],
+                'valor': ['', 'r'],
             },
             ['header', '+style'],
             style = {'_': 'text-align'},
@@ -73,7 +75,10 @@ class PedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
                 self.ENTREGA, 'entrega_de', 'entrega_ate']),
             self.filtra_fechamento,
             self.order_query,
+            self.annotate_query,
             self.exec_query,
+            self.prep_table,
+            self.totalize_table,
             self.context_table,
         ]
 
@@ -95,6 +100,11 @@ class PedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             f'-{self.DATA}', '-numero'
         )
 
+    def annotate_query(self):
+        self.query = self.query.annotate(
+            valor=Value(0)
+        )
+            
     def exec_query(self):
         self.data = self.query.values(
             *self.table_defs.all_fields)
@@ -104,7 +114,7 @@ class PedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             raise StopStepsException(
                 "Filtro definido não seleciona nenhum pedido")
 
-    def context_table(self):
+    def prep_table(self):
         PrepRows(
             self.data,
         ).str_dash(
@@ -119,6 +129,26 @@ class PedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             '<Erro!>',
         ).process()
 
+        for row in self.data:
+            row['valor'] = (
+                row[self.QUANTIDADE] * row[self.PRECO] +
+                row[self.PROGRAMACAO] +
+                row[self.AJUSTE]
+            )
+
+    def totalize_table(self):
+        totalize_data(
+            self.data,
+            {
+                'sum': ['valor'],
+                'descr': {self.AJUSTE: 'Total:'},
+                'row_style':
+                    "font-weight: bold;"
+                    "background-image: linear-gradient(#DDD, white);",
+            }
+        )
+
+    def context_table(self):
         self.context.update({
             'data': self.data,
         })
