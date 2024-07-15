@@ -13,22 +13,18 @@ from o2lib.views.main import (
     totalize_data,
 )
 from o2lib.views.base.get_post import O2BaseGetPostView
-from o2lib.views.base.exception import (
-    StepErrorException,
-    StopStepsException, 
-)
+from o2lib.views.base.exception import StopStepsException
 
 from bordado.forms.analise.cobranca import AnaliseCobrancaForm
-from bordado.models import (
-    Cliente,
-    Cobranca,
-)
+from bordado.models import Cobranca
+from bordado.views.base.filtro import FiltroParaView
 
 
 __all__ = ['AnaliseCobrancaView']
 
 
-class AnaliseCobrancaView(LoginRequiredMixin, O2BaseGetPostView):
+class AnaliseCobrancaView(
+        LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
 
     CLIENTE = 'cliente__apelido'
     VALOR = 'pedidoitemcobranca__valor'
@@ -62,9 +58,9 @@ class AnaliseCobrancaView(LoginRequiredMixin, O2BaseGetPostView):
         self.mount_steps = [
             self.processa_parametros,
             self.init_query,
-            self.filtra_ano,
-            self.filtra_mes,
-            self.filtra_cliente,
+            (self.filtra_valor, ['data__year', 'ano']),
+            (self.filtra_valor, ['data__month', 'mes']),
+            self.filtra_cliente__apelido,
             self.values_query,
             self.group_query,
             self.order_query,
@@ -79,50 +75,6 @@ class AnaliseCobrancaView(LoginRequiredMixin, O2BaseGetPostView):
 
     def init_query(self):
         self.query = Cobranca.objects
-
-    def filtra_ano(self):
-        if self.ano:
-            self.query = self.query.filter(
-                data__year=self.ano)
-
-    def filtra_mes(self):
-        if self.mes:
-            self.query = self.query.filter(
-                data__month=self.mes)
-
-    def filtra_cliente(self):
-        def do_filtra():
-            self.query = self.query.filter(
-                **{self.CLIENTE: self.cliente_apelido})
-            self.form.data['cliente_apelido'] = self.cliente_apelido
-
-        if self.cliente_apelido:
-            try:
-                cliente = Cliente.objects.get(
-                    apelido__iexact=self.cliente_apelido)
-                self.cliente_apelido = cliente.apelido
-                do_filtra()
-            except Cliente.DoesNotExist as _:
-                clientes = Cliente.objects.filter(
-                    apelido__icontains=self.cliente_apelido)
-                if len(clientes) == 1:
-                    self.cliente_apelido = clientes[0].apelido
-                    do_filtra()
-                else:
-                    if len(clientes) > 1:
-                        apelidos = [cliente.apelido for cliente in clientes]
-                        msg_erro = (
-                            "Mais de um cliente com apelido contendo "
-                            f"'{self.cliente_apelido}' "
-                            f"({', '.join(apelidos)})"
-                        )
-                    else:
-                        msg_erro = (
-                            "Cliente com apelido contendo "
-                            f"'{self.cliente_apelido}' não existe"
-                        )
-                    self.form.errors['cliente_apelido'] = [msg_erro]
-                    raise StopStepsException("Filtro de cliente mal definido")
 
     def values_query(self):
         self.query = self.query.annotate(
