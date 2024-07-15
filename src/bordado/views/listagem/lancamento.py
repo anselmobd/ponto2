@@ -66,7 +66,7 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             self.filtra_cliente__apelido,
             self.filtra_pedido,
             self.filtra_cobranca,
-            self.filtra_datas,
+            (self.filtra_valor_de_ate, ['data', 'data_de', 'data_ate']),
             self.filtra_tipo,
             self.exec_query,
             self.prep_table,
@@ -107,12 +107,6 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
                     f"Cobranca {self.cobranca_id} não existe"]
             finally:
                 self.query = self.query.filter(cobranca_id=self.cobranca_id)
-
-    def filtra_datas(self):
-        if self.data_de:
-            self.query = self.query.filter(data__gte=self.data_de)
-        if self.data_ate:
-            self.query = self.query.filter(data__lte=self.data_ate)
 
     def filtra_tipo(self):
         if self.tipo_lancamento == '-':
