@@ -59,19 +59,19 @@ urlpatterns = [
 
     # Listagem
     re_path(
-        r'^cobranca/(?P<numero>.+)?/?$',
+        r'^listagem_cobranca/(?P<numero>.+)?/?$',
         CobrancaView.as_view(),
-        name='cobranca',
+        name='listagem_cobranca',
     ),
     re_path(
-        r'^faturamento/(?P<nf>.+)?/?$',
+        r'^listagem_faturamento/(?P<nf>.+)?/?$',
         NotaFiscalView.as_view(),
-        name='faturamento',
+        name='listagem_faturamento',
     ),
     path(
-        'lancamento',
+        'listagem_lancamento',
         LancamentoView.as_view(),
-        name='lancamento',
+        name='listagem_lancamento',
     ),
     re_path(
         r'^listagem_pedido/(?P<numero>.+)?/?$',

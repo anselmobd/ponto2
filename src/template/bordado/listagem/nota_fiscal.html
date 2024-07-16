@@ -24,7 +24,7 @@
 {% endblock %}
 
 {% block content %}
-  <form class="noprint" action="{% url 'bordado:faturamento' %}" method="post">
+  <form class="noprint" action="{% url 'bordado:listagem_faturamento' %}" method="post">
     {% csrf_token %}
     {% include "layout/generic/form_field_control.html" with form=form only %}
     <input class="button" type="submit" value="Busca"/>
