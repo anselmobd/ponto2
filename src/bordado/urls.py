@@ -22,7 +22,7 @@ from bordado.api.rest import (
 )
 from bordado.views.analise.cobranca import AnaliseCobrancaView
 from bordado.views.listagem.cobranca import ListagemCobrancaView
-from bordado.views.listagem.lancamento import LancamentoView
+from bordado.views.listagem.lancamento import ListagemLancamentoView
 from bordado.views.listagem.nota_fiscal import ListagemNotaFiscalView
 from bordado.views.listagem.pedido import PedidoView
 from bordado.views.main import (
@@ -70,7 +70,7 @@ urlpatterns = [
     ),
     path(
         'listagem_lancamento',
-        LancamentoView.as_view(),
+        ListagemLancamentoView.as_view(),
         name='listagem_lancamento',
     ),
     re_path(

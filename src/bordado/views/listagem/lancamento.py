@@ -12,7 +12,7 @@ from o2lib.views.main import (
 from o2lib.views.base.get_post import O2BaseGetPostView
 from o2lib.views.base.exception import StopStepsException
 
-from bordado.forms.listagem.lancamento import LancamentoForm
+from bordado.forms.listagem.lancamento import ListagemLancamentoForm
 from bordado.models import (
     Cobranca,
     Lancamento,
@@ -21,10 +21,11 @@ from bordado.models import (
 from bordado.views.base.filtro import FiltroParaView
 
 
-__all__ = ['LancamentoView']
+__all__ = ['ListagemLancamentoView']
 
 
-class LancamentoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
+class ListagemLancamentoView(
+        LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
 
     CLIENTE = 'cliente__apelido'
     PEDIDO = 'cobranca__pedidoitemcobranca__pedido_item__pedido'
@@ -33,26 +34,24 @@ class LancamentoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
 
     def __init__(self):
         super().__init__()
-        self.Form_class = LancamentoForm
+        self.Form_class = ListagemLancamentoForm
         self.form_class_has_initial = True
         self.cleaned_data2self = True
         self.cleaned_data2context = True
         self.template_name = 'bordado/listagem/lancamento.html'
         self.title_name = "Lançamento - Listagem"
-        self.table_defs = TableDefsHBpSD(
-            {
-                self.CLIENTE: ['Cliente'],
-                'data': [],
-                'informacao': ['Informação', '', 'c'],
-                self.COMUNICACAO: ['Comunicação', '', 'c'],
-                'cobranca__nf': ['NF', '', 'c'],
-                'cobranca': ['Cobrança', '', 'c'],
-                'parcela': [None, '', 'c'],
-                'valor': ['Valor cobrança', '', 'r'],
-                self.PEDIDO: ['Pedido', '-c', 'c'],
-                self.VALOR: ['Valor pedido', '-c', 'r'],
-            },
-        )
+        self.table_defs = TableDefsHBpSD({
+            self.CLIENTE: ['Cliente'],
+            'data': [],
+            'informacao': ['Informação', '', 'c'],
+            self.COMUNICACAO: ['Comunicação', '', 'c'],
+            'cobranca__nf': ['NF', '', 'c'],
+            'cobranca': ['Cobrança', '', 'c'],
+            'parcela': [None, '', 'c'],
+            'valor': ['Valor cobrança', '', 'r'],
+            self.PEDIDO: ['Pedido', '-c', 'c'],
+            self.VALOR: ['Valor pedido', '-c', 'r'],
+        })
         self.extra_fields = [
             'cobranca__informacao',
             'n_parcelas',
