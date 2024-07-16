@@ -20,6 +20,7 @@ from bordado.models.forma_pagamento import (
     FormaPagamento,
     forma_pagamento_default_id,
 )
+from bordado.models.pedido import Pedido
 from bordado.models.tipo_comunicacao import (
     TipoComunicacao,
     tipo_comunicacao_default_id,
@@ -59,35 +60,6 @@ __all__ = [
 #         db_table = 'po2_empresa'
 #         verbose_name = "Empresa"
 #         ordering = ['nome']
-
-
-class Pedido(models.Model):
-    admin_order = 400
-    numero = models.AutoField(
-        "Número",
-        primary_key=True
-    )
-    cliente = models.ForeignKey(
-        Cliente,
-        on_delete=models.PROTECT,
-        blank=False,
-        null=False,
-    )
-    inserido_em = models.DateTimeField(auto_now_add=True)
-    entrega = models.DateField(
-        blank=True,
-        null=True,
-    )
-    cancelado = models.BooleanField(
-        default=False,
-    )
-
-    def __str__(self):
-        return f"{self.numero:04d} - {self.cliente}"
-
-    class Meta:
-        db_table = 'po2_pedido'
-        ordering = ['-numero']
 
 
 class PedidoItemManager(models.Manager):
