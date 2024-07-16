@@ -6,22 +6,22 @@ from django.db.models import F
 
 from o2lib.models.row_field import PrepRows
 from o2lib.models.dictlist import queryset2dictlist
-from o2lib.table_defs import TableDefs
+from o2lib.table_defs import TableDefsHpS
 from o2lib.views.main import (
     totalize_data,
 )
 from o2lib.views.base.get_post import O2BaseGetPostView
 from o2lib.views.base.exception import StopStepsException
 
-from bordado.forms.listagem.pedido import PedidoForm
+from bordado.forms.listagem.pedido import ListagemPedidoForm
 from bordado.models import Pedido
 from bordado.views.base.filtro import FiltroParaView
 
 
-__all__ = ['PedidoView']
+__all__ = ['ListagemPedidoView']
 
 
-class PedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
+class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
 
     CLIENTE = 'cliente__apelido'
     DATA = 'pedidoitem__data_pedido'
@@ -37,7 +37,7 @@ class PedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.Form_class = PedidoForm
+        self.Form_class = ListagemPedidoForm
         self.form_class_has_initial = True
         self.cleaned_data2self = True
         self.cleaned_data2context = True
@@ -46,25 +46,21 @@ class PedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
         self.get_args = ['numero']
         self.get_vars2form = True
 
-        self.table_defs = TableDefs(
-            {
-                'numero': ['Nº', 'c'],
-                self.DATA: ['Data', 'c'],
-                self.CLIENTE: ['Cliente'],
-                self.BORDADO_NOME: ['Bordado nome', 'c'],
-                self.BORDADO_CODIGO: ['Código', 'c'],
-                self.USUARIO: ["Usuário"],
-                self.QUANDO: ["Quando"],
-                self.ENTREGA: [],
-                self.QUANTIDADE: ["Quantidade", 'r'],
-                self.PRECO: ["Preço", 'r'],
-                self.PROGRAMACAO: ["Programação", 'r'],
-                self.AJUSTE: ["Ajuste", 'r'],
-                'valor': ['', 'r'],
-            },
-            ['header', '+style'],
-            style = {'_': 'text-align'},
-        )
+        self.table_defs = TableDefsHpS({
+            'numero': ['Nº', 'c'],
+            self.DATA: ['Data', 'c'],
+            self.CLIENTE: ['Cliente'],
+            self.BORDADO_NOME: ['Bordado nome', 'c'],
+            self.BORDADO_CODIGO: ['Código', 'c'],
+            self.USUARIO: ["Usuário"],
+            self.QUANDO: ["Quando"],
+            self.ENTREGA: [],
+            self.QUANTIDADE: ["Quantidade", 'r'],
+            self.PRECO: ["Preço", 'r'],
+            self.PROGRAMACAO: ["Programação", 'r'],
+            self.AJUSTE: ["Ajuste", 'r'],
+            'valor': ['', 'r'],
+        })
 
         self.mount_steps = [
             self.init_query,

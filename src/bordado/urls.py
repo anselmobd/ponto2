@@ -24,7 +24,7 @@ from bordado.views.analise.cobranca import AnaliseCobrancaView
 from bordado.views.listagem.cobranca import ListagemCobrancaView
 from bordado.views.listagem.lancamento import ListagemLancamentoView
 from bordado.views.listagem.nota_fiscal import ListagemNotaFiscalView
-from bordado.views.listagem.pedido import PedidoView
+from bordado.views.listagem.pedido import ListagemPedidoView
 from bordado.views.main import (
     index,
     sobre,
@@ -75,7 +75,7 @@ urlpatterns = [
     ),
     re_path(
         r'^listagem_pedido/(?P<numero>.+)?/?$',
-        PedidoView.as_view(),
+        ListagemPedidoView.as_view(),
         name='listagem_pedido',
     ),
 

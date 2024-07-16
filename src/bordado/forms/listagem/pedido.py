@@ -6,11 +6,11 @@ from o2lib.form.widget_attrs import FormWidgetAttrs
 
 
 __all__ = [
-    'PedidoForm',
+    'ListagemPedidoForm',
 ]
 
 
-class PedidoForm(forms.Form):
+class ListagemPedidoForm(forms.Form):
     a = FormWidgetAttrs()
 
     field_control = [
