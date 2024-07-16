@@ -14,6 +14,10 @@ from o2lib.codes.cnpj import CNPJ
 from o2lib.datetime.tz import tz_local
 from o2lib.models.base import logged_user
 
+from bordado.models.tipo_comunicacao import (
+    TipoComunicacao,
+    tipo_comunicacao_default_id,
+)
 
 __all__ = [
     'ApontamentoProducao',
@@ -43,31 +47,6 @@ __all__ = [
 #         db_table = 'po2_empresa'
 #         verbose_name = "Empresa"
 #         ordering = ['nome']
-
-
-class TipoComunicacao(models.Model):
-    admin_order = 50
-    descricao = models.CharField(
-        "Descrição",
-        max_length=50,
-        unique=True,
-    )
-
-    def __str__(self):
-        return self.descricao
-
-    class Meta:
-        db_table = 'po2_tipo_comunicacao'
-        verbose_name = "Tipo de comunicação"
-        verbose_name_plural = "Tipos de comunicação"
-        ordering = ['id']
-
-
-def tipo_comunicacao_default_id():
-    tipo_comunicacao = TipoComunicacao.objects.filter(descricao="Telefone").first()
-    if tipo_comunicacao:
-        return tipo_comunicacao.id
-    return None
 
 
 class FormaPagamento(models.Model):
