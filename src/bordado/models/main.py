@@ -10,9 +10,9 @@ from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
 
-from o2lib.classes.logged_in_user import SingletonLoggedInUser
 from o2lib.codes.cnpj import CNPJ
 from o2lib.datetime.tz import tz_local
+from o2lib.models.base import logged_user
 
 
 __all__ = [
@@ -28,10 +28,6 @@ __all__ = [
     'PedidoItemCobranca',
     'TipoComunicacao',
 ]
-
-
-def logged_user():
-    return SingletonLoggedInUser().user
 
 
 # class Empresa(models.Model):
