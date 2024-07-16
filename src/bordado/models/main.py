@@ -18,13 +18,20 @@ from bordado.models.tipo_comunicacao import (
     TipoComunicacao,
     tipo_comunicacao_default_id,
 )
+from bordado.models.forma_pagamento import (
+    FormaPagamento,
+    forma_pagamento_default_id,
+)
+
 
 __all__ = [
     'ApontamentoProducao',
     'Bordado',
     'Cliente',
     'Cobranca',
+    'Contato',
     'DificuldadeBordado',
+    'FormaPagamento',
     'Lancamento',
     'OrdemProducao',
     'Pedido',
@@ -47,30 +54,6 @@ __all__ = [
 #         db_table = 'po2_empresa'
 #         verbose_name = "Empresa"
 #         ordering = ['nome']
-
-
-class FormaPagamento(models.Model):
-    admin_order = 75
-    nome = models.CharField(
-        max_length=50,
-        unique=True,
-    )
-
-    def __str__(self):
-        return self.nome
-
-    class Meta:
-        db_table = 'po2_forma_pagamento'
-        verbose_name = "Forma de pagamento"
-        verbose_name_plural = "Formas de pagamento"
-        ordering = ['id']
-
-
-def forma_pagamento_default_id():
-    forma_pagamento = FormaPagamento.objects.filter(nome="Boleto").first()
-    if forma_pagamento:
-        return forma_pagamento.id
-    return None
 
 
 class ClienteManager(models.Manager):
