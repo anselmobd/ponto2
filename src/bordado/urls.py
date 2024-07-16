@@ -23,7 +23,7 @@ from bordado.api.rest import (
 from bordado.views.analise.cobranca import AnaliseCobrancaView
 from bordado.views.listagem.cobranca import ListagemCobrancaView
 from bordado.views.listagem.lancamento import LancamentoView
-from bordado.views.listagem.nota_fiscal import NotaFiscalView
+from bordado.views.listagem.nota_fiscal import ListagemNotaFiscalView
 from bordado.views.listagem.pedido import PedidoView
 from bordado.views.main import (
     index,
@@ -65,7 +65,7 @@ urlpatterns = [
     ),
     re_path(
         r'^listagem_faturamento/(?P<nf>.+)?/?$',
-        NotaFiscalView.as_view(),
+        ListagemNotaFiscalView.as_view(),
         name='listagem_faturamento',
     ),
     path(

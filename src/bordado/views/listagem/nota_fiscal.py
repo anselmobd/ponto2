@@ -12,21 +12,22 @@ from o2lib.views.main import (
 from o2lib.views.base.get_post import O2BaseGetPostView
 from o2lib.views.base.exception import StopStepsException
 
-from bordado.forms.listagem.nota_fiscal import NotaFiscalForm
+from bordado.forms.listagem.nota_fiscal import ListagemNotaFiscalForm
 from bordado.models import Cobranca
 from bordado.views.base.filtro import FiltroParaView
 
 
-__all__ = ['NotaFiscalView']
+__all__ = ['ListagemNotaFiscalView']
 
 
-class NotaFiscalView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
+class ListagemNotaFiscalView(
+        LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
 
     CLIENTE = 'cliente__apelido'
 
     def __init__(self, *args, **kwargs):
-        super(NotaFiscalView, self).__init__(*args, **kwargs)
-        self.Form_class = NotaFiscalForm
+        super().__init__(*args, **kwargs)
+        self.Form_class = ListagemNotaFiscalForm
         self.form_class_has_initial = True
         self.cleaned_data2self = True
         self.cleaned_data2context = True
