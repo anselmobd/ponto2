@@ -32,12 +32,15 @@ __all__ = [
     'Contato',
     'DificuldadeBordado',
     'FormaPagamento',
+    'forma_pagamento_default_id',
     'Lancamento',
+    'logged_user',
     'OrdemProducao',
     'Pedido',
     'PedidoItem',
     'PedidoItemCobranca',
     'TipoComunicacao',
+    'tipo_comunicacao_default_id',
 ]
 
 
