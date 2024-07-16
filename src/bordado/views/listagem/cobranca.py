@@ -5,7 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from o2lib.models.row_field import PrepRows
 from o2lib.models.dictlist import queryset2dictlist
-from o2lib.table_defs import TableDefs
+from o2lib.table_defs import TableDefsHpS
 from o2lib.views.main import (
     group_rowspan,
     totalize_grouped_data,
@@ -43,26 +43,22 @@ class ListagemCobrancaView(
         self.get_args = ['numero']
         self.get_vars2form = True
 
-        self.table_defs = TableDefs(
-            {
-                self.CLIENTE: ['Cliente'],
-                'id': ['Nº', 'c'],
-                'informacao': ['Informação'],
-                self.COMUNICACAO: ['Tipo'],
-                'nf': ['NF', 'c'],
-                'data': ['Data', 'c'],
-                'parcelamento': ['Parcelamento', 'c'],
-                self.PEDIDO: ['Pedido', 'c'],
-                self.QUANTIDADE: ['Quantidade', 'r'],
-                self.BORDADO_NOME: ['Bordado nome', 'c'],
-                self.BORDADO_CODIGO: ['Código', 'c'],
-                self.VALOR: ['Valor pedido', 'r'],
-                'usuario__username': ["Usuário"],
-                'quando': [],
-            },
-            ['header', '+style'],
-            style = {'_': 'text-align'},
-        )
+        self.table_defs = TableDefsHpS({
+            self.CLIENTE: ['Cliente'],
+            'id': ['Nº', 'c'],
+            'informacao': ['Informação'],
+            self.COMUNICACAO: ['Tipo'],
+            'nf': ['NF', 'c'],
+            'data': ['Data', 'c'],
+            'parcelamento': ['Parcelamento', 'c'],
+            self.PEDIDO: ['Pedido', 'c'],
+            self.QUANTIDADE: ['Quantidade', 'r'],
+            self.BORDADO_NOME: ['Bordado nome', 'c'],
+            self.BORDADO_CODIGO: ['Código', 'c'],
+            self.VALOR: ['Valor pedido', 'r'],
+            'usuario__username': ["Usuário"],
+            'quando': [],
+        })
 
         self.mount_steps = [
             self.init_query,
