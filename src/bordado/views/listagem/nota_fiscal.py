@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from o2lib.models.row_field import PrepRows
 from o2lib.models.dictlist import queryset2dictlist
-from o2lib.table_defs import TableDefs
+from o2lib.table_defs import TableDefsHpS
 from o2lib.views.main import (
     group_rowspan,
     totalize_grouped_data,
@@ -35,17 +35,13 @@ class ListagemNotaFiscalView(
         self.title_name = 'Nota fiscal - Listagem'
         self.get_args = ['nf']
 
-        self.table_defs = TableDefs(
-            {
-                self.CLIENTE: ['Cliente'],
-                'nf': ['NF', 'c'],
-                'id': ['Cobrança', 'c'],
-                'data': ['Data', 'c'],
-                'valor': ['Valor cobrança', 'r'],
-            },
-            ['header', '+style'],
-            style = {'_': 'text-align'},
-        )
+        self.table_defs = TableDefsHpS({
+            self.CLIENTE: ['Cliente'],
+            'nf': ['NF', 'c'],
+            'id': ['Cobrança', 'c'],
+            'data': ['Data', 'c'],
+            'valor': ['Valor cobrança', 'r'],
+        })
 
         self.mount_steps = [
             self.init_query,
