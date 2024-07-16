@@ -2,6 +2,8 @@ from pprint import pprint
 
 from django.db import models
 
+from bordado.models.cliente import Cliente
+
 
 __all__ = [
     'Pedido',
