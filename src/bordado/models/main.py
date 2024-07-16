@@ -22,6 +22,7 @@ from bordado.models.forma_pagamento import (
     forma_pagamento_default_id,
 )
 from bordado.models.pedido import Pedido
+from bordado.models.lancamento import Lancamento
 from bordado.models.pedido_item import PedidoItem
 from bordado.models.pedido_item_cobranca import PedidoItemCobranca
 from bordado.models.tipo_comunicacao import (
@@ -63,81 +64,6 @@ __all__ = [
 #         db_table = 'po2_empresa'
 #         verbose_name = "Empresa"
 #         ordering = ['nome']
-
-
-class Lancamento(models.Model):
-    admin_order = 900
-    cliente = models.ForeignKey(
-        Cliente,
-        on_delete=models.PROTECT,
-    )
-    data = models.DateField(
-    )
-    cobranca = models.ForeignKey(
-        Cobranca,
-        on_delete=models.PROTECT,
-        blank=True,
-        null=True,
-    )
-    parcela = models.PositiveSmallIntegerField(
-        validators=[MinValueValidator(0), MaxValueValidator(100)],
-        default=0,
-    )
-    n_parcelas = models.PositiveSmallIntegerField(
-        "Nº de parcelas",
-        validators=[MinValueValidator(0), MaxValueValidator(100)],
-        default=0,
-    )
-    informacao = models.CharField(
-        "Informação",
-        max_length=50,
-    )
-    valor = models.DecimalField(
-        max_digits=9,
-        decimal_places=2,
-        validators=[
-            MinValueValidator(Decimal(-1_000_000)),
-            MaxValueValidator(Decimal(1_000_000)),
-        ],
-        default=0,
-    )
-    calculando = models.BooleanField(
-        default=False,
-    )
-    saldo_cliente = models.DecimalField(
-        max_digits=9,
-        decimal_places=2,
-        validators=[
-            MinValueValidator(Decimal(-1_000_000)),
-            MaxValueValidator(Decimal(1_000_000)),
-        ],
-        default=0,
-    )
-    saldo_empresa = models.DecimalField(
-        max_digits=9,
-        decimal_places=2,
-        validators=[
-            MinValueValidator(Decimal(-1_000_000)),
-            MaxValueValidator(Decimal(1_000_000)),
-        ],
-        default=0,
-    )
-    usuario = models.ForeignKey(
-        User,
-        on_delete=models.PROTECT,
-        verbose_name="usuário",
-        related_name='+',
-        default=logged_user,
-    )
-    quando = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f"{self.id}: {self.data} {self.cliente}"
-
-    class Meta:
-        db_table = 'po2_lancamento'
-        verbose_name = "Lançamento"
-        ordering = ['-data', '-id']
 
 
 class OrdemProducao(models.Model):
