@@ -127,6 +127,8 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
                 self.BORDADO_NOME,
             ),
             '<Erro!>',
+        ).none(
+            'valor', Decimal('0.00')
         ).process()
 
     def totalize_table(self):
