@@ -13,15 +13,16 @@ from o2lib.views.main import (
 from o2lib.views.base.get_post import O2BaseGetPostView
 from o2lib.views.base.exception import StopStepsException
 
-from bordado.forms.listagem.cobranca import CobrancaForm
+from bordado.forms.listagem.cobranca import ListagemCobrancaForm
 from bordado.models import Cobranca
 from bordado.views.base.filtro import FiltroParaView
 
 
-__all__ = ['CobrancaView']
+__all__ = ['ListagemCobrancaView']
 
 
-class CobrancaView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
+class ListagemCobrancaView(
+        LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
 
     CLIENTE = 'cliente__apelido'
     COMUNICACAO = 'comunicacao__descricao'
@@ -32,8 +33,8 @@ class CobrancaView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
     VALOR = 'pedidoitemcobranca__valor'
 
     def __init__(self, *args, **kwargs):
-        super(CobrancaView, self).__init__(*args, **kwargs)
-        self.Form_class = CobrancaForm
+        super().__init__(*args, **kwargs)
+        self.Form_class = ListagemCobrancaForm
         self.form_class_has_initial = True
         self.cleaned_data2self = True
         self.cleaned_data2context = True
