@@ -8,6 +8,7 @@ from django.http import QueryDict
 from django.urls import reverse
 
 from o2lib.models.dictlist import queryset2dictlist
+from o2lib.models.row_field import PrepRows
 from o2lib.table_defs import TableDefsHBpSD
 from o2lib.views.main import (
     totalize_data,
@@ -65,6 +66,7 @@ class AnaliseCobrancaView(
             self.group_query,
             self.order_query,
             self.exec_query,
+            self.pre_prep_table,
             self.totalize_table,
             self.prep_table,
             self.context_table,
@@ -157,6 +159,14 @@ class AnaliseCobrancaView(
         qdict['data_ate'] = data_ate
 
         return qdict.urlencode()
+
+    def pre_prep_table(self):
+        PrepRows(
+            self.data,
+        ).none(
+            'total', 0
+        ).process()
+
 
     def prep_table(self):
         valor_acumulado = 0
