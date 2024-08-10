@@ -137,7 +137,7 @@ class ListagemLancamentoView(
                 'parcela',
             )
         ).a_blank(
-            'cobranca', 'bordado:cobranca'
+            'cobranca', 'bordado:listagem_cobranca'
         ).process()
 
     def group_table(self):
