@@ -170,7 +170,7 @@ class AnaliseCobrancaView(
 
             row[f"{self.totaliza_field}|TARGET"] = 'blank'
             row[f"{self.totaliza_field}|A"] = "?".join([
-                reverse('bordado:cobranca', args=[]),
+                reverse('bordado:listagem_cobranca', args=[]),
                 self.mount_url_query(row),
             ])
 
