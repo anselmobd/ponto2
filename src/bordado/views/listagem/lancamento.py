@@ -117,7 +117,10 @@ class ListagemLancamentoView(
     def prep_table(self):
         for row in self.data:
             if row['cobranca']:
-                row[self.VALOR] = -row[self.VALOR]
+                if row[self.VALOR]:
+                    row[self.VALOR] = -row[self.VALOR]
+                else:
+                    row[self.VALOR] = '<Erro!>'
                 row['informacao'] = row['cobranca__informacao']
                 row['parcela'] = f"{row['parcela']}/{row['n_parcelas']}"
             else:
