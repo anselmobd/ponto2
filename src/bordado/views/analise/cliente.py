@@ -29,7 +29,9 @@ class AnaliseClienteView(
 
         self.table_defs = TableDefsHBpSD(
             {
-                'apelido': ['Cliente', 'c'],
+                'apelido': ["Apelido"],
+                'nome': ['Nome/Razão Social'],
+                'fansasia': ['Nome Fantasia'],
             },
         )
 
