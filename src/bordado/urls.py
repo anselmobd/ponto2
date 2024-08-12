@@ -20,6 +20,7 @@ from bordado.api.rest import (
     TipoComunicacaoViewSet,
     UserViewSet,
 )
+from bordado.views.analise.cliente import AnaliseClienteView
 from bordado.views.analise.cobranca import AnaliseCobrancaView
 from bordado.views.listagem.cobranca import ListagemCobrancaView
 from bordado.views.listagem.lancamento import ListagemLancamentoView
@@ -84,5 +85,10 @@ urlpatterns = [
         'analise_cobranca',
         AnaliseCobrancaView.as_view(),
         name='analise_cobranca',
+    ),
+    path(
+        'analise_cliente',
+        AnaliseClienteView.as_view(),
+        name='analise_cliente',
     ),
 ]

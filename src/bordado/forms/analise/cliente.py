@@ -1,0 +1,44 @@
+from pprint import pprint
+
+from django import forms
+
+from o2lib.form.widget_attrs import FormWidgetAttrs
+from o2lib.date import ano_atual, mes_atual
+
+
+__all__ = [
+    'AnaliseClienteForm',
+]
+
+
+class AnaliseClienteForm(forms.Form):
+    a = FormWidgetAttrs()
+
+    field_control = [
+        ['ano', 'mes'],
+        ['apelido'],
+    ]
+
+    ano = forms.IntegerField(
+        required=False,
+        initial=ano_atual,
+        widget=forms.NumberInput(),
+    )
+
+    mes = forms.IntegerField(
+        required=False,
+        initial=mes_atual,
+    )
+
+    apelido = forms.CharField(
+        label='Cliente',
+        required=False,
+        widget=forms.TextInput(
+            attrs={**a.string, **a.autofocus}
+        ),
+        help_text="Se vazio, lista clientes"
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.data = self.data.copy()
