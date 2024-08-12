@@ -203,14 +203,14 @@ onMounted(() => {
                       >
                     </div>
                     <div>
-                      <label class="block" for="fansasia">Nome Fansasia</label>
-                      <p v-if="field_error?.fansasia" class="text-red-800">{{ field_error.fansasia }}</p>
+                      <label class="block" for="fantasia">Nome Fantasia</label>
+                      <p v-if="field_error?.fantasia" class="text-red-800">{{ field_error.fantasia }}</p>
                       <input
                       class="h-10 border mt-1 rounded px-4 bg-white"
-                      v-model="cliente.fansasia"
+                      v-model="cliente.fantasia"
                       type="text"
-                      name="fansasia"
-                      id="fansasia"
+                      name="fantasia"
+                      id="fantasia"
                       required
                       >
                     </div>

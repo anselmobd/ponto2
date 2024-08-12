@@ -65,7 +65,7 @@ export function getPedidoItens({
     response.data.results.forEach(element => {
       element.pedido.cliente.vazio = (
         element.pedido.cliente.nome+
-        element.pedido.cliente.fansasia+
+        element.pedido.cliente.fantasia+
         avaliarNullComoVazio(element.pedido.cliente.cnpj9)+
         avaliarNullComoVazio(element.pedido.cliente.cnpj4)+
         avaliarNullComoVazio(element.pedido.cliente.cnpj2)+
