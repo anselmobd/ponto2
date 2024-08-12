@@ -42,7 +42,7 @@ class Cliente(models.Model):
         max_length=100,
         blank=True,
     )
-    fansasia = models.CharField(
+    fantasia = models.CharField(
         "Nome Fantasia",
         max_length=100,
         blank=True,

@@ -46,7 +46,7 @@ class ClienteDownSerializer(serializers.ModelSerializer):
             'usuario',
             'quando',
             'nome',
-            'fansasia',
+            'fantasia',
             'cnpj9',
             'cnpj4',
             'cnpj2',

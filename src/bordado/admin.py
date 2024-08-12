@@ -43,7 +43,7 @@ class ClienteAdmin(CustomModelAdmin):
         ),
         (
             'nome',
-            'fansasia',
+            'fantasia',
         ),
         (
             'cnpj9',

@@ -31,7 +31,7 @@ class AnaliseClienteView(
             {
                 'apelido': ["Apelido"],
                 'nome': ['Nome/Razão Social'],
-                'fansasia': ['Nome Fantasia'],
+                'fantasia': ['Nome Fantasia'],
             },
         )
 
