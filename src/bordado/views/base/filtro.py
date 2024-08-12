@@ -19,36 +19,39 @@ class FiltroParaView():
     self.form: O form da view
     """
 
-    def filtra_cliente__apelido(self):
+    def filtra_cliente__apelido(
+            self,
+            data_field='cliente__apelido',
+            form_field='cliente_apelido'):
         """
         filtra_cliente__apelido supõe:
-        data_field na self.query = cliente__apelido
-        form_field = cliente_apelido
+        data_field em self.query = cliente__apelido
+        form_field em self.form.data = cliente_apelido
         """
-        cliente_apelido = (
-            self.form.data['cliente_apelido']
-            if 'cliente_apelido' in self.form.data
+        apelido = (
+            self.form.data[form_field]
+            if form_field in self.form.data
             else None
         )
 
         def do_filtra():
             self.query = self.query.filter(
-                cliente__apelido = cliente_apelido)
-            self.form.data['cliente_apelido'] = cliente_apelido
+                **{data_field: apelido})
+            self.form.data[form_field] = apelido
 
-        if cliente_apelido:
+        if apelido:
             try:
                 cliente = Cliente.objects.get(
-                    apelido__iexact=cliente_apelido)
-                cliente_apelido = cliente.apelido
+                    apelido__iexact=apelido)
+                apelido = cliente.apelido
                 do_filtra()
             except Cliente.DoesNotExist as _:
-                partes = cliente_apelido.split(' ')
+                partes = apelido.split(' ')
                 regex = r".*\s.*".join(partes)
                 clientes = Cliente.objects.filter(
                     apelido__iregex=regex)
                 if len(clientes) == 1:
-                    cliente_apelido = clientes[0].apelido
+                    apelido = clientes[0].apelido
                     do_filtra()
                     return
 
@@ -62,15 +65,15 @@ class FiltroParaView():
                         apelidos.append('...')
                     msg_erro = (
                         "Mais de um cliente com apelido contendo "
-                        f"'{cliente_apelido}' "
+                        f"'{apelido}' "
                         f"({', '.join(apelidos)})"
                     )
                 else:
                     msg_erro = (
                         "Cliente com apelido contendo "
-                        f"'{cliente_apelido}' não existe"
+                        f"'{apelido}' não existe"
                     )
-                self.form.errors['cliente_apelido'] = [msg_erro]
+                self.form.errors[form_field] = [msg_erro]
                 raise StopStepsException("Filtro de cliente mal definido")
 
     def filtra_valor(self, data_field, form_field):
