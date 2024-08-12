@@ -10,7 +10,7 @@
               {% endfor %}
             </ul>
           {% endif %}
-          {{ field.label_tag }} {{ field }} &nbsp;
+          {{ field.label_tag }} {{ field }}{%if field.help_text%} <span class="helptext">{{ field.help_text }}</span>{% endif %} &nbsp;
         {% endif %}
       {% endfor %}
     {% endfor %}
