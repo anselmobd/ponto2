@@ -367,7 +367,7 @@ onMounted(() => {
                       </select>
                     </div>
                     <div>
-                      <label class="block" for="fansasia">Parcelamento</label>
+                      <label class="block" for="parcelamento">Parcelamento</label>
                       <p v-if="field_error?.parcelamento" class="text-red-800">{{ field_error.parcelamento }}</p>
                       <input
                       class="h-10 border mt-1 rounded px-4 bg-white"

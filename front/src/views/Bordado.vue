@@ -122,7 +122,7 @@ onMounted(() => {
                 <section id="nomes_section">
                   <div class="flex gap-4">
                     <div>
-                      <label class="block" for="fansasia">Nome</label>
+                      <label class="block" for="nome">Nome</label>
                       <p v-if="field_error?.nome" class="text-red-800">{{ field_error.nome }}</p>
                       <input
                       class="h-10 border mt-1 rounded px-4 bg-white"
