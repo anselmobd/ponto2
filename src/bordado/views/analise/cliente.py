@@ -67,3 +67,6 @@ class AnaliseClienteView(
         self.table_defs.hfs_dict_context(
             self.context,
         )
+        if len(self.data) > 1:
+            raise StopStepsException(
+                "Apenas lista clientes")
