@@ -15,8 +15,8 @@ class AnaliseClienteForm(forms.Form):
     a = FormWidgetAttrs()
 
     field_control = [
-        ['ano', 'mes'],
         ['apelido'],
+        ['ano', 'mes'],
     ]
 
     ano = forms.IntegerField(
