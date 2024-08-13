@@ -22,11 +22,13 @@ class FiltroParaView():
     def filtra_cliente__apelido(
             self,
             data_field='cliente__apelido',
-            form_field='cliente_apelido'):
+            form_field='cliente_apelido',
+            query_attr='query'):
         """
-        filtra_cliente__apelido supõe:
-        data_field em self.query = cliente__apelido
-        form_field em self.form.data = cliente_apelido
+        defaults:
+            data_field em self.query = cliente__apelido
+            form_field em self.form.data = cliente_apelido
+            query_attr em self = query
         """
         apelido = (
             self.form.data[form_field]
@@ -35,8 +37,11 @@ class FiltroParaView():
         )
 
         def do_filtra():
-            self.query = self.query.filter(
-                **{data_field: apelido})
+            setattr(self, query_attr,
+                getattr(self, query_attr).filter(
+                    **{data_field: apelido}
+                )
+            )
             self.form.data[form_field] = apelido
 
         if apelido:
