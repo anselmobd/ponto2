@@ -48,7 +48,7 @@ class ListagemLancamentoView(
             'cobranca__nf': ['NF', '', 'c'],
             'cobranca': ['Cobrança', '', 'c'],
             'parcela': [None, '', 'c'],
-            'valor': ['Valor cobrança', '', 'r'],
+            'valor': ['Valor do lançamento', '', 'r'],
             self.PEDIDO: ['Pedido', '-c', 'c'],
             self.VALOR: ['Valor pedido', '-c', 'r'],
         })
