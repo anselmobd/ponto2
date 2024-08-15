@@ -10,6 +10,7 @@ from o2lib.views.base.exception import StopStepsException
 
 from bordado.forms.analise.cliente import AnaliseClienteForm
 from bordado.models import Cliente
+from bordado.queries.lancamento.totalizador import get_totais_lancamentos
 from bordado.queries.pedido.totalizador import get_totais_pedidos
 from bordado.views.base.filtro import FiltroParaView
 
@@ -58,7 +59,8 @@ class AnaliseClienteView(
             {
                 'fechado': 'Pedidos não cobrados',
                 'cobrado': 'Cobranças',
-                # 'recebimentos': None,
+                'recebido': 'Recebimentos',
+                'saldo': None,
             }
         )
 
@@ -156,6 +158,9 @@ class AnaliseClienteView(
 
     def totais_pedidos(self):
         totais = get_totais_pedidos(self.cliente_data[0]['id'])
+        totais_lancamentos = get_totais_lancamentos(self.cliente_data[0]['id'])
+        totais.update(totais_lancamentos)
+        totais['saldo'] = totais['recebido'] - totais['cobrado'] - totais['fechado']
 
         config_totais = {
             'data': [totais],
