@@ -10,6 +10,7 @@ from o2lib.views.base.exception import StopStepsException
 
 from bordado.forms.analise.cliente import AnaliseClienteForm
 from bordado.models import Cliente
+from bordado.queries.pedido.totalizador import get_totais_pedidos
 from bordado.views.base.filtro import FiltroParaView
 
 
@@ -53,6 +54,13 @@ class AnaliseClienteView(
                 'cep': "CEP",
             }
         )
+        self.totais_defs = TableDefsH(
+            {
+                'fechado': 'Pedidos não cobrados',
+                'cobrado': 'Cobranças',
+                # 'recebimentos': None,
+            }
+        )
 
         self.mount_steps = [
             # Mostra lista de clientes ou nomes do cliente
@@ -64,7 +72,7 @@ class AnaliseClienteView(
             self.exec_query_clientes,
             self.prep_clientes_data,
             self.context_list_clientes,
-            
+
             # Mostra dados do cliente
             (self.init_query_cliente, 'query_cliente'),
             (self.filtra_cliente__apelido, [
@@ -73,6 +81,9 @@ class AnaliseClienteView(
             self.exec_query_cliente,
             self.prep_cliente_data,
             self.context_capa_cliente,
+
+            # Mostra totais de pedidos
+            self.totais_pedidos,
         ]
 
     def init_query_cliente(self):
@@ -85,7 +96,7 @@ class AnaliseClienteView(
 
     def values_query_cliente(self):
         self.query_cliente = self.query_cliente.values(
-            *[
+            *[ 'id',
                 *self.lista_clientes_defs.all_fields,
                 *self.cliente_end1_defs.all_fields,
                 *self.cliente_end2_defs.all_fields,
@@ -142,3 +153,16 @@ class AnaliseClienteView(
             self.context,
             sufixo='end2_',
         )
+
+    def totais_pedidos(self):
+        totais = get_totais_pedidos(self.cliente_data[0]['id'])
+
+        config_totais = {
+            'data': [totais],
+            'data_title': "Posição financeira",
+        }
+        self.totais_defs.hfs_dict_context(config_totais)
+
+        self.context.update({
+            'totais': config_totais,
+        })

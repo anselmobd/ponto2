@@ -56,5 +56,8 @@
       {% include "layout/generic/thead.html" with data=end2_headers safe=end2_safe style=end2_style thclass='sticky' group=end2_group only %}
       {% include "layout/generic/tbody.html" with fields=end2_fields data=cliente_data safe=end2_safe style=end2_style group=end2_group only %}
     </table>
+
+    {% include "layout/generic/table.html" with table=totais only %}
+
   {% endif %}
 {% endblock %}
