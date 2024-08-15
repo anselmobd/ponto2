@@ -40,12 +40,17 @@
     {% endif %}
     <table>
       {% include "layout/generic/thead.html" with data=headers safe=safe style=style thclass='sticky' group=group only %}
-      {% include "layout/generic/tbody.html" with fields=fields data=cliente_data safe=safe style=style group=group only %}
+      {% include "layout/generic/tbody.html" with fields=fields data=clientes_data safe=safe style=style group=group only %}
     </table>
 
     <table>
-      {% include "layout/generic/thead.html" with data=num_headers safe=num_safe style=num_style thclass='sticky' group=num_group only %}
-      {% include "layout/generic/tbody.html" with fields=num_fields data=cliente_data safe=num_safe style=num_style group=num_group only %}
+      {% include "layout/generic/thead.html" with data=end1_headers safe=end1_safe style=end1_style thclass='sticky' group=end1_group only %}
+      {% include "layout/generic/tbody.html" with fields=end1_fields data=cliente_data safe=end1_safe style=end1_style group=end1_group only %}
+    </table>
+
+    <table>
+      {% include "layout/generic/thead.html" with data=end2_headers safe=end2_safe style=end2_style thclass='sticky' group=end2_group only %}
+      {% include "layout/generic/tbody.html" with fields=end2_fields data=cliente_data safe=end2_safe style=end2_style group=end2_group only %}
     </table>
   {% endif %}
 {% endblock %}

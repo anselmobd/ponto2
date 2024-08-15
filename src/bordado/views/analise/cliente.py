@@ -3,6 +3,7 @@ from pprint import pprint
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from o2lib.models.dictlist import queryset2dictlist
+from o2lib.models.row_field import PrepRows
 from o2lib.table_defs import TableDefsH
 from o2lib.views.base.get_post import O2BaseGetPostView
 from o2lib.views.base.exception import StopStepsException
@@ -27,68 +28,117 @@ class AnaliseClienteView(
         self.template_name = 'bordado/analise/cliente.html'
         self.title_name = 'Cliente - Analise'
 
-        self.lista_clientes_nomes_defs = TableDefsH(
+        self.lista_clientes_defs = TableDefsH(
             {
-                'apelido': ["Apelido"],
-                'nome': ['Nome/Razão Social'],
-                'fantasia': ['Nome Fantasia'],
+                'apelido': None,
+                'nome': 'Nome/Razão Social',
+                'fantasia': 'Nome Fantasia',
+                'cnpj9': "CNPJ (raiz)",
+                'cnpj4': "CNPJ (filial)",
+                'cnpj2': "CNPJ (dígitos)",
             }
         )
-        self.lista_clientes_numeros_defs = TableDefsH(
+        self.cliente_end1_defs = TableDefsH(
             {
-                'cnpj9': ["CNPJ (raiz)"],
-                'cnpj4': ["CNPJ (filial)"],
-                'cnpj2': ["CNPJ (dígitos)"],
-                'cep': ["CEP"],
+                'logradouro': None,
+                'numero': "Número",
+                'complemento': None,
+            }
+        )
+        self.cliente_end2_defs = TableDefsH(
+            {
+                'bairro': None,
+                'cidade': None,
+                'uf': 'UF',
+                'cep': "CEP",
             }
         )
 
         self.mount_steps = [
-            self.init_query_cliente,
+            # Mostra lista de clientes ou nomes do cliente
+            (self.init_query_cliente, 'query_clientes'),
+            (self.filtra_cliente__apelido, [
+                'apelido', 'apelido', 'query_clientes']),
+            self.values_query_clientes,
+            self.order_query_clientes,
+            self.exec_query_clientes,
+            self.prep_clientes_data,
+            self.context_list_clientes,
+            
+            # Mostra dados do cliente
+            (self.init_query_cliente, 'query_cliente'),
             (self.filtra_cliente__apelido, [
                 'apelido', 'apelido', 'query_cliente']),
             self.values_query_cliente,
-            self.order_query_cliente,
             self.exec_query_cliente,
-            self.context_list_cliente,
-            # Mostra dados de 1 cliente
-            self.init_query_cliente,
-            (self.filtra_cliente__apelido, [
-                'apelido', 'apelido', 'query_cliente']),
+            self.prep_cliente_data,
+            self.context_capa_cliente,
         ]
 
     def init_query_cliente(self):
-        self.query_cliente = Cliente.objects
+        return Cliente.objects
+
+    def values_query_clientes(self):
+        self.query_clientes = self.query_clientes.values(
+            *self.lista_clientes_defs.all_fields
+        )
 
     def values_query_cliente(self):
         self.query_cliente = self.query_cliente.values(
             *[
-                *self.lista_clientes_nomes_defs.all_fields,
-                *self.lista_clientes_numeros_defs.all_fields,
+                *self.lista_clientes_defs.all_fields,
+                *self.cliente_end1_defs.all_fields,
+                *self.cliente_end2_defs.all_fields,
             ]
         )
 
-    def order_query_cliente(self):
-        self.query_cliente = self.query_cliente.order_by('apelido')
+    def order_query_clientes(self):
+        self.query_clientes = self.query_clientes.order_by('apelido')
+
+    def exec_query_clientes(self):
+        self.clientes_data = queryset2dictlist(self.query_clientes)
 
     def exec_query_cliente(self):
         self.cliente_data = queryset2dictlist(self.query_cliente)
-        if not self.cliente_data:
-            raise StopStepsException(
-                "Filtro definido não seleciona nenhum cliente")
 
-    def context_list_cliente(self):
+    def prep_clientes_data(self):
+        PrepRows(
+            self.clientes_data,
+        ).none(
+            (
+                'cnpj9',
+                'cnpj4',
+                'cnpj2',
+            ), 0
+        ).process()
+
+    def prep_cliente_data(self):
+        PrepRows(
+            self.cliente_data,
+        ).none(
+            'numero', ''
+        ).process()
+
+    def context_list_clientes(self):
         self.context.update({
-            'cliente_data': self.cliente_data,
+            'clientes_data': self.clientes_data,
         })
-        self.lista_clientes_nomes_defs.hfs_dict_context(
+        self.lista_clientes_defs.hfs_dict_context(
             self.context,
         )
-        if len(self.cliente_data) > 1:
+        if len(self.clientes_data) > 1:
             raise StopStepsException(
                 "Apenas lista clientes")
 
-        self.lista_clientes_numeros_defs.hfs_dict_context(
+    def context_capa_cliente(self):
+        self.context.update({
+            'cliente_data': self.cliente_data,
+        })
+        self.cliente_end1_defs.hfs_dict_context(
             self.context,
-            sufixo='num_',
+            sufixo='end1_',
+        )
+        self.cliente_end2_defs.hfs_dict_context(
+            self.context,
+            sufixo='end2_',
         )
