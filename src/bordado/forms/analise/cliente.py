@@ -36,7 +36,7 @@ class AnaliseClienteForm(forms.Form):
         widget=forms.TextInput(
             attrs={**a.string, **a.autofocus}
         ),
-        help_text="Se vazio, lista clientes"
+        help_text="Se vazio ou selecionar mais de um cliente, lista clientes"
     )
 
     def __init__(self, *args, **kwargs):

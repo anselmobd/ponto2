@@ -58,7 +58,7 @@ class AnaliseClienteView(
             # Mostra lista de clientes ou nomes do cliente
             (self.init_query_cliente, 'query_clientes'),
             (self.filtra_cliente__apelido, [
-                'apelido', 'apelido', 'query_clientes']),
+                'apelido', 'apelido', 'query_clientes', False]),
             self.values_query_clientes,
             self.order_query_clientes,
             self.exec_query_clientes,
@@ -126,9 +126,9 @@ class AnaliseClienteView(
         self.lista_clientes_defs.hfs_dict_context(
             self.context,
         )
-        if len(self.clientes_data) > 1:
+        if len(self.clientes_data) != 1:
             raise StopStepsException(
-                "Apenas lista clientes")
+                "Lista clientes")
 
     def context_capa_cliente(self):
         self.context.update({
