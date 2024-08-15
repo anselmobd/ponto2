@@ -143,9 +143,18 @@ class TableDefs(object):
             result[col] = def_col
         return result
 
+    def get_fields(self, exclude=None):
+        if exclude:
+            return list(
+                key
+                for key in self.definition.keys()
+                if key not in exclude
+            )
+        return list(self.definition.keys())
+
     @property
     def all_fields(self):
-        return list(self.definition.keys())
+        return self.get_fields()
 
     def cols(self, *cols):
         if cols:
