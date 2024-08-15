@@ -1,5 +1,5 @@
+from decimal import Decimal
 from pprint import pprint
-from collections import defaultdict
 
 from o2lib.models.dictlist import queryset2dictlist
 
@@ -28,7 +28,11 @@ def get_totais_pedidos(cliente=None):
 
     pedido_data = queryset2dictlist(query)
 
-    totais = defaultdict(int)
+    zero = Decimal('0.00')
+    totais = {
+        'fechado': zero,
+        'cobrado': zero,
+    }
 
     for row in pedido_data:
         row['valor'] = (
@@ -43,4 +47,4 @@ def get_totais_pedidos(cliente=None):
         )
         totais[status] += row['valor']
 
-    return dict(totais)
+    return totais
