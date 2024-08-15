@@ -23,7 +23,8 @@ class FiltroParaView():
             self,
             data_field='cliente__apelido',
             form_field='cliente_apelido',
-            query_attr='query'):
+            query_attr='query',
+            apenas_um=True):
         """
         defaults:
             data_field em self.query = cliente__apelido
@@ -60,12 +61,13 @@ class FiltroParaView():
                     do_filtra()
                     return
 
+                msg_erro = ''
                 if not clientes:
                     msg_erro = (
                         "Cliente com apelido contendo "
                         f"'{apelido}' não existe"
                     )
-                else:
+                elif apenas_um:
                     qtd_lista_clientes = 10
                     apelidos = [
                         cliente.apelido
@@ -78,8 +80,16 @@ class FiltroParaView():
                         f"'{apelido}' "
                         f"({', '.join(apelidos)})"
                     )
-                self.form.errors[form_field] = [msg_erro]
-                raise StopStepsException("Filtro de cliente mal definido")
+                else:
+                    setattr(self, query_attr,
+                        getattr(self, query_attr).filter(
+                            **{f'{data_field}__icontains': apelido}
+                        )
+                    )
+
+                if msg_erro:
+                    self.form.errors[form_field] = [msg_erro]
+                    raise StopStepsException("Filtro de cliente mal definido")
 
     def filtra_valor(self, data_field, form_field):
         valor = (
