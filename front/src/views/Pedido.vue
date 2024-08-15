@@ -521,7 +521,6 @@ watch(status, (newStatus) => {
             >{{pedido_item.pedido.cliente.apelido}}</router-link>
             <button
               v-if="pedido_item.pedido.cliente.vazio"
-              class="button-text-shadow"
               :value="pedido_item.pedido.cliente.id"
               @click="handleCriaDadosClienteClick"
               :disabled="status != 'b'"
@@ -546,7 +545,7 @@ watch(status, (newStatus) => {
               @click="handleApagarClick"
               :disabled="status != 'b'"
               title="Apaga pedido"
-            >🗑️</button>
+            >⛔</button>
             <button
               v-if="!pedido_item.cobrancas.length"
               class="button-text-shadow"
@@ -554,14 +553,14 @@ watch(status, (newStatus) => {
               @click="handleFechandoClick"
               :disabled="status != 'b'"
               title="Fecha pedido"
-            >🪡</button>
+            >📦</button>
             <button
               class="button-text-shadow"
               :value="pedido_item.pedido.cliente.apelido"
               @click="handleFinanceiroClick"
               :disabled="status != 'b'"
               title="Financeiro"
-            >💲</button>
+            >💵</button>
           </td>
           <td :title="pedido_item.usuario.username
             +' - '+pedidoItemInseridoEmData(pedido_item)">🛈</td>
@@ -590,9 +589,12 @@ button:disabled {
   @apply bg-slate-500
 }
 .button-text-shadow {
-  text-shadow: 0px 0px 0.5px whitesmoke
+  text-shadow: 1px 1px 5px whitesmoke
+}
+.button-text-shadow:hover {
+  text-shadow: 1px 1px 10px whitesmoke
 }
 .router-link:not(.router-link-active):hover {
-  text-shadow: 1px 1px 2px  rgba(3, 132, 196, 0.7)
+  text-shadow: 1px 1px 2px rgba(3, 132, 196, 0.7)
 }
 </style>
