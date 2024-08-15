@@ -30,7 +30,11 @@
     <input class="button" type="submit" value="Busca"/>
   </form>
   {% if form_method == 'POST' %}
-    {% include "layout/generic/form_inputs_report.html" with form=form h=6 excludes=form_report_excludes only %}
+    {% if cliente_data %}
+      {% include "layout/generic/form_inputs_report.html" with form=form h=6 only %}
+    {% else %}
+      {% include "layout/generic/form_inputs_report.html" with form=form h=6 excludes='ano, mes' only %}
+    {% endif %}
     {% if msg_erro %}
       <ul class="errorlist">
         {% for error in msg_erro %}
