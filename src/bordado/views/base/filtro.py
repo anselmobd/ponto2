@@ -60,7 +60,12 @@ class FiltroParaView():
                     do_filtra()
                     return
 
-                if len(clientes) > 1:
+                if not clientes:
+                    msg_erro = (
+                        "Cliente com apelido contendo "
+                        f"'{apelido}' não existe"
+                    )
+                else:
                     qtd_lista_clientes = 10
                     apelidos = [
                         cliente.apelido
@@ -72,11 +77,6 @@ class FiltroParaView():
                         "Mais de um cliente com apelido contendo "
                         f"'{apelido}' "
                         f"({', '.join(apelidos)})"
-                    )
-                else:
-                    msg_erro = (
-                        "Cliente com apelido contendo "
-                        f"'{apelido}' não existe"
                     )
                 self.form.errors[form_field] = [msg_erro]
                 raise StopStepsException("Filtro de cliente mal definido")
