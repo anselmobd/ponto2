@@ -2,6 +2,7 @@ from pprint import pprint
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from o2lib.codes.cnpj import CNPJ
 from o2lib.models.dictlist import queryset2dictlist
 from o2lib.models.row_field import PrepRows
 from o2lib.table_defs import TableDefsH
@@ -35,11 +36,14 @@ class AnaliseClienteView(
                 'apelido': None,
                 'nome': 'Nome/Razão Social',
                 'fantasia': 'Nome Fantasia',
-                'cnpj9': "CNPJ (raiz)",
-                'cnpj4': "CNPJ (filial)",
-                'cnpj2': "CNPJ (dígitos)",
+                'cnpj': "CNPJ",
             }
         )
+        self.lista_clientes_extra_fields = [
+            'cnpj9',
+            'cnpj4',
+            'cnpj2',
+        ]
         self.cliente_end1_defs = TableDefsH(
             {
                 'logradouro': None,
@@ -93,13 +97,16 @@ class AnaliseClienteView(
 
     def values_query_clientes(self):
         self.query_clientes = self.query_clientes.values(
-            *self.lista_clientes_defs.all_fields
+            *[
+                *self.lista_clientes_defs.get_fields(exclude=['cnpj']),
+                *self.lista_clientes_extra_fields,
+            ]
         )
 
     def values_query_cliente(self):
         self.query_cliente = self.query_cliente.values(
-            *[ 'id',
-                *self.lista_clientes_defs.all_fields,
+            *[
+                'id',
                 *self.cliente_end1_defs.all_fields,
                 *self.cliente_end2_defs.all_fields,
             ]
@@ -124,6 +131,8 @@ class AnaliseClienteView(
                 'cnpj2',
             ), 0
         ).process()
+        for row in self.clientes_data:
+            row['cnpj'] = CNPJ(row['cnpj9'], row['cnpj4'], row['cnpj2'])
 
     def prep_cliente_data(self):
         PrepRows(
