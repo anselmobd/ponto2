@@ -127,12 +127,6 @@ class AnaliseClienteView(
     def prep_clientes_data(self):
         PrepRows(
             self.clientes_data,
-        ).none(
-            (
-                'cnpj9',
-                'cnpj4',
-                'cnpj2',
-            ), 0
         ).a(
             'apelido', 'bordado:analise_cliente', ['apelido_slug'],
         ).process()
