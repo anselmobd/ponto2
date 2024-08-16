@@ -50,8 +50,18 @@ class FiltroParaView():
                 cliente = Cliente.objects.get(
                     apelido__iexact=apelido)
                 apelido = cliente.apelido
-                do_filtra()
+                exato = True
             except Cliente.DoesNotExist as _:
+                try:
+                    cliente = Cliente.objects.get(
+                        apelido_slug__iexact=apelido)
+                    apelido = cliente.apelido
+                    exato = True
+                except Cliente.DoesNotExist as _:
+                    exato = False
+            if exato:
+                do_filtra()
+            else:
                 partes = apelido.split(' ')
                 regex = r".*\s.*".join(partes)
                 clientes = Cliente.objects.filter(
