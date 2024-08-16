@@ -27,16 +27,6 @@ class AnaliseClienteForm(forms.Form):
         help_text="Se vazio ou selecionar mais de um cliente, lista clientes"
     )
 
-    # ano = forms.IntegerField(
-    #     required=False,
-    #     initial=ano_atual,
-    # )
-
-    # mes = forms.IntegerField(
-    #     required=False,
-    #     initial=mes_atual,
-    # )
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.data = self.data.copy()
