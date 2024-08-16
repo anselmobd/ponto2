@@ -86,8 +86,8 @@ urlpatterns = [
         AnaliseCobrancaView.as_view(),
         name='analise_cobranca',
     ),
-    path(
-        'analise_cliente',
+    re_path(
+        r'^analise_cliente/(?P<apelido>.+)?/?$',
         AnaliseClienteView.as_view(),
         name='analise_cliente',
     ),

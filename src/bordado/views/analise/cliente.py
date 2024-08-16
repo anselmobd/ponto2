@@ -28,8 +28,10 @@ class AnaliseClienteView(
         self.form_class_has_initial = True
         self.cleaned_data2self = True
         self.cleaned_data2context = True
-        self.template_name = 'bordado/analise/cliente.html'
-        self.title_name = 'Cliente - Analise'
+        self.template_name = "bordado/analise/cliente.html"
+        self.title_name = "Cliente - Analise"
+        self.get_args = ['apelido']
+        self.get_vars2form = True
 
         self.lista_clientes_defs = TableDefsH(
             {
@@ -40,6 +42,7 @@ class AnaliseClienteView(
             }
         )
         self.lista_clientes_extra_fields = [
+            'apelido_slug',
             'cnpj9',
             'cnpj4',
             'cnpj2',
@@ -130,9 +133,14 @@ class AnaliseClienteView(
                 'cnpj4',
                 'cnpj2',
             ), 0
+        ).a_blank(
+            'apelido', 'bordado:analise_cliente', ['apelido_slug'],
         ).process()
         for row in self.clientes_data:
-            row['cnpj'] = CNPJ(row['cnpj9'], row['cnpj4'], row['cnpj2'])
+            if row['cnpj9']:
+                row['cnpj'] = CNPJ(row['cnpj9'], row['cnpj4'], row['cnpj2'])
+            else:
+                row['cnpj'] = "-"
 
     def prep_cliente_data(self):
         PrepRows(
