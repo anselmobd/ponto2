@@ -16,19 +16,7 @@ class AnaliseClienteForm(forms.Form):
 
     field_control = [
         ['apelido'],
-        ['ano', 'mes'],
     ]
-
-    ano = forms.IntegerField(
-        required=False,
-        initial=ano_atual,
-        widget=forms.NumberInput(),
-    )
-
-    mes = forms.IntegerField(
-        required=False,
-        initial=mes_atual,
-    )
 
     apelido = forms.CharField(
         label='Cliente',
@@ -38,6 +26,16 @@ class AnaliseClienteForm(forms.Form):
         ),
         help_text="Se vazio ou selecionar mais de um cliente, lista clientes"
     )
+
+    # ano = forms.IntegerField(
+    #     required=False,
+    #     initial=ano_atual,
+    # )
+
+    # mes = forms.IntegerField(
+    #     required=False,
+    #     initial=mes_atual,
+    # )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
