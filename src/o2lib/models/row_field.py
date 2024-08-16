@@ -167,6 +167,10 @@ class PrepRows():
         self.custom_command(self._a_blank, *args, **kwargs)
         return self
 
+    def a(self, *args, **kwargs):
+        self.custom_command(self._a, *args, **kwargs)
+        return self
+
     def date(self, *args, **kwargs):
         self.custom_command(self._date, *args, **kwargs)
         return self
