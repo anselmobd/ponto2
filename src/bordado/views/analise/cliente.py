@@ -133,7 +133,7 @@ class AnaliseClienteView(
                 'cnpj4',
                 'cnpj2',
             ), 0
-        ).a_blank(
+        ).a(
             'apelido', 'bordado:analise_cliente', ['apelido_slug'],
         ).process()
         for row in self.clientes_data:
