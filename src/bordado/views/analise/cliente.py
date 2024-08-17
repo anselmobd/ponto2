@@ -13,7 +13,7 @@ from bordado.forms.analise.cliente import AnaliseClienteForm
 from bordado.models import Cliente
 from bordado.queries.lancamento.totalizador import get_totais_lancamentos
 from bordado.queries.pedido.totalizador import get_totais_pedidos
-from bordado.queries.pedido.financeiro_mes import pedido_cliente_por_mes
+from bordado.queries.pedido.financeiro_mes import financeiro_por_mes
 from bordado.views.base.filtro import FiltroParaView
 
 
@@ -195,7 +195,7 @@ class AnaliseClienteView(
         })
 
     def totais_pedidos_por_mes(self):
-        totais = pedido_cliente_por_mes(self.cliente_data[0]['id'])
+        totais = financeiro_por_mes(self.cliente_data[0]['id'])
         pprint(totais)
         config_totais = {
             'data': totais,
