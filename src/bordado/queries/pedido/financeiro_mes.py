@@ -35,6 +35,10 @@ def get_pedido_financeiro_mes(cliente=None):
             cliente=cliente
         )
 
+    query = query.filter(
+        entrega__isnull=False
+    )
+
     query = query.annotate(
         mes=Concat(
             'entrega__year',
