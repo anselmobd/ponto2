@@ -1,3 +1,4 @@
+from decimal import Decimal
 from pprint import pprint
 
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -12,6 +13,7 @@ from o2lib.views.base.exception import StopStepsException
 from bordado.forms.analise.cliente import AnaliseClienteForm
 from bordado.models import Cliente
 from bordado.queries.lancamento.financeiro import get_lancamento_financeiro
+from bordado.queries.lancamento.financeiro_mes import get_lancamento_financeiro_mes
 from bordado.queries.pedido.financeiro import get_pedido_financeiro
 from bordado.queries.pedido.financeiro_mes import get_pedido_financeiro_mes
 from bordado.views.base.filtro import FiltroParaView
@@ -76,6 +78,8 @@ class AnaliseClienteView(
                 'mes': 'Mês',
                 'fechado': 'Pedidos não cobrados',
                 'cobrado': 'Cobranças',
+                'recebido': 'Recebimentos',
+                'saldo': None,
             }
         )
 
@@ -195,7 +199,48 @@ class AnaliseClienteView(
         })
 
     def totais_pedidos_por_mes(self):
-        totais = get_pedido_financeiro_mes(self.cliente_data[0]['id'])
+        totais_pedidos = get_pedido_financeiro_mes(self.cliente_data[0]['id'])
+        totais_lancamentos = get_lancamento_financeiro_mes(
+            self.cliente_data[0]['id'])
+        meses_set = set([
+            *[ item['mes'] for item in totais_pedidos],
+            *[ item['mes'] for item in totais_lancamentos],
+        ])
+        meses = sorted( list(meses_set), reverse=True)
+
+        totais = []
+        for mes in meses:
+            mes_pedido = [
+                item
+                for item in totais_pedidos
+                if item['mes'] == mes
+            ]
+            mes_lancamento = [
+                item
+                for item in totais_lancamentos
+                if item['mes'] == mes
+            ]
+            totais.append({
+                'mes': mes,
+                'fechado': (
+                    mes_pedido[0]['fechado']
+                    if mes_pedido
+                    else Decimal('0.00')
+                ),
+                'cobrado': (
+                    mes_lancamento[0]['cobrado']
+                    if mes_lancamento
+                    else Decimal('0.00')
+                ),
+                'recebido': (
+                    mes_lancamento[0]['recebido']
+                    if mes_lancamento
+                    else Decimal('0.00')
+                ),
+            })
+
+        for row in totais:
+            row['saldo'] = row['recebido'] - row['cobrado'] - row['fechado']
 
         config_totais = {
             'data': totais,
