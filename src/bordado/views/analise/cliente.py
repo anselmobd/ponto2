@@ -13,6 +13,7 @@ from bordado.forms.analise.cliente import AnaliseClienteForm
 from bordado.models import Cliente
 from bordado.queries.lancamento.totalizador import get_totais_lancamentos
 from bordado.queries.pedido.totalizador import get_totais_pedidos
+from bordado.queries.pedido.financeiro_mes import pedido_cliente_por_mes
 from bordado.views.base.filtro import FiltroParaView
 
 
@@ -70,6 +71,13 @@ class AnaliseClienteView(
                 'saldo': None,
             }
         )
+        self.totais_mes_defs = TableDefsH(
+            {
+                'mes': 'Mês',
+                'fechado': 'Pedidos não cobrados',
+                'cobrado': 'Cobranças',
+            }
+        )
 
         self.mount_steps = [
             # Mostra lista de clientes ou nomes do cliente
@@ -91,8 +99,11 @@ class AnaliseClienteView(
             self.prep_cliente_data,
             self.context_capa_cliente,
 
-            # Mostra totais de pedidos
+            # Mostra financeiros gerais
             self.totais_pedidos,
+
+            # Mostra financeiros por mês
+            self.totais_pedidos_por_mes,
         ]
 
     def init_query_cliente(self):
@@ -181,4 +192,17 @@ class AnaliseClienteView(
 
         self.context.update({
             'totais': config_totais,
+        })
+
+    def totais_pedidos_por_mes(self):
+        totais = pedido_cliente_por_mes(self.cliente_data[0]['id'])
+        pprint(totais)
+        config_totais = {
+            'data': totais,
+            'data_title': "Posição financeira por mês",
+        }
+        self.totais_mes_defs.hfs_dict_context(config_totais)
+        pprint(config_totais)
+        self.context.update({
+            'totais_por_mes': config_totais,
         })
