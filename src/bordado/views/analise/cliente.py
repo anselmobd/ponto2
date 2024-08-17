@@ -12,8 +12,8 @@ from o2lib.views.base.exception import StopStepsException
 from bordado.forms.analise.cliente import AnaliseClienteForm
 from bordado.models import Cliente
 from bordado.queries.lancamento.totalizador import get_totais_lancamentos
-from bordado.queries.pedido.totalizador import get_totais_pedidos
-from bordado.queries.pedido.financeiro_mes import financeiro_por_mes
+from bordado.queries.pedido.financeiro import get_pedido_financeiro
+from bordado.queries.pedido.financeiro_mes import get_pedido_financeiro_mes
 from bordado.views.base.filtro import FiltroParaView
 
 
@@ -179,7 +179,7 @@ class AnaliseClienteView(
         )
 
     def totais_pedidos(self):
-        totais = get_totais_pedidos(self.cliente_data[0]['id'])
+        totais = get_pedido_financeiro(self.cliente_data[0]['id'])
         totais_lancamentos = get_totais_lancamentos(self.cliente_data[0]['id'])
         totais.update(totais_lancamentos)
         totais['saldo'] = totais['recebido'] - totais['cobrado'] - totais['fechado']
@@ -195,14 +195,14 @@ class AnaliseClienteView(
         })
 
     def totais_pedidos_por_mes(self):
-        totais = financeiro_por_mes(self.cliente_data[0]['id'])
-        pprint(totais)
+        totais = get_pedido_financeiro_mes(self.cliente_data[0]['id'])
+
         config_totais = {
             'data': totais,
             'data_title': "Posição financeira por mês",
         }
         self.totais_mes_defs.hfs_dict_context(config_totais)
-        pprint(config_totais)
+
         self.context.update({
             'totais_por_mes': config_totais,
         })

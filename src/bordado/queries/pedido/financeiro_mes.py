@@ -24,10 +24,10 @@ from o2lib.models.dictlist import queryset2dictlist
 from bordado.models import Pedido
 
 
-__all__ = ['financeiro_por_mes']
+__all__ = ['get_pedido_financeiro_mes']
 
 
-def financeiro_por_mes(cliente=None):
+def get_pedido_financeiro_mes(cliente=None):
     query = Pedido.objects
 
     if cliente:

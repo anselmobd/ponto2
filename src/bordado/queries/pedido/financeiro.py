@@ -6,10 +6,10 @@ from o2lib.models.dictlist import queryset2dictlist
 from bordado.models import Pedido
 
 
-__all__ = ['get_totais_pedidos']
+__all__ = ['get_pedido_financeiro']
 
 
-def get_totais_pedidos(cliente=None):
+def get_pedido_financeiro(cliente=None):
     query = Pedido.objects
 
     if cliente:
