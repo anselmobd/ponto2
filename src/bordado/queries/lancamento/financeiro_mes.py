@@ -65,7 +65,7 @@ def get_lancamento_financeiro_mes(cliente=None):
     )
 
     query = query.annotate(
-        recebido=Q(cobranca__isnull=False),
+        recebido=Q(cobranca__isnull=True),
     )
 
     query = query.values('mes', 'recebido')
