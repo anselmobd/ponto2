@@ -6,10 +6,10 @@ from o2lib.models.dictlist import queryset2dictlist
 from bordado.models.lancamento import Lancamento
 
 
-__all__ = ['get_totais_lancamentos']
+__all__ = ['get_lancamento_financeiro']
 
 
-def get_totais_lancamentos(cliente=None):
+def get_lancamento_financeiro(cliente=None):
     query = Lancamento.objects
 
     if cliente:
