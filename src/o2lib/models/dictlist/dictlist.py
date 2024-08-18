@@ -3,8 +3,10 @@ from collections import defaultdict
 from functools import lru_cache
 from pprint import pprint
 
-from django.db.models.base import ModelState
-
+from o2lib.models.dictlist.record_key import (
+    record_keys,
+    record_keys2dict,
+)
 
 __all__ = [
     'dictlist_zip_columns',
@@ -17,7 +19,6 @@ __all__ = [
     'dictlist_indexed',
     'dict_def_options',
     'dict_options',
-    'record2dict',
 ]
 
 
@@ -46,31 +47,6 @@ def dictlist_split(dlist, rule):
     for row in dlist:
         parts[rule(row)].append(row)
     return parts[True], parts[False]
-
-
-def record_keys(record):
-    return [
-        key
-        # for key in record.__dict__
-        for key in record
-        if not isinstance(record[key], ModelState)
-    ]
-
-
-def record_keys2dict(record, keys, fkey=lambda x: x):
-    return {
-        # fkey(key): record.__dict__[key]
-        fkey(key): record[key]
-        for key in keys
-    }
-
-
-def record2dict(record, fkey=lambda x: x):
-    return record_keys2dict(
-        record,
-        record_keys(record),
-        fkey
-    )
 
 
 def queryset2dictlist(qs, filter=None):
