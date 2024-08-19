@@ -14,8 +14,12 @@ def get_pedido_financeiro(cliente=None):
 
     if cliente:
         query = query.filter(
-            cliente=cliente
+            cliente=cliente,
         )
+
+    query = query.filter(
+        pedidoitem__isnull=False,
+    )
 
     query = query.values(
         'numero',
