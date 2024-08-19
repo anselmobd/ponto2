@@ -240,6 +240,8 @@ class AnaliseClienteView(
             })
 
         for row in totais:
+            if row['fechado'] is None:
+                row['fechado'] = Decimal('0.00')
             row['saldo'] = row['recebido'] - row['cobrado'] - row['fechado']
 
         config_totais = {
