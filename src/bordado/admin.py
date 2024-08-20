@@ -303,6 +303,9 @@ class PedidoItemCobrancaAdmin(admin.ModelAdmin):
         'cobranca__id',
         'valor',
     ]
+    list_filter = [
+        'cobranca__cliente',
+    ]
 
 
 @admin.register(Lancamento)
