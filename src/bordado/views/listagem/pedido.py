@@ -34,6 +34,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
     PRECO = 'pedidoitem__preco'
     PROGRAMACAO = 'pedidoitem__programacao'
     AJUSTE = 'pedidoitem__ajuste'
+    COBRANCA = 'pedidoitem__cobrancas__cobranca'
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -60,6 +61,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             self.PROGRAMACAO: ["Programação", 'r'],
             self.AJUSTE: ["Ajuste", 'r'],
             'valor': ['', 'r'],
+            self.COBRANCA: ['Cobrança', 'c'],
         })
 
         self.mount_steps = [
@@ -121,6 +123,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             (
                 self.BORDADO_CODIGO,
                 self.ENTREGA,
+                self.COBRANCA,
             )
         ).str(
             (
