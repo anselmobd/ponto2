@@ -17,7 +17,7 @@ class ListagemPedidoForm(forms.Form):
         ['cliente_apelido', 'numero'],
         ['data_de', 'data_ate'],
         ['entrega_de', 'entrega_ate'],
-        ['fechamento'],
+        ['fechamento', 'cobranca'],
     ]
 
     cliente_apelido = forms.CharField(
@@ -61,6 +61,17 @@ class ListagemPedidoForm(forms.Form):
     ]
     fechamento = forms.ChoiceField(
         label='Quanto ao fechamento',
+        choices=CHOICES,
+        initial='',
+        required=False,
+    )
+    CHOICES = [
+        ('', 'Não filtra'),
+        ('c', 'Cobrado'),
+        ('n', 'Não cobrado'),
+    ]
+    cobranca = forms.ChoiceField(
+        label='Quanto à cobrança',
         choices=CHOICES,
         initial='',
         required=False,
