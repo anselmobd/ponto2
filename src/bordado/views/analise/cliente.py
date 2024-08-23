@@ -240,6 +240,7 @@ class AnaliseClienteView(
             })
 
         for row in totais:
+            row['mes'] = '/'.join(row['mes'].split('-')[::-1])
             if row['fechado'] is None:
                 row['fechado'] = Decimal('0.00')
             row['saldo'] = row['recebido'] - row['cobrado'] - row['fechado']
