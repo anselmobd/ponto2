@@ -42,6 +42,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
         self.form_class_has_initial = True
         self.cleaned_data2self = True
         self.cleaned_data2context = True
+        self.cleaned_data2data = True
         self.template_name = 'bordado/listagem/pedido.html'
         self.title_name = "Pedido - Listagem"
         self.get_args = ['numero']
