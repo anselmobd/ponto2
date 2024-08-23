@@ -6,7 +6,7 @@ __all__ = [
 ]
 
 
-def form_report(form, form_report_excludes=[]):
+def form_report(form, form_report_excludes=[], field_modifier={}):
     if hasattr(form, 'field_control'):
         field_control = form.field_control
     else:
@@ -15,15 +15,17 @@ def form_report(form, form_report_excludes=[]):
     result = []
     for lin in field_control:
         line = {}
-        for col in lin:
-            if col in form_report_excludes:
+        for field in lin:
+            if field in form_report_excludes:
                 continue
-            value = form.cleaned_data[col]
-            if form.fields[col].widget.input_type == 'select':
-                value = dict(form.fields[col].choices)[value]
+            value = form.cleaned_data[field]
+            if form.fields[field].widget.input_type == 'select':
+                value = dict(form.fields[field].choices)[value]
+            if field in field_modifier:
+                value = field_modifier[field](value)
             if value:
-                if not (label := form.fields[col].label):
-                    label = col.title()
+                if not (label := form.fields[field].label):
+                    label = field.title()
                 line[label] = value
         if line:
             result.append(line)
