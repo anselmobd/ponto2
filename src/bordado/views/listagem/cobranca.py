@@ -3,6 +3,7 @@ from pprint import pprint
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from o2lib.form.form_report import form_report
 from o2lib.models.row_field import PrepRows
 from o2lib.models.dictlist import queryset2dictlist
 from o2lib.table_defs import TableDefsHpS
@@ -68,6 +69,7 @@ class ListagemCobrancaView(
             self.order_query,
             self.exec_query,
             self.context_table,
+            self.form_report,
         ]
 
     def init_query(self):
@@ -140,3 +142,8 @@ class ListagemCobrancaView(
             'group': group,
         })
         self.table_defs.hfs_dict_context(self.context)
+
+    def form_report(self):
+        self.context.update({
+            'form_report': form_report(self.form),
+        })
