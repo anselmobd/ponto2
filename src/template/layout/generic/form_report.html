@@ -1,5 +1,5 @@
 {% for linha in form_report %}
-  <h{{h}}>{% for coluna in linha %}
+  <h{{h|default:6}}>{% for coluna in linha %}
     {% if not forloop.first %} &nbsp; {% endif %}{{coluna}}{%if coluna|last not in ":?" %}:{% endif %} <b>{{linha|get_item:coluna}}</b>
-  {% endfor %}</h{{h}}>
+  {% endfor %}</h{{h|default:6}}>
 {% endfor %}

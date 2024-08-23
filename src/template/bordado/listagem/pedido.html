@@ -30,7 +30,7 @@
     <input class="button" type="submit" value="Busca"/>
   </form>
   {% if form_method == 'POST' %}
-    {% include "layout/generic/form_report.html" with form_report=form_report h=6 only %}
+    {% include "layout/generic/form_report.html" with form_report=form_report only %}
     {% if msg_erro %}
       <ul class="errorlist">
         {% for error in msg_erro %}
