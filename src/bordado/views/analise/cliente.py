@@ -6,7 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from o2lib.codes.cnpj import CNPJ
 from o2lib.models.dictlist import queryset2dictlist
 from o2lib.models.row_field import PrepRows
-from o2lib.table_defs import TableDefsH
+from o2lib.table_defs import TableDefsH, TableDefsHpS
 from o2lib.views.base.get_post import O2BaseGetPostView
 from o2lib.views.base.exception import StopStepsException
 
@@ -65,21 +65,21 @@ class AnaliseClienteView(
                 'cep': "CEP",
             }
         )
-        self.totais_defs = TableDefsH(
+        self.totais_defs = TableDefsHpS(
             {
-                'fechado': 'Pedidos não cobrados',
-                'cobrado': 'Cobranças',
-                'recebido': 'Recebimentos',
-                'saldo': None,
+                'fechado': ['Pedidos não cobrados', 'r'],
+                'cobrado': ['Cobranças', 'r'],
+                'recebido': ['Recebimentos', 'r'],
+                'saldo': ['', 'r'],
             }
         )
-        self.totais_mes_defs = TableDefsH(
+        self.totais_mes_defs = TableDefsHpS(
             {
-                'mes': 'Mês',
-                'fechado': 'Pedidos não cobrados',
-                'cobrado': 'Cobranças',
-                'recebido': 'Recebimentos',
-                'saldo': None,
+                'mes': ['Mês'],
+                'fechado': ['Pedidos não cobrados', 'r'],
+                'cobrado': ['Cobranças', 'r'],
+                'recebido': ['Recebimentos', 'r'],
+                'saldo': ['', 'r'],
             }
         )
 
