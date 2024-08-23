@@ -2,6 +2,7 @@ from pprint import pprint
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from o2lib.form.form_report import form_report
 from o2lib.models.row_field import PrepRows
 from o2lib.models.dictlist import queryset2dictlist
 from o2lib.table_defs import TableDefsHBpSD
@@ -40,6 +41,8 @@ class ListagemLancamentoView(
         self.cleaned_data2context = True
         self.template_name = 'bordado/listagem/lancamento.html'
         self.title_name = "Lançamento - Listagem"
+
+        self.form_report_excludes = []
         self.table_defs = TableDefsHBpSD({
             self.CLIENTE: ['Cliente'],
             'data': [],
@@ -69,6 +72,7 @@ class ListagemLancamentoView(
             self.group_table,
             self.totalize_table,
             self.context_table,
+            self.form_report,
         ]
 
     def init_query(self):
@@ -106,9 +110,7 @@ class ListagemLancamentoView(
 
     def filtra_tipo(self):
         if self.tipo_lancamento == '-':
-            self.context.update({
-                'form_report_excludes': ['tipo_lancamento'],
-            })
+            self.form_report_excludes.append('tipo_lancamento')
         elif self.tipo_lancamento == 'c':
             self.query = self.query.filter(cobranca__isnull=False)
         elif self.tipo_lancamento == 'r':
@@ -183,3 +185,11 @@ class ListagemLancamentoView(
             self.context,
             bitmap=self.tipo_lancamento,
         )
+
+    def form_report(self):
+        self.context.update({
+            'form_report': form_report(
+                self.form,
+                self.form_report_excludes,
+            ),
+        })
