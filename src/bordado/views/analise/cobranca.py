@@ -197,5 +197,8 @@ class AnaliseCobrancaView(
 
     def form_report(self):
         self.context.update({
-            'form_report': form_report(self.form),
+            'form_report': form_report(
+                self.form,
+                field_modifier={'ano': str}
+            ),
         })
