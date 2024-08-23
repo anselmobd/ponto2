@@ -4,6 +4,7 @@ from pprint import pprint
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import F
 
+from o2lib.form.form_report import form_report
 from o2lib.models.row_field import PrepRows
 from o2lib.models.dictlist import queryset2dictlist
 from o2lib.table_defs import TableDefsHpS
@@ -48,6 +49,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
         self.get_args = ['numero']
         self.get_vars2form = True
 
+        self.form_report_excludes = []
         self.table_defs = TableDefsHpS({
             'numero': ['Nº', 'c'],
             self.DATA: ['Data', 'c'],
@@ -80,6 +82,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             self.prep_table,
             self.totalize_table,
             self.context_table,
+            self.form_report,
         ]
 
     def init_query(self):
@@ -87,9 +90,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
 
     def filtra_fechamento(self):
         if self.fechamento == '':
-            self.context.update({
-                'form_report_excludes': ['fechamento'],
-            })
+            self.form_report_excludes.append('fechamento')
         elif self.fechamento == 'f':
             self.query = self.query.filter(entrega__isnull=False)
         elif self.fechamento == 'n':
@@ -97,9 +98,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
 
     def filtra_cobranca(self):
         if self.cobranca == '':
-            self.context.update({
-                'form_report_excludes': ['cobranca'],
-            })
+            self.form_report_excludes.append('cobranca')
         elif self.cobranca == 'c':
             self.query = self.query.filter(
                 pedidoitem__cobrancas__cobranca__isnull=False)
@@ -168,3 +167,11 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             'data': self.data,
         })
         self.table_defs.hfs_dict_context(self.context)
+
+    def form_report(self):
+        self.context.update({
+            'form_report': form_report(
+                self.form,
+                self.form_report_excludes,
+            ),
+        })
