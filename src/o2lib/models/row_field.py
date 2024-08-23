@@ -1,3 +1,4 @@
+import datetime
 from pprint import pprint
 
 from django.urls import reverse
@@ -123,7 +124,8 @@ class PrepRows():
     def _to_date(self, row, field, field_is_empty=None):
         empty = is_empty(row[field]) if field_is_empty is None else field_is_empty
         if not empty:
-            row[field] = row[field].date()
+            if not isinstance(row[field], datetime.date):
+                row[field] = row[field].date()
 
     def _date(self, row, field, default=None):
         empty = is_empty(row[field])
