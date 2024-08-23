@@ -22,7 +22,9 @@ def form_report(form, form_report_excludes=[]):
             if form.fields[col].widget.input_type == 'select':
                 value = dict(form.fields[col].choices)[value]
             if value:
-                line[form.fields[col].label] = value
+                if not (label := form.fields[col].label):
+                    label = col.title()
+                line[label] = value
         if line:
             result.append(line)
 
