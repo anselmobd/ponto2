@@ -135,8 +135,11 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
         ).str_dash(
             (
                 self.BORDADO_CODIGO,
-                self.ENTREGA,
                 self.COBRANCA,
+            )
+        ).date_dash(
+            (
+                self.ENTREGA,
             )
         ).str(
             (
