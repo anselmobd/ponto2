@@ -107,6 +107,12 @@ class CustomView(View):
         if self.mount_steps:
             self.do_steps()
 
+    def post_mount_context(self):
+        """
+        Metodo de pós-montagem de contexto
+        """
+        pass
+
     def do_steps(self, steps=None, msg_erro='msg_erro'):
         """Metodo de que recebe lista de metodos e os executa.
 
