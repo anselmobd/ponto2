@@ -7,6 +7,7 @@ from django.db.models.functions import Concat
 from django.http import QueryDict
 from django.urls import reverse
 
+from o2lib.form.form_report import form_report
 from o2lib.models.dictlist import queryset2dictlist
 from o2lib.models.row_field import PrepRows
 from o2lib.table_defs import TableDefsHBpSD
@@ -70,6 +71,7 @@ class AnaliseCobrancaView(
             self.totalize_table,
             self.prep_table,
             self.context_table,
+            self.form_report,
         ]
 
     def processa_parametros(self):
@@ -192,3 +194,8 @@ class AnaliseCobrancaView(
             self.context,
             bitmap=self.totaliza,
         )
+
+    def form_report(self):
+        self.context.update({
+            'form_report': form_report(self.form),
+        })
