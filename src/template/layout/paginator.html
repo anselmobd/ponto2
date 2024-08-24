@@ -1,0 +1,79 @@
+{% with pag_neib=data.paginator.pag_neib|stringformat:"i" %}
+{% with pag_neibn="-"|add:pag_neib %}
+{% if data.paginator.num_pages != 1 %}
+  <ul class="pagination">
+    {% if data.number > 1 %}
+      <li title="Anterior {{ data.number|add:-1 }}">
+        <a href="#"
+          onclick="o2SetPageAndSubmit({{ data.number|add:-1 }})"
+        >
+          <span>&lt;</span>
+        </a>
+      </li>
+    {% else %}
+      <li class="disabled">
+        <a><span>&lt;</span></a>
+      </li>
+    {% endif %}
+    {% if data.number < data.paginator.num_pages %}
+      <li title="Posterior {{ data.number|add:1 }}">
+        <a href="#"
+          onclick="o2SetPageAndSubmit({{ data.number|add:1 }})"
+        >
+          <span>&gt;</span>
+        </a>
+      </li>
+    {% else %}
+      <li class="disabled">
+        <a><span>&gt;</span></a>
+      </li>
+    {% endif %}
+    &nbsp;
+
+    {% if data.number > pag_neib|add:1 %}
+      <li title="Primeira 1">
+        <a href="#" onclick="o2SetPageAndSubmit(1)">
+          1
+          {% if data.number > pag_neib|add:2 %}
+            <span>&Lt;</span>
+          {% endif %}
+        </a>
+      </li>
+      {% if data.number > pag_neib|add:2 %}
+        &nbsp;
+      {% endif %}
+    {% endif %}
+
+    {% for i in data.paginator.page_range %}
+      {% if i >= data.number|add:pag_neibn %}
+        {% if i <= data.number|add:pag_neib %}
+          {% if data.number == i %}
+            <li class="active"><a>{{ i }}</a></li>
+          {% else %}
+            <li>
+              <a href="#" onclick="o2SetPageAndSubmit({{ i }})">{{ i }}</a>
+            </li>
+          {% endif %}
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+    
+    {% if data.number < data.paginator.num_pages|add:pag_neibn %}
+      {% if data.number < data.paginator.num_pages|add:pag_neibn|add:"-1" %}
+        &nbsp;
+      {% endif %}
+      <li title="Última {{ data.paginator.num_pages }}">
+        <a href="#"
+          onclick="o2SetPageAndSubmit({{ data.paginator.num_pages }})"
+        >
+          {% if data.number < data.paginator.num_pages|add:pag_neibn|add:"-1" %}
+            <span>&Gt;</span>
+          {% endif %}
+          {{ data.paginator.num_pages }}
+        </a>
+      </li>
+    {% endif %}
+  </ul>
+{% endif %}
+{% endwith %}
+{% endwith %}

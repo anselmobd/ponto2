@@ -1,0 +1,61 @@
+{% if url_name %}
+  {% url url_name as url_name_link %}
+{% endif %}
+{% with var_page_name=var_page|default:'page' extra_var_name=extra_var|default:'----' pag_neib=data.paginator.pag_neib|stringformat:"i" %}
+{% with clean_url_gets=url_gets|gets_without:var_page_name|gets_without:extra_var_name pag_neibn="-"|add:pag_neib %}
+{% if data.paginator.num_pages != 1 %}
+  !!!!!!! adaptar, seguindo o padrão do paginator.html
+  <ul class="pagination">
+    {% if data.number > 1 %}
+      <li title="Anterior {{ data.number|add:-1 }}"><a href="{% firstof url_link url_name_link %}?{{clean_url_gets|if_text_sufix:'&'}}{% if extra_var %}{{ extra_var|add:'='|add:extra_value|add:'&' }}{% endif %}{{ var_page_name }}={{ data.number|add:-1 }}">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+      </a></li>
+    {% else %}
+      <li><a href="#" onclick="false">
+        <span class="glyphicon glyphicon-chevron-left" style="color: gray;"></span>
+      </a></li>
+    {% endif %}
+    {% if data.number < data.paginator.num_pages %}
+      <li title="Próxima {{ data.number|add:1 }}"><a href="{% firstof url_link url_name_link %}?{{clean_url_gets|if_text_sufix:'&'}}{% if extra_var %}{{ extra_var|add:'='|add:extra_value|add:'&' }}{% endif %}{{ var_page_name }}={{ data.number|add:1 }}">
+        <span class="glyphicon glyphicon-chevron-right"></span>
+      </a></li>
+    {% else %}
+      <li><a href="#" onclick="false">
+        <span class="glyphicon glyphicon-chevron-right" style="color: gray;"></span>
+      </a></li>
+    {% endif %}
+  </ul>
+  <ul class="pagination">
+    {% if data.number > pag_neib|add:1 %}
+      <li><a href="{% firstof url_link url_name_link %}?{{clean_url_gets|if_text_sufix:'&'}}{% if extra_var %}{{ extra_var|add:'='|add:extra_value|add:'&' }}{% endif %}{{ var_page_name }}=1">
+        <span>1
+          {% if data.number > pag_neib|add:2 %}
+            <span class="glyphicon glyphicon-chevron-left" style="text-shadow: lightblue 4px 0px;"></span>
+          {% endif %}
+        </span>
+      </a></li>
+    {% endif %}
+    {% for i in data.paginator.page_range %}
+      {% if i >= data.number|add:pag_neibn %}
+        {% if i <= data.number|add:pag_neib %}
+          {% if data.number == i %}
+            <li class="active"><span>{{ i }}<span class="sr-only">(current)</span></span></li>
+          {% else %}
+            <li><a href="{% firstof url_link url_name_link %}?{{clean_url_gets|if_text_sufix:'&'}}{% if extra_var %}{{ extra_var|add:'='|add:extra_value|add:'&' }}{% endif %}{{ var_page_name }}={{ i }}">{{ i }}</a></li>
+          {% endif %}
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+    {% if data.number < data.paginator.num_pages|add:pag_neibn %}
+      <li><a href="{% firstof url_link url_name_link %}?{{clean_url_gets|if_text_sufix:'&'}}{% if extra_var %}{{ extra_var|add:'='|add:extra_value|add:'&' }}{% endif %}{{ var_page_name }}={{ data.paginator.num_pages }}">
+        <span>
+          {% if data.number < data.paginator.num_pages|add:pag_neibn|add:"-1" %}
+            <span class="glyphicon glyphicon-chevron-right" style="text-shadow: lightblue -4px 0px;"></span>
+          {% endif %}
+        {{ data.paginator.num_pages }}</span>
+      </a></li>
+    {% endif %}
+  </ul>
+{% endif %}
+{% endwith %}
+{% endwith %}
