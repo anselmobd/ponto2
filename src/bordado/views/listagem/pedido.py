@@ -79,9 +79,12 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             self.order_query,
             self.annotate_query,
             self.exec_query,
-            self.prep_table,
-            self.totalize_table,
+            self.pre_prep_table,
+            self.calcula_totalizador_geral,
             self.paginador,
+            self.prep_table,
+            self.calcula_totalizador_pagina,
+            self.append_totalizador_geral,
             self.context_table,
             self.form_report,
         ]
@@ -130,9 +133,16 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             raise StopStepsException(
                 "Filtro definido não seleciona nenhum pedido")
 
-    def prep_table(self):
+    def pre_prep_table(self):
         PrepRows(
             self.data,
+        ).none(
+            'valor', Decimal('0.00')
+        ).process()
+
+    def prep_table(self):
+        PrepRows(
+            self.data.object_list,
         ).str_dash(
             (
                 self.BORDADO_CODIGO,
@@ -147,25 +157,40 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
                 self.BORDADO_NOME,
             ),
             '<Erro!>',
-        ).none(
-            'valor', Decimal('0.00')
         ).process()
 
-    def totalize_table(self):
+    def calcula_totalizador_geral(self):
         totalize_data(
             self.data,
             {
                 'sum': ['valor'],
-                'descr': {self.AJUSTE: 'Total:'},
+                'descr': {self.BORDADO_NOME: 'Total geral:'},
                 'row_style':
                     "font-weight: bold;"
                     "background-image: linear-gradient(#DDD, white);",
             }
         )
+        self.totalizador = self.data.pop()
 
     def paginador(self):
         self.data = paginator_basic(
             self.data, self.por_pagina, self.page, pag_neib=3)
+
+    def calcula_totalizador_pagina(self):
+        if self.data.paginator.num_pages > 1:
+            totalize_data(
+                self.data.object_list,
+                {
+                    'sum': ['valor'],
+                    'descr': {self.BORDADO_NOME: 'Total da página:'},
+                    'row_style':
+                        "font-weight: bold;"
+                        "background-image: linear-gradient(#DDD, white);",
+                }
+            )
+
+    def append_totalizador_geral(self):
+        self.data.object_list.append(self.totalizador)
 
     def context_table(self):
         self.context.update({
