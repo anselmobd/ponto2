@@ -3,7 +3,6 @@ from pprint import pprint
 from django import forms
 
 from o2lib.form.widget_attrs import FormWidgetAttrs
-from o2lib.date import ano_atual, mes_atual
 
 
 __all__ = [
