@@ -2,8 +2,19 @@ from datetime import date
 from pprint import pprint
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Sum, CharField, Value
-from django.db.models.functions import Concat
+from django.db.models import (
+    CharField,
+    Sum,
+    Value,
+)
+from django.db.models.fields import (
+    TextField,
+)
+from django.db.models.functions import (
+    Cast,
+    Concat,
+    LPad,
+)
 from django.http import QueryDict
 from django.urls import reverse
 
@@ -85,7 +96,11 @@ class AnaliseCobrancaView(
             mes=Concat(
                 'data__year',
                 Value('-'),
-                'data__month',
+                LPad(
+                    Cast('data__month', TextField()),
+                    2,
+                    Cast(0, TextField()),
+                ),
                 output_field=CharField()
             )
         )
