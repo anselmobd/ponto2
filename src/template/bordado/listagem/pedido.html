@@ -9,6 +9,7 @@
 {% block style %}
   <style>
     {% include 'layout/simple_table.css' %}
+    {% include "layout/paginator_stylesheet.css" %}
     .errorlist {
       color: darkred;
       margin: 0.25rem;
@@ -24,10 +25,10 @@
 {% endblock %}
 
 {% block content %}
-  <form class="noprint" action="{% url 'bordado:listagem_pedido' %}" method="post">
+  <form class="noprint" action="{% url 'bordado:listagem_pedido' %}" method="post" name="myForm">
     {% csrf_token %}
     {% include "layout/generic/form_field_control.html" with form=form only %}
-    <input class="button" type="submit" value="Busca"/>
+    <input class="button" type="submit" value="Busca" onclick="o2SetPage1AndSubmit()"/>
   </form>
   {% if form_method == 'POST' %}
     {% include "layout/generic/form_report.html" with form_report=form_report only %}
@@ -38,9 +39,17 @@
         {% endfor %}
       </ul>
     {% endif %}
+    {% include "layout/paginator.html" with data=data url_name='cd:novo_estoque' only %}
     <table>
       {% include "layout/generic/thead.html" with data=headers safe=safe style=style thclass='sticky' group=group only %}
       {% include "layout/generic/tbody.html" with fields=fields data=data safe=safe style=style group=group only %}
     </table>
+    {% include "layout/paginator.html" with data=data url_name='cd:novo_estoque' only %}
   {% endif %}
+{% endblock %}
+
+{% block javascript %}
+  <script type="text/javascript">
+    {% include "layout/paginator_javascript.js" with form='myForm' field='page' only %}
+  </script>
 {% endblock %}

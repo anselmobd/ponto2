@@ -8,11 +8,10 @@ from o2lib.form.form_report import form_report
 from o2lib.models.row_field import PrepRows
 from o2lib.models.dictlist import queryset2dictlist
 from o2lib.table_defs import TableDefsHpS
-from o2lib.views.main import (
-    totalize_data,
-)
 from o2lib.views.base.get_post import O2BaseGetPostView
 from o2lib.views.base.exception import StopStepsException
+from o2lib.views.main import totalize_data
+from o2lib.views.paginator import paginator_basic
 
 from bordado.forms.listagem.pedido import ListagemPedidoForm
 from bordado.models import Pedido
@@ -49,6 +48,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
         self.get_args = ['numero']
         self.get_vars2form = True
 
+        self.por_pagina = 50
         self.form_report_excludes = []
         self.table_defs = TableDefsHpS({
             'numero': ['Nº', 'c'],
@@ -81,6 +81,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             self.exec_query,
             self.prep_table,
             self.totalize_table,
+            self.paginador,
             self.context_table,
             self.form_report,
         ]
@@ -161,6 +162,10 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
                     "background-image: linear-gradient(#DDD, white);",
             }
         )
+
+    def paginador(self):
+        self.data = paginator_basic(
+            self.data, self.por_pagina, self.page, pag_neib=3)
 
     def context_table(self):
         self.context.update({

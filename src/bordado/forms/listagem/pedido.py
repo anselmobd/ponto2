@@ -76,6 +76,10 @@ class ListagemPedidoForm(forms.Form):
         initial='',
         required=False,
     )
+    page = forms.IntegerField(
+        required=False,
+        widget=forms.HiddenInput()
+    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
