@@ -158,18 +158,21 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             '<Erro!>',
         ).process()
 
-    def calcula_totalizador_geral(self):
+    def calcula_totalizador(self, dados, descr):
         totalize_data(
-            self.data,
+            dados,
             {
                 'sum': ['valor'],
-                'descr': {self.BORDADO_NOME: 'Total geral:'},
+                'descr': {self.CLIENTE: descr},
                 'row_style':
                     "font-weight: bold;"
                     "background-image: linear-gradient(#DDD, white);",
             }
         )
-        self.totalizador = self.data.pop()
+
+    def calcula_totalizador_geral(self):
+        self.calcula_totalizador(self.data, "Total geral:")
+        self.total_geral = self.data.pop()
 
     def paginador(self):
         self.por_pagina = int(self.por_pagina)
@@ -183,19 +186,10 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
 
     def calcula_totalizador_pagina(self):
         if self.data.paginator.num_pages > 1:
-            totalize_data(
-                self.data.object_list,
-                {
-                    'sum': ['valor'],
-                    'descr': {self.BORDADO_NOME: 'Total da página:'},
-                    'row_style':
-                        "font-weight: bold;"
-                        "background-image: linear-gradient(#DDD, white);",
-                }
-            )
+            self.calcula_totalizador(self.data.object_list, "Total da página:")
 
     def append_totalizador_geral(self):
-        self.data.object_list.append(self.totalizador)
+        self.data.object_list.insert(0, self.total_geral)
 
     def context_table(self):
         self.context.update({
