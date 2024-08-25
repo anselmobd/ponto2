@@ -48,7 +48,6 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
         self.get_args = ['numero']
         self.get_vars2form = True
 
-        self.por_pagina = 50
         self.form_report_excludes = []
         self.table_defs = TableDefsHpS({
             'numero': ['Nº', 'c'],
@@ -173,8 +172,14 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
         self.totalizador = self.data.pop()
 
     def paginador(self):
-        self.data = paginator_basic(
-            self.data, self.por_pagina, self.page, pag_neib=3)
+        self.por_pagina = int(self.por_pagina)
+        if not self.por_pagina:
+            self.form_report_excludes.append('por_pagina')
+            self.data = paginator_basic(
+                self.data, 999_999, 1)
+        else:
+            self.data = paginator_basic(
+                self.data, self.por_pagina, self.page, pag_neib=4)
 
     def calcula_totalizador_pagina(self):
         if self.data.paginator.num_pages > 1:

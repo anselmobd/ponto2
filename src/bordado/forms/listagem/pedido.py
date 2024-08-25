@@ -18,17 +18,18 @@ class ListagemPedidoForm(forms.Form):
         ['data_de', 'data_ate'],
         ['entrega_de', 'entrega_ate'],
         ['fechamento', 'cobranca'],
+        ['por_pagina']
     ]
 
     cliente_apelido = forms.CharField(
-        label='Cliente',
+        label="Cliente",
         required=False,
         widget=forms.TextInput(
             attrs={**a.autofocus, **a.string}
         ),
     )
     numero = forms.CharField(
-        label='Pedido nº',
+        label="Pedido nº",
         required=False,
         widget=forms.TextInput(
             attrs={**a.number, **a.placeholder_0, **a.size_6}
@@ -55,26 +56,35 @@ class ListagemPedidoForm(forms.Form):
         widget=forms.DateInput(attrs={'type': 'date'}),
     )
     CHOICES = [
-        ('', 'Não filtra'),
-        ('f', 'Fechado'),
-        ('n', 'Não fechado'),
+        ('', "Não filtra"),
+        ('f', "Fechado"),
+        ('n', "Não fechado"),
     ]
     fechamento = forms.ChoiceField(
-        label='Quanto ao fechamento',
+        label="Quanto ao fechamento",
         choices=CHOICES,
         initial='',
         required=False,
     )
     CHOICES = [
-        ('', 'Não filtra'),
-        ('c', 'Cobrado'),
-        ('n', 'Não cobrado'),
+        ('', "Não filtra"),
+        ('c', "Cobrado"),
+        ('n', "Não cobrado"),
     ]
     cobranca = forms.ChoiceField(
-        label='Quanto à cobrança',
+        label="Quanto à cobrança",
         choices=CHOICES,
         initial='',
         required=False,
+    )
+    por_pagina = forms.CharField(
+        label="Pedidos por página",
+        help_text="Se zero, desliga paginação.",
+        required=True,
+        initial='50',
+        widget=forms.TextInput(
+            attrs={**a.number, **a.placeholder_0, **a.size_6}
+        ),
     )
     page = forms.IntegerField(
         required=False,
