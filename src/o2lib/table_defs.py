@@ -263,11 +263,10 @@ class TableDefs(object):
 
 class TableDefsH(TableDefs):
 
-    def __init__(self, definition, style={}):
+    def __init__(self, definition):
         super().__init__(
             definition,
             ['header'],
-            style=style,
         )
 
 
