@@ -6,35 +6,12 @@
   <link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
   <title>Ponto2 b . Bordado industrial - © 2023 RPR & Oxigenai</title>
   <link href="{% static "css/base.css" %}" rel="stylesheet">
-  <style>
-    .header_div {
-      padding-left: 1rem/* 16px */;
-      padding-right: 1rem/* 16px */;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
-      border-width: 0 0 1px 0;
-      border-style: solid;
-      border-color: black;
-    }
-    .header_a_logo {
-      font-size: 1.5rem/* 24px */;
-      line-height: 2rem/* 32px */;
-      font-weight: bolder;
-      text-decoration: none;
-      color: rgb(2 132 199);
-    }
-    .main_body {
-      padding: 0 1rem/* 16px */;
-    }
-    </style>
-    {% block style %}{% endblock %}
+  {% block style %}{% endblock %}
 </head>
 <body>
-  <header class="header_div">
+  <header class="layout_header">
     <a
-      class="header_a_logo"
+      class="layout_header_a_logo"
       href="{% url 'index' %}"
     >
       RPR - Ponto2 <span class="text-sm">b</span>
@@ -71,7 +48,7 @@
     </div>
   </header>
 
-  <main class="main_body">
+  <main class="layout_body">
     <header>
       {% block header %}
         {% block header.open %}<h3>{% endblock header.open %}{% block header.content %}
