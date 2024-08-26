@@ -9,8 +9,18 @@ th, td {
   text-align: left;
   padding: 2px;
 }
-tr:nth-child(even) {
-  background-color: #f2f2f2
+tr:nth-child(even):not(.totalizador) {
+  position: relative;
+}
+tr:nth-child(even):not(.totalizador)::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.08);
+  pointer-events: none;
 }
 div#divTable {
   overflow-x: auto;
