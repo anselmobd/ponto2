@@ -7,7 +7,7 @@ from django.db.models import F
 from o2lib.form.form_report import form_report
 from o2lib.models.row_field import PrepRows
 from o2lib.models.dictlist import queryset2dictlist
-from o2lib.table_defs import TableDefsHpS
+from o2lib.table_defs import TableDefsHBpSD
 from o2lib.views.base.get_post import O2BaseGetPostView
 from o2lib.views.base.exception import StopStepsException
 from o2lib.views.main import totalize_data
@@ -23,18 +23,20 @@ __all__ = ['ListagemPedidoView']
 
 class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
 
-    CLIENTE = 'cliente__apelido'
-    DATA = 'pedidoitem__data_pedido'
-    BORDADO_NOME = 'pedidoitem__bordado__nome'
+    AJUSTE = 'pedidoitem__ajuste'
     BORDADO_CODIGO = 'pedidoitem__bordado__codigo'
-    USUARIO = 'pedidoitem__usuario__username'
-    QUANDO = 'pedidoitem__inserido_em'
+    BORDADO_NOME = 'pedidoitem__bordado__nome'
+    CLIENTE = 'cliente__apelido'
+    COBRANCA = 'pedidoitem__cobrancas__cobranca'
+    DATA = 'pedidoitem__data_pedido'
     ENTREGA = 'entrega'
-    QUANTIDADE = 'pedidoitem__quantidade'
+    NUMERO = 'numero'
     PRECO = 'pedidoitem__preco'
     PROGRAMACAO = 'pedidoitem__programacao'
-    AJUSTE = 'pedidoitem__ajuste'
-    COBRANCA = 'pedidoitem__cobrancas__cobranca'
+    QUANDO = 'pedidoitem__inserido_em'
+    QUANTIDADE = 'pedidoitem__quantidade'
+    USUARIO = 'pedidoitem__usuario__username'
+    VALOR = 'valor'
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -49,21 +51,21 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
         self.get_vars2form = True
 
         self.form_report_excludes = []
-        self.table_defs = TableDefsHpS({
-            'numero': ['Nº', 'c'],
-            self.DATA: ['Data', 'c'],
-            self.CLIENTE: ['Cliente'],
-            self.BORDADO_NOME: ['Bordado nome', 'c'],
-            self.BORDADO_CODIGO: ['Código', 'c'],
-            self.USUARIO: ["Usuário"],
-            self.QUANDO: ["Quando"],
-            self.ENTREGA: [],
-            self.QUANTIDADE: ["Quantidade", 'r'],
-            self.PRECO: ["Preço", 'r'],
-            self.PROGRAMACAO: ["Programação", 'r'],
-            self.AJUSTE: ["Ajuste", 'r'],
-            'valor': ['', 'r'],
-            self.COBRANCA: ['Cobrança', 'c'],
+        self.table_defs = TableDefsHBpSD({
+            self.NUMERO: ["Nº", 'c', 'c'],
+            self.DATA: ["Data", 'c', 'c'],
+            self.CLIENTE: ["Cliente", 'cp'],
+            self.BORDADO_NOME: ["Bordado nome", 'cp', 'c'],
+            self.BORDADO_CODIGO: ["Código", 'cp', 'c'],
+            self.USUARIO: ["Usuário", 'c'],
+            self.QUANDO: ["Quando", 'c'],
+            self.ENTREGA: ["", 'cp'],
+            self.QUANTIDADE: ["Quantidade", 'cp', 'r'],
+            self.PRECO: ["Preço", 'cp', 'r'],
+            self.PROGRAMACAO: ["Programação", 'cp', 'r'],
+            self.AJUSTE: ["Ajuste", 'cp', 'r'],
+            self.VALOR: ["", 'cp', 'r'],
+            self.COBRANCA: ["Cobrança", 'c', 'c'],
         })
 
         self.mount_steps = [
@@ -84,6 +86,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             self.prep_table,
             self.calcula_totalizador_pagina,
             self.append_totalizador_geral,
+            self.filter_report_excludes,
             self.context_table,
             self.form_report,
         ]
@@ -92,17 +95,13 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
         self.query = Pedido.objects
 
     def filtra_fechamento(self):
-        if self.fechamento == '':
-            self.form_report_excludes.append('fechamento')
-        elif self.fechamento == 'f':
+        if self.fechamento == 'f':
             self.query = self.query.filter(entrega__isnull=False)
         elif self.fechamento == 'n':
             self.query = self.query.filter(entrega__isnull=True)
 
     def filtra_cobranca(self):
-        if self.cobranca == '':
-            self.form_report_excludes.append('cobranca')
-        elif self.cobranca == 'c':
+        if self.cobranca == 'c':
             self.query = self.query.filter(
                 pedidoitem__cobrancas__cobranca__isnull=False)
         elif self.cobranca == 'n':
@@ -191,11 +190,23 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
     def append_totalizador_geral(self):
         self.data.object_list.insert(0, self.total_geral)
 
+    def filter_report_excludes(self):
+        if self.fechamento == '':
+            self.form_report_excludes.append('fechamento')
+        if self.cobranca == '':
+            self.form_report_excludes.append('cobranca')
+        self.form_report_excludes.append('apresentacao')
+        if (not self.por_pagina) or (self.data.paginator.num_pages == 1):
+            self.form_report_excludes.append('por_pagina')
+
     def context_table(self):
         self.context.update({
             'data': self.data,
         })
-        self.table_defs.hfs_dict_context(self.context)
+        self.table_defs.hfs_dict_context(
+            self.context,
+            bitmap=self.apresentacao[0],
+        )
 
     def form_report(self):
         self.context.update({

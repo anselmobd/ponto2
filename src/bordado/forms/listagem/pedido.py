@@ -18,7 +18,7 @@ class ListagemPedidoForm(forms.Form):
         ['data_de', 'data_ate'],
         ['entrega_de', 'entrega_ate'],
         ['fechamento', 'cobranca'],
-        ['por_pagina']
+        ['apresentacao', 'por_pagina']
     ]
 
     cliente_apelido = forms.CharField(
@@ -75,6 +75,17 @@ class ListagemPedidoForm(forms.Form):
         label="Quanto à cobrança",
         choices=CHOICES,
         initial='',
+        required=False,
+    )
+    CHOICES = [
+        ('c', "Completa"),
+        ('p', "Parcial"),
+        # ('pc', "Parcial+Cores"),
+    ]
+    apresentacao = forms.ChoiceField(
+        label="Apresentação",
+        choices=CHOICES,
+        initial='c',
         required=False,
     )
     por_pagina = forms.CharField(
