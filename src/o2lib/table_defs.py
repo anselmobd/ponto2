@@ -263,38 +263,42 @@ class TableDefs(object):
 
 class TableDefsH(TableDefs):
 
-    def __init__(self, definition):
-        super(TableDefsH, self).__init__(
+    def __init__(self, definition, style={}):
+        super().__init__(
             definition,
             ['header'],
+            style=style,
         )
 
 
 class TableDefsHpS(TableDefs):
 
-    def __init__(self, definition):
-        super(TableDefsHpS, self).__init__(
+    def __init__(self, definition, style={}):
+        style.update({'_': 'text-align'})
+        super().__init__(
             definition,
             ['header', '+style'],
-            style = {'_': 'text-align'},
+            style=style,
         )
 
 
 class TableDefsHpSD(TableDefs):
 
-    def __init__(self, definition):
-        super(TableDefsHpSD, self).__init__(
+    def __init__(self, definition, style={}):
+        style.update({'_': 'text-align'})
+        super().__init__(
             definition,
             ['header', '+style', 'decimals'],
-            style = {'_': 'text-align'},
+            style=style,
         )
 
 
 class TableDefsHBpSD(TableDefs):
 
-    def __init__(self, definition):
-        super(TableDefsHBpSD, self).__init__(
+    def __init__(self, definition, style={}):
+        style.update({'_': 'text-align'})
+        super().__init__(
             definition,
             ['header', 'flags_bitmap', '+style', 'decimals'],
-            style = {'_': 'text-align'},
+            style=style,
         )
