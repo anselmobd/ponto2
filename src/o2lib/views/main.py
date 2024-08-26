@@ -23,7 +23,7 @@ def totalize_data(data, config, return_not_append=False):
         class_suffix = config['class_suffix']
         keys = [key for key in totrow.keys() if '|' not in key]
         for key in keys:
-            totrow['{}|CLASS'.format(key)] = '{}{}'.format(key, class_suffix)
+            totrow[f'{key}|CLASS'] = f'{key}{class_suffix}'
 
     sum = {key: 0 for key in config['sum']}
     for row in data:
