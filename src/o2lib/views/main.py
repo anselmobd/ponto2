@@ -19,6 +19,8 @@ def totalize_data(data, config, return_not_append=False):
     if 'row_style' in config:
         totrow['|STYLE'] = config['row_style']
 
+    totrow['|CLASS'] = 'totalizador'
+
     if 'class_suffix' in config:
         class_suffix = config['class_suffix']
         keys = [key for key in totrow.keys() if '|' not in key]
