@@ -56,11 +56,11 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
                 self.NUMERO: ["Nº", 'c', 'c'],
                 self.DATA: ["Data", 'c', 'c'],
                 self.CLIENTE: ["Cliente", 'cp', 'l verde'],
-                self.BORDADO_NOME: ["Bordado nome", 'cp', 'c amarelo'],
-                self.BORDADO_CODIGO: ["Código", 'cp', 'c amarelo'],
+                self.BORDADO_NOME: ["Bordado nome", 'cp', 'l amarelo'],
+                self.BORDADO_CODIGO: ["Código", 'cp', 'l amarelo'],
                 self.USUARIO: ["Usuário", 'c'],
                 self.QUANDO: ["Quando", 'c'],
-                self.ENTREGA: ["", 'cp', 'l azul'],
+                self.ENTREGA: ["", 'cp', 'c azul'],
                 self.QUANTIDADE: ["Quantidade", 'cp', 'r verde'],
                 self.PRECO: ["Preço", 'cp', 'r verde'],
                 self.PROGRAMACAO: ["Programação", 'cp', 'r verde'],
@@ -209,6 +209,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
     def context_table(self):
         self.context['tabela']= {
             'data': self.data,
+            'thclass': 'sticky',
         }
         self.table_defs.hfs_dict_context(
             self.context['tabela'],
