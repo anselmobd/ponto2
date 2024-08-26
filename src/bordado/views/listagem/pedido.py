@@ -51,22 +51,29 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
         self.get_vars2form = True
 
         self.form_report_excludes = []
-        self.table_defs = TableDefsHBpSD({
-            self.NUMERO: ["Nº", 'c', 'c'],
-            self.DATA: ["Data", 'c', 'c'],
-            self.CLIENTE: ["Cliente", 'cp'],
-            self.BORDADO_NOME: ["Bordado nome", 'cp', 'c'],
-            self.BORDADO_CODIGO: ["Código", 'cp', 'c'],
-            self.USUARIO: ["Usuário", 'c'],
-            self.QUANDO: ["Quando", 'c'],
-            self.ENTREGA: ["", 'cp'],
-            self.QUANTIDADE: ["Quantidade", 'cp', 'r'],
-            self.PRECO: ["Preço", 'cp', 'r'],
-            self.PROGRAMACAO: ["Programação", 'cp', 'r'],
-            self.AJUSTE: ["Ajuste", 'cp', 'r'],
-            self.VALOR: ["", 'cp', 'r'],
-            self.COBRANCA: ["Cobrança", 'c', 'c'],
-        })
+        self.table_defs = TableDefsHBpSD(
+            {
+                self.NUMERO: ["Nº", 'c', 'c'],
+                self.DATA: ["Data", 'c', 'c'],
+                self.CLIENTE: ["Cliente", 'cp', 'l verde'],
+                self.BORDADO_NOME: ["Bordado nome", 'cp', 'c amarelo'],
+                self.BORDADO_CODIGO: ["Código", 'cp', 'c amarelo'],
+                self.USUARIO: ["Usuário", 'c'],
+                self.QUANDO: ["Quando", 'c'],
+                self.ENTREGA: ["", 'cp', 'l azul'],
+                self.QUANTIDADE: ["Quantidade", 'cp', 'r verde'],
+                self.PRECO: ["Preço", 'cp', 'r verde'],
+                self.PROGRAMACAO: ["Programação", 'cp', 'r verde'],
+                self.AJUSTE: ["Ajuste", 'cp', 'r verde'],
+                self.VALOR: ["", 'cp', 'r azul'],
+                self.COBRANCA: ["Cobrança", 'c', 'c'],
+            },
+            style={
+                'azul': "background-color: lightblue;",
+                'verde': "background-color: lightgreen;",
+                'amarelo': "background-color: lightyellow;",
+            },
+        )
 
         self.mount_steps = [
             self.init_query,
