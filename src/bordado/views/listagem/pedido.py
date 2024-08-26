@@ -200,11 +200,11 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             self.form_report_excludes.append('por_pagina')
 
     def context_table(self):
-        self.context.update({
+        self.context['tabela']= {
             'data': self.data,
-        })
+        }
         self.table_defs.hfs_dict_context(
-            self.context,
+            self.context['tabela'],
             bitmap=self.apresentacao[0],
         )
 

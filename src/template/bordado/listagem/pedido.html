@@ -15,7 +15,7 @@
       margin: 0.25rem;
       padding-left: 1rem;
     }
-    /* h6 utilizado na chamanda do generic/form_inputs_report */
+    /* h6 utilizado na chamada do generic/form_inputs_report */
     h6 {
       font-size: unset;
       font-weight: normal;
@@ -39,12 +39,11 @@
         {% endfor %}
       </ul>
     {% endif %}
-    {% include "layout/paginator.html" with data=data url_name='cd:novo_estoque' only %}
-    <table>
-      {% include "layout/generic/thead.html" with data=headers safe=safe style=style thclass='sticky' group=group only %}
-      {% include "layout/generic/tbody.html" with fields=fields data=data safe=safe style=style group=group only %}
-    </table>
-    {% include "layout/paginator.html" with data=data url_name='cd:novo_estoque' only %}
+    {% include "layout/paginator.html" with data=tabela.data url_name='cd:novo_estoque' only %}
+
+    {% include "layout/generic/table.html" with table=tabela only %}
+
+    {% include "layout/paginator.html" with data=tabela.data url_name='cd:novo_estoque' only %}
   {% endif %}
 {% endblock %}
 
