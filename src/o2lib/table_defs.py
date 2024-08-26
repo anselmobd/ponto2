@@ -137,7 +137,10 @@ class TableDefs(object):
                 if i < len(definition[col]):
                     if key.startswith('+'):
                         key = key[1:]
-                        def_col[key] = self.kwargs[key][definition[col][i]]
+                        values = []
+                        for plus_key in definition[col][i].split():
+                            values.append(self.kwargs[key][plus_key])
+                        def_col[key] = ''.join(values)
                     else:
                         def_col[key] = definition[col][i]
             result[col] = def_col
