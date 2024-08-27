@@ -9,10 +9,10 @@ th, td {
   text-align: left;
   padding: 2px;
 }
-tr:nth-child(even):not(.totalizador) {
+tr:nth-child(even):not(.totalizador) td {
   position: relative;
 }
-tr:nth-child(even):not(.totalizador)::after {
+tr:nth-child(even):not(.totalizador) td::after {
   content: '';
   position: absolute;
   top: 0;
