@@ -26,6 +26,8 @@ class O2BaseGetPostView(CustomView):
         self.cleaned_data2self = False
         self.cleaned_data2context = False
         self.cleaned_data2data = False
+        self.form_cookie_per_user = True
+        self.form_cookie_prefix = ''
 
     def do_cleaned_data2self(self):
         if self.cleaned_data2self:
@@ -44,6 +46,22 @@ class O2BaseGetPostView(CustomView):
             for field in self.form.cleaned_data:
                 self.form.data[field] = self.form.cleaned_data[field]
 
+    def cookie_name(self, field):
+        parts = [field]
+        if self.form_cookie_prefix:
+            parts.append(self.form_cookie_prefix)
+        if self.form_cookie_per_user and self.request.user:
+            parts.append(str(self.request.user))
+        return '.'.join(parts[::-1])
+
+    def form_to_cookies(self):
+        if not hasattr(self.Form_class, 'cookie_field'):
+            return
+        for field in self.Form_class.cookie_field:
+            self.set_del_cookies[
+                self.cookie_name(field)
+            ] = self.form.cleaned_data[field]
+
     def render_mount(self):
         self.pre_mount_context()
         if self.form.is_valid():
@@ -51,6 +69,7 @@ class O2BaseGetPostView(CustomView):
             self.do_cleaned_data2context()
             self.do_cleaned_data2data()
             self.mount_context()
+            self.form_to_cookies()
         self.context['form'] = self.form
         self.post_mount_context()
         return self.get_response_with_cookies()
@@ -77,6 +96,15 @@ class O2BaseGetPostView(CustomView):
     def pre_form(self):
         pass
 
+    def cookies_to_form_dict_initial(self):
+        if not hasattr(self.Form_class, 'cookie_field'):
+            return
+        for field in self.Form_class.cookie_field:
+            if self.cookie_name(field) in self.request.COOKIES:
+                self.form_dict_initial[field] = (
+                    self.request.COOKIES.get(self.cookie_name(field))
+                )
+
     def get(self, request, *args, **kwargs):
         self.init_self(request, **kwargs)
 
@@ -95,6 +123,7 @@ class O2BaseGetPostView(CustomView):
             return self.post(request, *args, **kwargs)
 
         self.pre_form()
+        self.cookies_to_form_dict_initial()
         if self.form_class_has_initial:
             self.form = self.Form_class(
                 initial=self.form_dict_initial, **self.form_create_kwargs)
