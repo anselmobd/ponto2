@@ -6,7 +6,6 @@ __all__ = [
     'totalize_data',
     'get_total_row',
     'totalize_grouped_data',
-    'group_rowspan',
 ]
 
 
@@ -160,20 +159,3 @@ def totalize_grouped_data(data, config):
             data.insert(len(data)-1, global_tot)
 
     del(data[len(data)-1])
-
-
-def group_rowspan(data, group):
-    noSpan = True
-    for i in range(len(data)):
-        data[i]['rowspan'] = 1
-    inferior = []
-    atual = []
-    for i in range(len(data)-1, -1, -1):
-        atual = [data[i][f] for f in group]
-        if atual == inferior:
-            noSpan = False
-            data[i]['rowspan'] = data[i]['rowspan'] + data[i+1]['rowspan']
-            data[i+1]['rowspan'] = 0
-        inferior = atual[:]
-    if noSpan:
-        del list(group)[:]
