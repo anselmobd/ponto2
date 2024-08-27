@@ -34,6 +34,9 @@ class CustomView(View):
         redirect
             String ou tupla que serão attibutos da execução de um redirect.
             Caso None, é executado um render.
+        set_del_cookies
+            Pode ser setado com dicionário com nome de cookie e valor.
+            Se valor for None, o cookie é excluido, senão, é criado.
         # error_field
         #     Nome da chave do context que guarda lista de mensagens de erro
         #     recebidas pelo método do_steps.
@@ -43,6 +46,7 @@ class CustomView(View):
         self.get_args2context = False
         self.get_args2self = False
         self.redirect = None
+        self.set_del_cookies = {}
         self.mount_steps = []
 
         self.context = {'error_msgs': []}
@@ -83,7 +87,7 @@ class CustomView(View):
         """
         return self.kwargs[field] if field in self.kwargs else None
 
-    def render_or_redirect(self):
+    def mount_response(self):
         """
         Se self.redirect for definido, execute redirect.
         Senão, execute render com request, template_name e context
@@ -91,8 +95,23 @@ class CustomView(View):
         if self.redirect:
             if not isinstance(self.redirect, tuple):
                 self.redirect = (self.redirect, )
-            return redirect(*self.redirect)
-        return render(self.request, self.template_name, self.context)
+            self._response = redirect(*self.redirect)
+        else:
+            self._response = render(
+                self.request, self.template_name, self.context)
+
+    def bake_cookies(self):
+        if self.set_del_cookies:
+            for cookie, value in self.set_del_cookies.items():
+                if value:
+                    self._response.set_cookie(cookie, value)
+                else:
+                    self._response.delete_cookie(cookie)
+
+    def get_response_with_cookies(self):
+        self.mount_response()
+        self.bake_cookies()
+        return self._response
 
     def pre_mount_context(self):
         """

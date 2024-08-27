@@ -53,7 +53,7 @@ class O2BaseGetPostView(CustomView):
             self.mount_context()
         self.context['form'] = self.form
         self.post_mount_context()
-        return self.render_or_redirect()
+        return self.get_response_with_cookies()
 
     def set_form_arg(self, field):
         value = self.get_arg(field)
