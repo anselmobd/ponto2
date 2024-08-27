@@ -1,10 +1,13 @@
-import hashlib
-import time
 from datetime import date
 from pprint import pprint
 
 
-from o2lib.functions import request_user
+__all__ = [
+    'totalize_data',
+    'get_total_row',
+    'totalize_grouped_data',
+    'group_rowspan',
+]
 
 
 def totalize_data(data, config, return_not_append=False):
@@ -174,18 +177,3 @@ def group_rowspan(data, group):
         inferior = atual[:]
     if noSpan:
         del list(group)[:]
-
-
-def hash_trail(*fields):
-    hash_cache = ';'.join(map(format, fields))
-    hash_object = hashlib.md5(hash_cache.encode())
-    return hash_object.hexdigest()
-
-
-def request_hash_trail(request, *fields):
-    params = list(fields) + [
-        time.strftime('%y%m%d'),
-        request_user(request),
-        request.session.session_key,
-    ]
-    return hash_trail(*params)
