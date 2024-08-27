@@ -6,10 +6,8 @@ from o2lib.form.form_report import form_report
 from o2lib.models.row_field import PrepRows
 from o2lib.models.dictlist import queryset2dictlist
 from o2lib.table_defs import TableDefsHBpSD
-from o2lib.views.main import (
-    group_rowspan,
-    totalize_data,
-)
+from o2lib.views.group import group_rowspan
+from o2lib.views.totalize import totalize_data
 from o2lib.views.base.get_post import O2BaseGetPostView
 from o2lib.views.base.exception import StopStepsException
 

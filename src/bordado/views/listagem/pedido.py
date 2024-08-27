@@ -10,7 +10,7 @@ from o2lib.models.dictlist import queryset2dictlist
 from o2lib.table_defs import TableDefsHBpSD
 from o2lib.views.base.get_post import O2BaseGetPostView
 from o2lib.views.base.exception import StopStepsException
-from o2lib.views.main import totalize_data
+from o2lib.views.totalize import totalize_data
 from o2lib.views.paginator import paginator_basic
 
 from bordado.forms.listagem.pedido import ListagemPedidoForm
