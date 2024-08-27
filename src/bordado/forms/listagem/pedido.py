@@ -20,6 +20,7 @@ class ListagemPedidoForm(forms.Form):
         ['fechamento', 'cobranca'],
         ['apresentacao', 'por_pagina']
     ]
+    cookie_field = ['apresentacao', 'por_pagina']
 
     cliente_apelido = forms.CharField(
         label="Cliente",
