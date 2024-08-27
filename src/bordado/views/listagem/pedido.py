@@ -71,7 +71,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             style={
                 'azul': "background-color: lightblue;",
                 'verde': "background-color: lightgreen;",
-                'amarelo': "background-color: lightyellow;",
+                'amarelo': "background-color: khaki;",
             },
         )
 
