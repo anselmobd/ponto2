@@ -72,7 +72,6 @@ class O2BaseGetPostView(CustomView):
     def form_initial(self):
         """Metodo chamado no GET para colocar valores no dict que inicializará o Form_class"""
         dict_initial = self.empty_form_initial()
-        dict_initial.update(self.form_dict_initial)
         return dict_initial
 
     def pre_form(self):
@@ -97,7 +96,8 @@ class O2BaseGetPostView(CustomView):
 
         self.pre_form()
         if self.form_class_has_initial:
-            self.form = self.Form_class(**self.form_create_kwargs)
+            self.form = self.Form_class(
+                initial=self.form_dict_initial, **self.form_create_kwargs)
         else:
             self.form = self.Form_class(
                 initial=self.form_initial(), **self.form_create_kwargs)
@@ -107,7 +107,8 @@ class O2BaseGetPostView(CustomView):
     def post(self, request, *args, **kwargs):
         self.init_self(request, **kwargs)
         self.pre_form()
-        self.form = self.Form_class(self.request.POST, **self.form_create_kwargs)
+        self.form = self.Form_class(
+            self.request.POST, **self.form_create_kwargs)
 
         if self.get_args2form:
             for arg in self.get_args:
