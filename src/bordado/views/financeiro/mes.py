@@ -33,6 +33,7 @@ class FinanceiroMesView(
 
         self.mount_steps = [
             self.mount_meses,
+            self.mount_fields_meses,
             self.mount_totais_pedidos_dict_meses,
             self.mount_totais_pedidos,
             self.sort_totais_pedidos,
@@ -59,6 +60,12 @@ class FinanceiroMesView(
             self.meses.append((ano, mes))
             ano, mes = self.ano_mes_anterior(ano, mes)
 
+    def mount_fields_meses(self):
+        self.fields_meses = []
+        for ano, mes in self.meses:
+            for tipo in ['saldo', 'recebido', 'cobrado', 'fechado']:
+                self.fields_meses.append(self.fname(tipo, ano, mes))
+
     def row_zerada(self):
         row = {}
         for ano_mes in self.meses:
@@ -83,13 +90,7 @@ class FinanceiroMesView(
         return row
 
     def valores_inteiros(self, row):
-        fields = ['saldo']
-        for ano, mes in self.meses:
-            fields.append(self.fname('saldo', ano, mes))
-            fields.append(self.fname('recebido', ano, mes))
-            fields.append(self.fname('cobrado', ano, mes))
-            fields.append(self.fname('fechado', ano, mes))
-        for field in fields:
+        for field in self.fields_meses+['saldo']:
             row[field] = int(row[field])
         return row
 
