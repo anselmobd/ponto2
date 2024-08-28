@@ -29,7 +29,7 @@ class FinanceiroMesView(
         self.form_class_has_initial = True
         self.cleaned_data2self = True
         self.template_name = "bordado/financeiro/mes.html"
-        self.title_name = "Financeiro - Mês"
+        self.title_name = "Financeiro - Por 3 mêses / Clientes"
 
         self.mount_steps = [
             self.mount_meses,
