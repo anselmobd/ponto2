@@ -188,6 +188,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
         else:
             self.data = paginator_basic(
                 self.data, self.por_pagina, self.page, pag_neib=4)
+        self.form.data['page'] = self.data.number
 
     def calcula_totalizador_pagina(self):
         if self.data.paginator.num_pages > 1:
@@ -204,6 +205,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
         self.form_report_excludes.append('apresentacao')
         if (not self.por_pagina) or (self.data.paginator.num_pages == 1):
             self.form_report_excludes.append('por_pagina')
+        self.form_report_excludes.append('page')
 
     def context_table(self):
         self.context['tabela']= {

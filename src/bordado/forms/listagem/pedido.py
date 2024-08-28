@@ -18,7 +18,7 @@ class ListagemPedidoForm(forms.Form):
         ['data_de', 'data_ate'],
         ['entrega_de', 'entrega_ate'],
         ['fechamento', 'cobranca'],
-        ['apresentacao', 'por_pagina']
+        ['apresentacao', 'por_pagina', 'page']
     ]
     cookie_field = ['apresentacao', 'por_pagina']
 
@@ -99,8 +99,12 @@ class ListagemPedidoForm(forms.Form):
         ),
     )
     page = forms.IntegerField(
-        required=False,
-        widget=forms.HiddenInput()
+        label="Ir para página",
+        required=True,
+        initial='1',
+        widget=forms.TextInput(
+            attrs={**a.number, **a.placeholder_0, **a.size_6}
+        ),
     )
 
     def __init__(self, *args, **kwargs):

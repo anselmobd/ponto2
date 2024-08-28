@@ -28,7 +28,7 @@
   <form class="noprint" action="{% url 'bordado:listagem_pedido' %}" method="post" name="myForm">
     {% csrf_token %}
     {% include "layout/generic/form_field_control.html" with form=form only %}
-    <input class="button" type="submit" value="Busca" onclick="o2SetPage1AndSubmit()"/>
+    <input class="button" type="submit" value="Busca"/>
   </form>
   {% if form_method == 'POST' %}
     {% include "layout/generic/form_report.html" with form_report=form_report only %}
