@@ -3,7 +3,7 @@ table {
   width: 100%;
 }
 thead {
-    font-weight: bold;
+  font-weight: bold;
 }
 th, td {
   text-align: left;
@@ -30,8 +30,18 @@ th.group, tr.group {
   border-bottom-style: dashed;
   border-bottom-width: thin;
 }
-table:not(.layout) tbody tr:hover {
-  background-color: #DDD;
+table:not(.layout) tbody tr:hover td {
+  position: relative;
+}
+table:not(.layout) tbody tr:hover td:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.16);
+  pointer-events: none;
 }
 thead:not(.layout) th
 {
