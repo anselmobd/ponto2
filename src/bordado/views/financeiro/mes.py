@@ -9,6 +9,7 @@ from o2lib.models.row_field import PrepRows
 from o2lib.table_defs import TableDefsHpS
 from o2lib.views.base.exception import StopStepsException
 from o2lib.views.base.get_post import O2BaseGetPostView
+from o2lib.views.totalize import totalize_data
 
 from bordado.forms.financeiro.mes import FinanceiroMesForm
 from bordado.queries.lancamento.financeiro_mes import \
@@ -39,6 +40,7 @@ class FinanceiroMesView(
             self.sort_totais_pedidos,
             self.mount_totais_defs,
             self.prep_data,
+            self.calcula_totalizador,
             self.context_table,
             self.form_report,
         ]
@@ -82,7 +84,7 @@ class FinanceiroMesView(
             )
             row[self.fname('saldo', ano, mes)] = saldo
             saldo_total += saldo
-        row['saldo'] = saldo
+        row['saldo'] = saldo_total
         return row
 
     def valores_inteiros(self, row):
@@ -172,6 +174,20 @@ class FinanceiroMesView(
         ).a_blank(
             'cliente__apelido', 'bordado:analise_cliente', ['cliente__apelido'],
         ).process()
+
+    def calcula_totalizador(self):
+        totalize_data(
+            self.totais_pedidos,
+            {
+                'sum': self.fields_meses+['saldo'],
+                'descr': {'cliente__apelido': 'Totais'},
+                'row_style':
+                    "font-weight: bold;"
+                    "background-image: linear-gradient(#DDD, white);",
+            }
+        )
+        self.total_geral = self.totais_pedidos.pop()
+        self.totais_pedidos.insert(0, self.total_geral)
 
     def context_table(self):
         config_totais = {
