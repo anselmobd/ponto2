@@ -16,7 +16,7 @@ class ListagemLancamentoForm(forms.Form):
     field_control = [
         ['cliente_apelido', 'pedido_numero', 'cobranca_id'],
         ['data_de', 'data_ate'],
-        ['tipo_lancamento'],
+        ['tipo_lancamento', 'ordem'],
     ]
 
     cliente_apelido = forms.CharField(
@@ -59,6 +59,15 @@ class ListagemLancamentoForm(forms.Form):
         label='Tipo de lançamento',
         choices=CHOICES,
         initial='-',
+    )
+    CHOICES = [
+        ('p', 'Padrão'),
+        ('c', 'Cliente'),
+    ]
+    ordem = forms.ChoiceField(
+        label='Ordenação',
+        choices=CHOICES,
+        initial='p',
     )
 
     def __init__(self, *args, **kwargs):

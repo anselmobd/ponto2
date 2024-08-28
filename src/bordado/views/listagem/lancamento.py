@@ -65,6 +65,7 @@ class ListagemLancamentoView(
             self.filtra_cobranca,
             (self.filtra_valor_de_ate, ['data', 'data_de', 'data_ate']),
             self.filtra_tipo,
+            self.order_query,
             self.exec_query,
             self.prep_table,
             self.group_table,
@@ -75,6 +76,13 @@ class ListagemLancamentoView(
 
     def init_query(self):
         self.query = Lancamento.objects
+
+    def order_query(self):
+        # Padrão do modelo = '-data', '-id'
+        if self.ordem == 'c':
+            self.query = self.query.order_by(
+                self.CLIENTE, '-data', '-id'
+        )
 
     def exec_query(self):
         self.data = self.query.values(
