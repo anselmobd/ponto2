@@ -44,17 +44,14 @@ class FinanceiroMesView(
         return ano, mes
 
     def mount_meses(self):
-        self.meses = {}
+        self.meses = []
         ano, mes = self.ano, self.mes
         for _ in range(3):
-            self.meses[(ano, mes)] = {
-                'ano': ano,
-                'mes': mes,
-                'tupla': (ano, mes),
-                '_': f'{ano}_{mes:02d}',
-                '/': f'{mes:02d}/{ano}',
-            }
+            self.meses.append((ano, mes))
             ano, mes = self.ano_mes_anterior(ano, mes)
+
+    def fname(self, name, ano, mes):
+        return f'{name}_{ano}_{mes:02d}'
 
     def get_totais_pedidos_dict_mes(self, ano, mes):
         dados = get_pedido_financeiro_mes(
@@ -65,8 +62,8 @@ class FinanceiroMesView(
         dados_dict = {}
         for row in dados:
             dados_dict[row['cliente__apelido']] = {
-                f'cobrado_{ano}_{mes}': row['cobrado'],
-                f'fechado_{ano}_{mes}': row['fechado'],
+                self.fname('fechado', ano, mes): row['fechado'],
+                self.fname('cobrado', ano, mes): row['cobrado'],
             }
         return dados_dict
 
@@ -74,16 +71,15 @@ class FinanceiroMesView(
         row = {}
         for ano_mes in self.meses:
             ano, mes = ano_mes
-            row[f'cobrado_{ano}_{mes}'] = Decimal('0.00')
-            row[f'fechado_{ano}_{mes}'] = Decimal('0.00')
+            row[self.fname('fechado', ano, mes)] = Decimal('0.00')
+            row[self.fname('cobrado', ano, mes)] = Decimal('0.00')
         return row
 
     def mount_totais_pedidos_dict_meses(self):
         row_zerada = self.row_zerada()
         self.totais_pedidos_dict = {}
         for ano_mes in self.meses:
-            dict_mes = self.get_totais_pedidos_dict_mes(
-                *self.meses[ano_mes]['tupla'])
+            dict_mes = self.get_totais_pedidos_dict_mes(*ano_mes)
             for cliente, row in dict_mes.items():
                 if cliente not in self.totais_pedidos_dict:
                     self.totais_pedidos_dict[cliente] = row_zerada.copy()
@@ -105,12 +101,12 @@ class FinanceiroMesView(
             # 'recebido': ['Recebimentos', 'r'],
             # 'saldo': ['', 'r'],
         }
-        for ano_mes in list(self.meses.keys())[::-1]:
+        for ano_mes in self.meses[::-1]:
             ano, mes = ano_mes
-            definicao[f'fechado_{ano}_{mes}'] = \
-                [f'({mes}/{ano})Pedidos', 'r']
-            definicao[f'cobrado_{ano}_{mes}'] = \
-                [f'({mes}/{ano})Cobranças', 'r']
+            definicao[self.fname('fechado', ano, mes)] = \
+                [(f'{mes:02d}/{ano}<br/>Pedidos',), 'r']
+            definicao[self.fname('cobrado', ano, mes)] = \
+                [(f'{mes:02d}/{ano}<br/>Cobranças',), 'r']
         self.totais_defs = TableDefsHpS(definicao)
 
     def context_tatle(self):
