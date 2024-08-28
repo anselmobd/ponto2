@@ -22,7 +22,7 @@ class FinanceiroMesForm(forms.Form):
         required=True,
         initial=ano_atual,
         widget=forms.TextInput(
-            attrs={**a.number, **a.placeholder_0, **a.size_6}
+            attrs={**a.autofocus, **a.number, **a.placeholder_0, **a.size_6}
         ),
     )
 

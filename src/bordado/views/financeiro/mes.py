@@ -2,6 +2,7 @@ from pprint import pprint
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from o2lib.form.form_report import form_report
 from o2lib.table_defs import TableDefsHpS
 from o2lib.views.base.exception import StopStepsException
 from o2lib.views.base.get_post import O2BaseGetPostView
@@ -37,7 +38,8 @@ class FinanceiroMesView(
 
         self.mount_steps = [
             self.totais_por_cliente,
-            self.context_totais,
+            self.context_tatle,
+            self.form_report,
         ]
 
     def totais_por_cliente(self):
@@ -52,7 +54,7 @@ class FinanceiroMesView(
                 "Nada selecionado")
 
 
-    def context_totais(self):
+    def context_tatle(self):
         config_totais = {
             'data': self.totais_pedidos,
             'data_title': "Posição financeira por cliente",
@@ -61,4 +63,12 @@ class FinanceiroMesView(
 
         self.context.update({
             'totais_por_mes': config_totais,
+        })
+
+    def form_report(self):
+        self.context.update({
+            'form_report': form_report(
+                self.form,
+                field_modifier={'ano': str}
+            ),
         })
