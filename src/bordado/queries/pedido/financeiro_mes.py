@@ -48,6 +48,16 @@ def get_pedido_financeiro_mes(
             cliente=cliente
         )
 
+    if ano:
+        query = query.filter(
+            entrega__year=ano
+        )
+
+    if mes:
+        query = query.filter(
+            entrega__month=mes
+        )
+
     query = query.filter(
         entrega__isnull=False
     )
