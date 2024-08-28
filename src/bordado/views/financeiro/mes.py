@@ -5,6 +5,7 @@ from pprint import pprint
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from o2lib.form.form_report import form_report
+from o2lib.models.row_field import PrepRows
 from o2lib.table_defs import TableDefsHpS
 from o2lib.views.base.exception import StopStepsException
 from o2lib.views.base.get_post import O2BaseGetPostView
@@ -36,7 +37,8 @@ class FinanceiroMesView(
             self.mount_totais_pedidos,
             self.sort_totais_pedidos,
             self.mount_totais_defs,
-            self.context_tatle,
+            self.prep_data,
+            self.context_table,
             self.form_report,
         ]
 
@@ -164,10 +166,17 @@ class FinanceiroMesView(
             definicao[self.fname('saldo', ano, mes)] = \
                 [(f'{mes:02d}/{ano}<br/>Saldo',), 'r']
         definicao['saldo'] = \
-            [('Saldo<br/>total',), 'r']
+            [('Saldo<br/>meses',), 'r']
         self.totais_defs = TableDefsHpS(definicao)
 
-    def context_tatle(self):
+    def prep_data(self):
+        PrepRows(
+            self.totais_pedidos,
+        ).a_blank(
+            'cliente__apelido', 'bordado:analise_cliente', ['cliente__apelido'],
+        ).process()
+
+    def context_table(self):
         config_totais = {
             'data': self.totais_pedidos,
             'thclass': 'sticky',
