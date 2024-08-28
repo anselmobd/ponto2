@@ -68,12 +68,8 @@ class FinanceiroMesView(
 
     def row_zerada(self):
         row = {}
-        for ano_mes in self.meses:
-            ano, mes = ano_mes
-            row[self.fname('fechado', ano, mes)] = Decimal('0.00')
-            row[self.fname('cobrado', ano, mes)] = Decimal('0.00')
-            row[self.fname('recebido', ano, mes)] = Decimal('0.00')
-            row[self.fname('saldo', ano, mes)] = Decimal('0.00')
+        for field in self.fields_meses:
+            row[field] = Decimal('0.00')
         return row
 
     def calc_saldos(self, row):
