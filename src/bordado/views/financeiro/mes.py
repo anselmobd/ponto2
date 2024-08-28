@@ -1,3 +1,4 @@
+import operator
 from decimal import Decimal
 from pprint import pprint
 
@@ -33,6 +34,7 @@ class FinanceiroMesView(
             self.mount_meses,
             self.mount_totais_pedidos_dict_meses,
             self.mount_totais_pedidos,
+            self.sort_totais_pedidos,
             self.mount_totais_defs,
             self.context_tatle,
             self.form_report,
@@ -79,7 +81,7 @@ class FinanceiroMesView(
         return row
 
     def valores_inteiros(self, row):
-        fields = []
+        fields = ['saldo']
         for ano, mes in self.meses:
             fields.append(self.fname('saldo', ano, mes))
             fields.append(self.fname('recebido', ano, mes))
@@ -141,6 +143,10 @@ class FinanceiroMesView(
             self.calc_saldos(row)
             self.valores_inteiros(row)
 
+    def sort_totais_pedidos(self):
+        self.totais_pedidos.sort(
+            key=operator.itemgetter('saldo', 'cliente__apelido'))
+
     def mount_totais_defs(self):
         definicao = {
             'cliente__apelido': ['Cliente'],
@@ -164,6 +170,7 @@ class FinanceiroMesView(
     def context_tatle(self):
         config_totais = {
             'data': self.totais_pedidos,
+            'thclass': 'sticky',
             'data_title': "Posição financeira por cliente",
         }
         self.totais_defs.hfs_dict_context(config_totais)
