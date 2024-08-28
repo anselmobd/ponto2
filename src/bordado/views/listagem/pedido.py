@@ -183,7 +183,6 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
     def paginador(self):
         self.por_pagina = int(self.por_pagina)
         if not self.por_pagina:
-            self.form_report_excludes.append('por_pagina')
             self.data = paginator_basic(
                 self.data, 999_999, 1)
         else:
