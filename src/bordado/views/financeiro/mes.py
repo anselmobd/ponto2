@@ -1,3 +1,4 @@
+from decimal import Decimal
 from pprint import pprint
 
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -26,40 +27,98 @@ class FinanceiroMesView(
         self.template_name = "bordado/financeiro/mes.html"
         self.title_name = "Financeiro - Mês"
 
-        self.totais_mes_defs = TableDefsHpS(
-            {
-                'cliente__apelido': ['Cliente apelido'],
-                'fechado': ['Pedidos não cobrados', 'r'],
-                'cobrado': ['Cobranças', 'r'],
-                # 'recebido': ['Recebimentos', 'r'],
-                # 'saldo': ['', 'r'],
-            }
-        )
-
         self.mount_steps = [
-            self.totais_por_cliente,
+            self.mount_meses,
+            self.mount_totais_pedidos_dict_meses,
+            self.mount_totais_pedidos,
+            self.mount_totais_defs,
             self.context_tatle,
             self.form_report,
         ]
 
-    def totais_por_cliente(self):
-        self.totais_pedidos = get_pedido_financeiro_mes(
-            ano=self.ano,
-            mes=self.mes,
+    def ano_mes_anterior(self, ano, mes):
+        mes -= 1
+        if mes == 0:
+            mes = 12
+            ano -= 1
+        return ano, mes
+
+    def mount_meses(self):
+        self.meses = {}
+        ano, mes = self.ano, self.mes
+        for _ in range(3):
+            self.meses[(ano, mes)] = {
+                'ano': ano,
+                'mes': mes,
+                'tupla': (ano, mes),
+                '_': f'{ano}_{mes:02d}',
+                '/': f'{mes:02d}/{ano}',
+            }
+            ano, mes = self.ano_mes_anterior(ano, mes)
+
+    def get_totais_pedidos_dict_mes(self, ano, mes):
+        dados = get_pedido_financeiro_mes(
+            ano=ano,
+            mes=mes,
             group_by='cliente'
         )
-        pprint(self.totais_pedidos)
+        dados_dict = {}
+        for row in dados:
+            dados_dict[row['cliente__apelido']] = {
+                f'cobrado_{ano}_{mes}': row['cobrado'],
+                f'fechado_{ano}_{mes}': row['fechado'],
+            }
+        return dados_dict
+
+    def row_zerada(self):
+        row = {}
+        for ano_mes in self.meses:
+            ano, mes = ano_mes
+            row[f'cobrado_{ano}_{mes}'] = Decimal('0.00')
+            row[f'fechado_{ano}_{mes}'] = Decimal('0.00')
+        return row
+
+    def mount_totais_pedidos_dict_meses(self):
+        row_zerada = self.row_zerada()
+        self.totais_pedidos_dict = {}
+        for ano_mes in self.meses:
+            dict_mes = self.get_totais_pedidos_dict_mes(
+                *self.meses[ano_mes]['tupla'])
+            for cliente, row in dict_mes.items():
+                if cliente not in self.totais_pedidos_dict:
+                    self.totais_pedidos_dict[cliente] = row_zerada.copy()
+                self.totais_pedidos_dict[cliente].update(row)
+
+
+    def mount_totais_pedidos(self):
+        self.totais_pedidos = []
+        for cliente, row in self.totais_pedidos_dict.items():
+            row['cliente__apelido'] = cliente
+            self.totais_pedidos.append(row)
         if not self.totais_pedidos:
             raise StopStepsException(
                 "Nada selecionado")
 
+    def mount_totais_defs(self):
+        definicao = {
+            'cliente__apelido': ['Cliente'],
+            # 'recebido': ['Recebimentos', 'r'],
+            # 'saldo': ['', 'r'],
+        }
+        for ano_mes in list(self.meses.keys())[::-1]:
+            ano, mes = ano_mes
+            definicao[f'fechado_{ano}_{mes}'] = \
+                [f'({mes}/{ano})Pedidos', 'r']
+            definicao[f'cobrado_{ano}_{mes}'] = \
+                [f'({mes}/{ano})Cobranças', 'r']
+        self.totais_defs = TableDefsHpS(definicao)
 
     def context_tatle(self):
         config_totais = {
             'data': self.totais_pedidos,
             'data_title': "Posição financeira por cliente",
         }
-        self.totais_mes_defs.hfs_dict_context(config_totais)
+        self.totais_defs.hfs_dict_context(config_totais)
 
         self.context.update({
             'totais_por_mes': config_totais,
