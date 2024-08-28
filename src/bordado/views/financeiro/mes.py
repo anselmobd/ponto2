@@ -157,16 +157,25 @@ class FinanceiroMesView(
         for ano_mes in self.meses[::-1]:
             ano, mes = ano_mes
             definicao[self.fname('fechado', ano, mes)] = \
-                [(f'{mes:02d}/{ano}<br/>Pedido',), 'r']
+                [('<br/>Pedido',), 'r amarelo']
             definicao[self.fname('cobrado', ano, mes)] = \
-                [(f'{mes:02d}/{ano}<br/>Cobrado',), 'r']
+                [('<br/>Cobrado',), 'r vermelho']
             definicao[self.fname('recebido', ano, mes)] = \
-                [(f'{mes:02d}/{ano}<br/>Recebido',), 'r']
+                [('<br/>Recebido',), 'r verde']
             definicao[self.fname('saldo', ano, mes)] = \
-                [(f'{mes:02d}/{ano}<br/>Saldo',), 'r']
+                [(f'{mes:02d}/{ano}<br/>Saldo',), 'r azul']
         definicao['saldo'] = \
-            [('Saldo<br/>meses',), 'r']
-        self.totais_defs = TableDefsHpS(definicao)
+            [('Saldo<br/>meses',), 'r azulao']
+        self.totais_defs = TableDefsHpS(
+            definicao,
+            style={
+                'amarelo': "background-color: khaki;",
+                'vermelho': "background-color: lightsalmon;",
+                'verde': "background-color: lightgreen;",
+                'azul': "background-color: lightblue;",
+                'azulao': "background-color: lightskyblue;",
+            },
+        )
 
     def prep_data(self):
         PrepRows(
