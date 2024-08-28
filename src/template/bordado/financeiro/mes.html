@@ -38,9 +38,8 @@
         {% endfor %}
       </ul>
     {% endif %}
-    <table>
-      {% include "layout/generic/thead.html" with data=headers safe=safe style=style thclass='sticky' group=group only %}
-      {% include "layout/generic/tbody.html" with fields=fields data=data safe=safe style=style group=group only %}
-    </table>
-  {% endif %}
+
+    {% include "layout/generic/table.html" with table=totais_por_mes only %}
+
+    {% endif %}
 {% endblock %}

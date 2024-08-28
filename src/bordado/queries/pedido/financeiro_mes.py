@@ -29,6 +29,8 @@ __all__ = ['get_pedido_financeiro_mes']
 
 def get_pedido_financeiro_mes(
         cliente=None,
+        ano=None,
+        mes=None,
         group_by='mes',  ## mes ou cliente
         ):
 
