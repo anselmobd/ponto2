@@ -29,12 +29,35 @@ from bordado.models import Lancamento
 __all__ = ['get_lancamento_financeiro_mes']
 
 
-def get_lancamento_financeiro_mes(cliente=None):
+def get_lancamento_financeiro_mes(
+        cliente=None,
+        ano=None,
+        mes=None,
+        group_by='mes',  ## mes ou cliente
+        ):
+
+    if group_by == 'mes':
+        group_field = 'mes'
+        order_by = f'-{group_field}'
+    else:
+        group_field = 'cliente__apelido'
+        order_by = group_field
+
     query = Lancamento.objects
 
     if cliente:
         query = query.filter(
             cliente=cliente
+        )
+
+    if ano:
+        query = query.filter(
+            data__year=ano
+        )
+
+    if mes:
+        query = query.filter(
+            data__month=mes
         )
 
     query = query.annotate(
@@ -68,30 +91,30 @@ def get_lancamento_financeiro_mes(cliente=None):
         recebido=Q(cobranca__isnull=True),
     )
 
-    query = query.values('mes', 'recebido')
+    query = query.values(group_field, 'recebido')
 
     query = query.annotate(
         total=Sum('modulo_valor')
     )
 
-    query = query.order_by('-mes')
+    query = query.order_by(order_by)
 
-    mes_status = queryset2dictlist(query)
+    grupo_status = queryset2dictlist(query)
 
-    por_mes = {}
-    for item in mes_status:
-        mes = item['mes']
+    por_grupo = {}
+    for item in grupo_status:
+        grupo = item[group_field]
         status = 'recebido' if item['recebido'] else 'cobrado'
         valor = item['total']
         
-        if mes not in por_mes:
-            por_mes[mes] = {
-                'mes': mes,
+        if grupo not in por_grupo:
+            por_grupo[grupo] = {
+                group_field: grupo,
                 'cobrado': Decimal('0.00'),
                 'recebido': Decimal('0.00'),
             }
         
-        por_mes[mes][status] = valor
+        por_grupo[grupo][status] = valor
 
-    result = list(por_mes.values())
+    result = list(por_grupo.values())
     return result
