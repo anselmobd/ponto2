@@ -94,6 +94,12 @@ class FinanceiroMesView(
     def valores_inteiros(self, row):
         for field in self.fields_meses:  # +['saldo']:
             row[field] = int(row[field])
+        space = False
+        for ano, mes in self.meses[::-1]:
+            if space:
+                row[self.fname('space', ano, mes)] = ' '
+            else:
+                space = True
         return row
 
     def get_totais_pedidos_dict_mes(self, ano, mes):
@@ -156,7 +162,12 @@ class FinanceiroMesView(
         definicao = {
             'cliente__apelido': ['Cliente'],
         }
+        space = False
         for ano, mes in self.meses[::-1]:
+            if space:
+                definicao[self.fname('space', ano, mes)] = ' '
+            else:
+                space = True
             definicao[self.fname('fechado', ano, mes)] = \
                 [('<br/>Pedido',), 'r amarelo']
             definicao[self.fname('cobrado', ano, mes)] = \
