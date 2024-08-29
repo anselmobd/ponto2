@@ -53,10 +53,13 @@ class FinanceiroMesView(
         return ano, mes
 
     def fname(self, name, ano, mes):
-        return f'{name}_{ano}_{mes:02d}'
+        if ano and mes:
+            return f'{name}_{ano}_{mes:02d}'
+        else:
+            return f'{name}_total'
 
     def mount_meses(self):
-        self.meses = []
+        self.meses = [(None, None)]
         ano, mes = self.ano, self.mes
         for _ in range(3):
             self.meses.append((ano, mes))
@@ -75,7 +78,7 @@ class FinanceiroMesView(
         return row
 
     def calc_saldos(self, row):
-        saldo_total = 0
+        # saldo_total = 0
         for ano, mes in self.meses:
             saldo = (
                 row[self.fname('recebido', ano, mes)]
@@ -83,12 +86,13 @@ class FinanceiroMesView(
                 - row[self.fname('fechado', ano, mes)]
             )
             row[self.fname('saldo', ano, mes)] = saldo
-            saldo_total += saldo
-        row['saldo'] = saldo_total
+            # if ano and mes:
+            #     saldo_total += saldo
+        # row['saldo'] = saldo_total
         return row
 
     def valores_inteiros(self, row):
-        for field in self.fields_meses+['saldo']:
+        for field in self.fields_meses:  # +['saldo']:
             row[field] = int(row[field])
         return row
 
@@ -146,26 +150,27 @@ class FinanceiroMesView(
 
     def sort_totais_pedidos(self):
         self.totais_pedidos.sort(
-            key=operator.itemgetter('saldo', 'cliente__apelido'))
+            key=operator.itemgetter('saldo_total', 'cliente__apelido'))
 
     def mount_totais_defs(self):
         definicao = {
             'cliente__apelido': ['Cliente'],
-            # 'recebido': ['Recebimentos', 'r'],
-            # 'saldo': ['', 'r'],
         }
-        for ano_mes in self.meses[::-1]:
-            ano, mes = ano_mes
+        for ano, mes in self.meses[::-1]:
             definicao[self.fname('fechado', ano, mes)] = \
                 [('<br/>Pedido',), 'r amarelo']
             definicao[self.fname('cobrado', ano, mes)] = \
                 [('<br/>Cobrado',), 'r vermelho']
             definicao[self.fname('recebido', ano, mes)] = \
                 [('<br/>Recebido',), 'r verde']
-            definicao[self.fname('saldo', ano, mes)] = \
-                [(f'{mes:02d}/{ano}<br/>Saldo',), 'r azul']
-        definicao['saldo'] = \
-            [('Saldo<br/>meses',), 'r azulao']
+            if ano and mes:
+                definicao[self.fname('saldo', ano, mes)] = \
+                    [(f'{mes:02d}/{ano}<br/>Saldo',), 'r azul']
+            else:
+                definicao[self.fname('saldo', ano, mes)] = \
+                    [('Total<br/>Saldo',), 'r azul']
+        # definicao['saldo'] = \
+        #     [('Saldo<br/>meses',), 'r azulao']
         self.totais_defs = TableDefsHpS(
             definicao,
             style={
@@ -173,7 +178,7 @@ class FinanceiroMesView(
                 'vermelho': "background-color: lightsalmon;",
                 'verde': "background-color: lightgreen;",
                 'azul': "background-color: lightblue;",
-                'azulao': "background-color: lightskyblue;",
+                # 'azulao': "background-color: lightskyblue;",
             },
         )
 
