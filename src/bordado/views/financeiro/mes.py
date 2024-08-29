@@ -188,7 +188,10 @@ class FinanceiroMesView(
         totalize_data(
             self.totais_pedidos,
             {
-                'sum': self.fields_meses+['saldo'],
+                'sum': [
+                    field for field in self.fields_meses
+                    if not field.startswith('saldo')
+                ],
                 'descr': {'cliente__apelido': 'Totais'},
                 'row_style':
                     "font-weight: bold;"
