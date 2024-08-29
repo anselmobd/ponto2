@@ -78,7 +78,6 @@ class FinanceiroMesView(
         return row
 
     def calc_saldos(self, row):
-        # saldo_total = 0
         for ano, mes in self.meses:
             saldo = (
                 row[self.fname('recebido', ano, mes)]
@@ -86,13 +85,10 @@ class FinanceiroMesView(
                 - row[self.fname('fechado', ano, mes)]
             )
             row[self.fname('saldo', ano, mes)] = saldo
-            # if ano and mes:
-            #     saldo_total += saldo
-        # row['saldo'] = saldo_total
         return row
 
     def valores_inteiros(self, row):
-        for field in self.fields_meses:  # +['saldo']:
+        for field in self.fields_meses:
             row[field] = int(row[field])
         space = False
         for ano, mes in self.meses[::-1]:
@@ -179,9 +175,7 @@ class FinanceiroMesView(
                     [(f'{mes:02d}/{ano}<br/>Saldo',), 'r azul']
             else:
                 definicao[self.fname('saldo', ano, mes)] = \
-                    [('Total<br/>Saldo',), 'r azul']
-        # definicao['saldo'] = \
-        #     [('Saldo<br/>meses',), 'r azulao']
+                    [('Total<br/>Saldo',), 'r azulao']
         self.totais_defs = TableDefsHpS(
             definicao,
             style={
@@ -189,7 +183,7 @@ class FinanceiroMesView(
                 'vermelho': "background-color: lightsalmon;",
                 'verde': "background-color: lightgreen;",
                 'azul': "background-color: lightblue;",
-                # 'azulao': "background-color: lightskyblue;",
+                'azulao': "background-color: lightskyblue;",
             },
         )
 
