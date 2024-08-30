@@ -15,7 +15,7 @@ class FinanceiroMesForm(forms.Form):
     a = FormWidgetAttrs()
 
     field_control = [
-        ['ano', 'mes'],
+        ['ano', 'mes', 'num_meses'],
     ]
 
     ano = forms.IntegerField(
@@ -26,13 +26,20 @@ class FinanceiroMesForm(forms.Form):
             attrs={**a.autofocus, **a.number, **a.placeholder_0, **a.size_6}
         ),
     )
-
     mes = forms.IntegerField(
         label='Mês',
         required=True,
         initial=mes_atual,
         widget=forms.TextInput(
             attrs={**a.number, **a.placeholder_0, **a.size_6}
+        ),
+    )
+    num_meses = forms.IntegerField(
+        label='Nº meses',
+        required=True,
+        initial=3,
+        widget=forms.TextInput(
+            attrs={**a.number, **a.placeholder_0, **a.size_5}
         ),
     )
 

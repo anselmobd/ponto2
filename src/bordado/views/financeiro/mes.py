@@ -31,7 +31,7 @@ class FinanceiroMesView(
         self.form_class_has_initial = True
         self.cleaned_data2self = True
         self.template_name = "bordado/financeiro/mes.html"
-        self.title_name = "Financeiro - Clientes / 3 meses"
+        self.title_name = "Financeiro - Clientes / Meses"
 
         self.mount_steps = [
             self.mount_meses,
@@ -63,7 +63,7 @@ class FinanceiroMesView(
     def mount_meses(self):
         self.meses = [(None, None)]
         ano, mes = self.ano, self.mes
-        for _ in range(3):
+        for _ in range(self.num_meses):
             self.meses.append((ano, mes))
             ano, mes = self.ano_mes_anterior(ano, mes)
 
