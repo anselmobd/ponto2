@@ -19,6 +19,7 @@ class FinanceiroMesForm(forms.Form):
     ]
 
     ano = forms.IntegerField(
+        label='Até ano',
         required=True,
         initial=ano_atual,
         widget=forms.TextInput(
@@ -27,6 +28,7 @@ class FinanceiroMesForm(forms.Form):
     )
 
     mes = forms.IntegerField(
+        label='Mês',
         required=True,
         initial=mes_atual,
         widget=forms.TextInput(
