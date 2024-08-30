@@ -1,4 +1,5 @@
 import operator
+from collections import defaultdict
 from decimal import Decimal
 from pprint import pprint
 
@@ -30,11 +31,12 @@ class FinanceiroMesView(
         self.form_class_has_initial = True
         self.cleaned_data2self = True
         self.template_name = "bordado/financeiro/mes.html"
-        self.title_name = "Financeiro - Por 3 mêses / Clientes"
+        self.title_name = "Financeiro - Clientes / 3 meses"
 
         self.mount_steps = [
             self.mount_meses,
             self.mount_fields_meses,
+            self.mount_row_zerada,
             self.mount_totais_pedidos_dict_meses,
             self.mount_totais_pedidos,
             self.sort_totais_pedidos,
@@ -56,7 +58,7 @@ class FinanceiroMesView(
         if ano and mes:
             return f'{name}_{ano}_{mes:02d}'
         else:
-            return f'{name}_total'
+            return f'{name}_geral'
 
     def mount_meses(self):
         self.meses = [(None, None)]
@@ -71,21 +73,10 @@ class FinanceiroMesView(
             for tipo in ['saldo', 'recebido', 'cobrado', 'fechado']:
                 self.fields_meses.append(self.fname(tipo, ano, mes))
 
-    def row_zerada(self):
-        row = {}
+    def mount_row_zerada(self):
+        self.mount_row_zerada = {}
         for field in self.fields_meses:
-            row[field] = Decimal('0.00')
-        return row
-
-    def calc_saldos(self, row):
-        for ano, mes in self.meses:
-            saldo = (
-                row[self.fname('recebido', ano, mes)]
-                - row[self.fname('cobrado', ano, mes)]
-                - row[self.fname('fechado', ano, mes)]
-            )
-            row[self.fname('saldo', ano, mes)] = saldo
-        return row
+            self.mount_row_zerada[field] = Decimal('0.00')
 
     def valores_inteiros(self, row):
         for field in self.fields_meses:
@@ -98,61 +89,93 @@ class FinanceiroMesView(
                 space = True
         return row
 
-    def get_totais_pedidos_dict_mes(self, ano, mes):
-        dados = get_pedido_financeiro_mes(
-            ano=ano,
-            mes=mes,
-            group_by='cliente'
-        )
-        dados_dict = {}
-        for row in dados:
-            dados_dict[row['cliente__apelido']] = {
-                self.fname('fechado', ano, mes): row['fechado'],
-                self.fname('cobrado', ano, mes): row['cobrado'],
-            }
-        return dados_dict
+    def decimal0(self):
+        return Decimal('0.00')
 
-    def get_totais_lancamento_dict_mes(self, ano, mes):
-        dados = get_lancamento_financeiro_mes(
+    def decimal0_dict(self):
+        return defaultdict(self.decimal0)
+
+    def add_to_dictdata(
+            self, dictlist, dictdata, key, callable_default=None):
+        if not callable_default:
+            callable_default = self.decimal0_dict
+        for row in dictlist:
+            if row[key] not in dictdata:
+                dictdata[row[key]] = callable_default()
+            dictdata[row[key]].update(row)
+
+    def get_valores_dict_mes(self, ano=None, mes=None, filtro=None):
+        valores_dict = {}
+
+        pedido_mes = get_pedido_financeiro_mes(
             ano=ano,
             mes=mes,
             group_by='cliente'
         )
-        dados_dict = {}
-        for row in dados:
-            dados_dict[row['cliente__apelido']] = {
-                self.fname('cobrado', ano, mes): row['cobrado'],
-                self.fname('recebido', ano, mes): row['recebido'],
+        self.add_to_dictdata(pedido_mes, valores_dict, 'cliente__apelido')
+
+        lancamento_mes = get_lancamento_financeiro_mes(
+            ano=ano,
+            mes=mes,
+            group_by='cliente'
+        )
+        self.add_to_dictdata(lancamento_mes, valores_dict, 'cliente__apelido')
+
+        for _, row in valores_dict.items():
+            row['saldo'] = (
+                row['recebido']
+                - row['cobrado']
+                - row['fechado']
+            )
+
+        if callable(filtro):
+            return {
+                key: row
+                for key, row in valores_dict.items()
+                if filtro(row)
             }
-        return dados_dict
+        else:
+            return valores_dict
+
+    def filtro_tem_saldo(self, row):
+        return row['saldo']
+
+    def dict_de_para(self, de, para, regra):
+        for de_key, para_key in regra.items():
+            para[para_key] = de[de_key]
 
     def mount_totais_pedidos_dict_meses(self):
-        row_zerada = self.row_zerada()
-        self.totais_pedidos_dict = {}
-        for ano_mes in self.meses:
-            pedido_mes = self.get_totais_pedidos_dict_mes(*ano_mes)
-            lancamento_mes = self.get_totais_lancamento_dict_mes(*ano_mes)
-            for fonte in [pedido_mes, lancamento_mes]:
-                for cliente, row in fonte.items():
-                    if cliente not in self.totais_pedidos_dict:
-                        self.totais_pedidos_dict[cliente] = row_zerada.copy()
-                    self.totais_pedidos_dict[cliente].update(row)
+        self.meses_dict = {}
+        for ano, mes in self.meses:
+            filtro = None if ano else self.filtro_tem_saldo
+            valores_dict = self.get_valores_dict_mes(ano, mes, filtro)
+            translate_fields = {
+                tipo: self.fname(tipo, ano, mes)
+                for tipo in ['saldo', 'recebido', 'cobrado', 'fechado']
+            }
+            for cliente, row in valores_dict.items():
+                if cliente not in self.meses_dict:
+                    self.meses_dict[cliente] = self.mount_row_zerada.copy()
+                self.dict_de_para(
+                    row,
+                    self.meses_dict[cliente],
+                    translate_fields,
+                )
 
     def mount_totais_pedidos(self):
         self.totais_pedidos = []
-        for cliente, row in self.totais_pedidos_dict.items():
+        for cliente, row in self.meses_dict.items():
             row['cliente__apelido'] = cliente
             self.totais_pedidos.append(row)
         if not self.totais_pedidos:
             raise StopStepsException(
                 "Nada selecionado")
         for row in self.totais_pedidos:
-            self.calc_saldos(row)
             self.valores_inteiros(row)
 
     def sort_totais_pedidos(self):
         self.totais_pedidos.sort(
-            key=operator.itemgetter('saldo_total', 'cliente__apelido'))
+            key=operator.itemgetter('saldo_geral', 'cliente__apelido'))
 
     def mount_totais_defs(self):
         definicao = {
@@ -175,7 +198,7 @@ class FinanceiroMesView(
                     [(f'{mes:02d}/{ano}<br/>Saldo',), 'r azul']
             else:
                 definicao[self.fname('saldo', ano, mes)] = \
-                    [('Total<br/>Saldo',), 'r azulao']
+                    [('Geral<br/>Saldo',), 'r azulao']
         self.totais_defs = TableDefsHpS(
             definicao,
             style={
@@ -215,7 +238,6 @@ class FinanceiroMesView(
         config_totais = {
             'data': self.totais_pedidos,
             'thclass': 'sticky',
-            'data_title': "Posição financeira por cliente",
         }
         self.totais_defs.hfs_dict_context(config_totais)
 
