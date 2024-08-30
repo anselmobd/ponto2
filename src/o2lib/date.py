@@ -84,6 +84,11 @@ def strdmy2date(text):
     return datetime.strptime(text, '%d/%m/%Y').date()
 
 
+def strymd2date(text):
+    """Convert string in format YYYY-MM-DD to date"""
+    return datetime.strptime(text, '%Y-%m-%d').date()
+
+
 def ano_atual():
     """Return year of today, considering TZ"""
     hoje = tz_today()
@@ -100,3 +105,8 @@ def dia_atual():
     """Return day of today, considering TZ"""
     hoje = tz_today()
     return hoje.day
+
+
+def yesterday(dt):
+    """Return date yesterday from date dt"""
+    return (dt - timedelta(days=1))
