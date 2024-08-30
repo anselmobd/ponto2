@@ -28,23 +28,27 @@ class O2BaseGetPostView(CustomView):
         self.cleaned_data2data = False
         self.form_cookie_per_user = True
         self.form_cookie_prefix = ''
+        # internals
+        self._copy_form_data = True
 
-    def do_cleaned_data2self(self):
-        if self.cleaned_data2self:
-            for field in self.form.cleaned_data:
-                setattr(self, field, self.form.cleaned_data[field])
-
-    def do_cleaned_data2context(self):
-        if self.cleaned_data2context:
-            for field in self.form.cleaned_data:
-                value = self.form.cleaned_data[field]
-                self.context.update({field: value})
-
-    def do_cleaned_data2data(self):
-        if self.cleaned_data2data:
+    def do_copy_form_data(self):
+        if self._copy_form_data:
             self.form.data = dict(self.form.data)
-            for field in self.form.cleaned_data:
-                self.form.data[field] = self.form.cleaned_data[field]
+            self._copy_form_data = False
+
+    def set_form_data(self, field, value):
+        self.do_copy_form_data()
+        self.form.data[field] = value
+
+    def do_cleaned_data2(self):
+        for field in self.form.cleaned_data:
+            value = self.form.cleaned_data[field]
+            if self.cleaned_data2self:
+                setattr(self, field, value)
+            if self.cleaned_data2context:
+                self.context[field] = value
+            if self.cleaned_data2data:
+                self.set_form_data(field, value)
 
     def cookie_name(self, field):
         parts = [field]
@@ -65,9 +69,7 @@ class O2BaseGetPostView(CustomView):
     def render_mount(self):
         self.pre_mount_context()
         if self.form.is_valid():
-            self.do_cleaned_data2self()
-            self.do_cleaned_data2context()
-            self.do_cleaned_data2data()
+            self.do_cleaned_data2()
             self.mount_context()
             self.form_to_cookies()
         self.context['form'] = self.form
@@ -77,12 +79,7 @@ class O2BaseGetPostView(CustomView):
     def set_form_arg(self, field):
         value = self.get_arg(field)
         if value is not None:
-
-            # evita erro "This QueryDict instance is immutable"
-            aux_data = self.form.data.copy()
-            self.form.data = aux_data
-
-            self.form.data[field] = value
+            self.set_form_data(field, value)
 
     def empty_form_initial(self):
         """Monta um dict com campos do Form_class e valores None"""
