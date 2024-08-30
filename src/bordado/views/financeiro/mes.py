@@ -3,8 +3,13 @@ from collections import defaultdict
 from decimal import Decimal
 from pprint import pprint
 
-from django.contrib.auth.mixins import LoginRequiredMixin
+from dateutil.relativedelta import relativedelta
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import QueryDict
+from django.urls import reverse
+
+from o2lib.date import strymd2date, yesterday, ymd
 from o2lib.form.form_report import form_report
 from o2lib.models.row_field import PrepRows
 from o2lib.table_defs import TableDefsHpS
@@ -210,12 +215,43 @@ class FinanceiroMesView(
             },
         )
 
+    def mount_url_query(self, row, ano, mes):
+        qdict = QueryDict('', mutable=True)
+        qdict['cliente_apelido'] = row['cliente__apelido']
+        qdict['cobranca'] = 'n'
+        if ano and mes:
+            qdict['entrega_de'] = f'{ano}-{mes}-01'
+            dt = strymd2date(
+                f'{ano}-{mes}-01'
+            )
+            dt = dt+relativedelta(months=+1)
+            qdict['entrega_ate'] = ymd(yesterday(dt))
+        return qdict.urlencode()
+
     def prep_data(self):
         PrepRows(
             self.totais_pedidos,
         ).a_blank(
             'cliente__apelido', 'bordado:analise_cliente', ['cliente__apelido'],
         ).process()
+
+        fields_pedidos = {}
+        for row in self.totais_pedidos:
+            if not fields_pedidos:
+                for field in row:
+                    if field.startswith('fechado'):
+                        partes = field.split('_')
+                        if len(partes) == 3:
+                            fields_pedidos[field] = partes[1:]
+                        else:
+                            fields_pedidos[field] = [None]*2
+            if fields_pedidos:
+                for field in fields_pedidos:
+                    row[f"{field}|TARGET"] = 'blank'
+                    row[f"{field}|A"] = "?".join([
+                        reverse('bordado:listagem_pedido'),
+                        self.mount_url_query(row, *fields_pedidos[field]),
+                    ])
 
     def calcula_totalizador(self):
         totalize_data(
