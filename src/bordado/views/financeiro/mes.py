@@ -52,9 +52,6 @@ class FinanceiroMesView(
             self.form_report,
         ]
 
-        # interno
-        self._fields_pedidos = {}
-
     def ano_mes_anterior(self, ano, mes):
         mes -= 1
         if mes == 0:
@@ -223,26 +220,13 @@ class FinanceiroMesView(
         qdict['cliente_apelido'] = row['cliente__apelido']
         qdict['cobranca'] = 'n'
         if ano and mes:
-            qdict['entrega_de'] = f'{ano}-{mes}-01'
+            qdict['entrega_de'] = f'{ano}-{mes:02d}-01'
             dt = strymd2date(
                 f'{ano}-{mes}-01'
             )
             dt = dt+relativedelta(months=+1)
             qdict['entrega_ate'] = ymd(yesterday(dt))
         return qdict.urlencode()
-
-    def fields_fechado(self, row):
-        if self._fields_pedidos:
-            return self._fields_pedidos
-
-        for field in row:
-            if field.startswith('fechado'):
-                partes = field.split('_')
-                if len(partes) == 3:  # fechado_2024_08
-                    self._fields_pedidos[field] = partes[1:]
-                else:  # fechado_geral
-                    self._fields_pedidos[field] = [None, None]
-        return self._fields_pedidos
 
     def prep_data(self):
         PrepRows(
@@ -252,11 +236,12 @@ class FinanceiroMesView(
         ).process()
 
         for row in self.totais_pedidos:
-            for field in self.fields_fechado(row):
+            for ano, mes in self.meses:
+                field = self.fname('fechado', ano, mes)
                 row[f"{field}|TARGET"] = 'blank'
                 row[f"{field}|A"] = "?".join([
                     reverse('bordado:listagem_pedido'),
-                    self.mount_url_query(row, *fields_pedidos[field]),
+                    self.mount_url_query(row, ano, mes),
                 ])
 
     def calcula_totalizador(self):
