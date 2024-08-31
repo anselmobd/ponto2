@@ -52,6 +52,9 @@ class FinanceiroMesView(
             self.form_report,
         ]
 
+        # interno
+        self._fields_pedidos = {}
+
     def ano_mes_anterior(self, ano, mes):
         mes -= 1
         if mes == 0:
@@ -228,6 +231,19 @@ class FinanceiroMesView(
             qdict['entrega_ate'] = ymd(yesterday(dt))
         return qdict.urlencode()
 
+    def fields_fechado(self, row):
+        if self._fields_pedidos:
+            return self._fields_pedidos
+
+        for field in row:
+            if field.startswith('fechado'):
+                partes = field.split('_')
+                if len(partes) == 3:  # fechado_2024_08
+                    self._fields_pedidos[field] = partes[1:]
+                else:  # fechado_geral
+                    self._fields_pedidos[field] = [None, None]
+        return self._fields_pedidos
+
     def prep_data(self):
         PrepRows(
             self.totais_pedidos,
@@ -235,23 +251,13 @@ class FinanceiroMesView(
             'cliente__apelido', 'bordado:analise_cliente', ['cliente__apelido'],
         ).process()
 
-        fields_pedidos = {}
         for row in self.totais_pedidos:
-            if not fields_pedidos:
-                for field in row:
-                    if field.startswith('fechado'):
-                        partes = field.split('_')
-                        if len(partes) == 3:
-                            fields_pedidos[field] = partes[1:]
-                        else:
-                            fields_pedidos[field] = [None]*2
-            if fields_pedidos:
-                for field in fields_pedidos:
-                    row[f"{field}|TARGET"] = 'blank'
-                    row[f"{field}|A"] = "?".join([
-                        reverse('bordado:listagem_pedido'),
-                        self.mount_url_query(row, *fields_pedidos[field]),
-                    ])
+            for field in self.fields_fechado(row):
+                row[f"{field}|TARGET"] = 'blank'
+                row[f"{field}|A"] = "?".join([
+                    reverse('bordado:listagem_pedido'),
+                    self.mount_url_query(row, *fields_pedidos[field]),
+                ])
 
     def calcula_totalizador(self):
         totalize_data(
