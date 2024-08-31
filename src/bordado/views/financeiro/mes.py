@@ -238,11 +238,12 @@ class FinanceiroMesView(
         for row in self.totais_pedidos:
             for ano, mes in self.meses:
                 field = self.fname('fechado', ano, mes)
-                row[f"{field}|TARGET"] = 'blank'
-                row[f"{field}|A"] = "?".join([
-                    reverse('bordado:listagem_pedido'),
-                    self.mount_url_query(row, ano, mes),
-                ])
+                if row[field]:
+                    row[f"{field}|TARGET"] = 'blank'
+                    row[f"{field}|A"] = "?".join([
+                        reverse('bordado:listagem_pedido'),
+                        self.mount_url_query(row, ano, mes),
+                    ])
 
     def calcula_totalizador(self):
         totalize_data(
