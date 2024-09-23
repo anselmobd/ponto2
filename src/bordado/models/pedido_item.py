@@ -47,8 +47,13 @@ class PedidoItem(models.Model):
         blank=False,
         null=False,
     )
-    quantidade = models.PositiveIntegerField(
-        validators=[MinValueValidator(1), MaxValueValidator(1_000_000)],
+    quantidade = models.DecimalField(
+        max_digits=9,
+        decimal_places=2,
+        validators=[
+            MinValueValidator(Decimal(0.01)),
+            MaxValueValidator(Decimal(1_000_000)),
+        ],
         default=0,
     )
     preco = models.DecimalField(
