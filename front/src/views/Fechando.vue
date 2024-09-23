@@ -53,7 +53,7 @@ function cbPedidoItem(data, error) {
     pedido_item.value = data;
     const date = new Date(pedido_item.value.inserido_em);
     inserido_em.value = dateTime2Text(date);
-    quantidade.value = pedido_item.value.quantidade;
+    quantidade.value = parseFloat(pedido_item.value.quantidade);
     valor_unitario.value = parseFloat(pedido_item.value.preco);
     programacao.value = parseFloat(pedido_item.value.programacao);
     ajuste.value = parseFloat(pedido_item.value.ajuste);
@@ -322,9 +322,10 @@ function calcAjuste() {
                 <input
                   class="px-2 py-1 w-24 border-2 rounded"
                   type="number"
+                  step="0.01"
                   name="quantidade"
                   id="quantidade"
-                  placeholder="0"
+                  placeholder="0,00"
                   v-model="quantidade"
                   @input="alerta = ''"
                   required>
@@ -441,7 +442,7 @@ function calcAjuste() {
               >{{pedido_item_bord.id}}</router-link>
             </td>
             <td>{{ inputStrDate2PtBrDate(pedido_item_bord.pedido.entrega, empty='-') }}</td>
-            <td>{{ pedido_item_bord.quantidade }}</td>
+            <td>{{ ptBrCurrencyFormat.format(pedido_item_bord.quantidade) }}</td>
             <td>{{ ptBrCurrencyFormat.format(pedido_item_bord.preco) }}</td>
             <td>{{ ptBrCurrencyFormat.format(pedido_item_bord.quantidade * pedido_item_bord.preco) }}</td>
             <td>{{ ptBrCurrencyFormat.format(pedido_item_bord.programacao) }}</td>
@@ -510,7 +511,7 @@ function calcAjuste() {
             <td>{{ pedido_item_clie.bordado.nome }}</td>
             <td>{{ pedido_item_clie.bordado.codigo }}</td>
             <td>{{ inputStrDate2PtBrDate(pedido_item_clie.pedido.entrega, empty='-') }}</td>
-            <td>{{ pedido_item_clie.quantidade }}</td>
+            <td>{{ ptBrCurrencyFormat.format(pedido_item_clie.quantidade) }}</td>
             <td>{{ ptBrCurrencyFormat.format(pedido_item_clie.preco) }}</td>
             <td>{{ ptBrCurrencyFormat.format(pedido_item_clie.quantidade * pedido_item_clie.preco) }}</td>
             <td>{{ ptBrCurrencyFormat.format(pedido_item_clie.programacao) }}</td>
