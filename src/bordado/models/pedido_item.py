@@ -47,6 +47,13 @@ class PedidoItem(models.Model):
         blank=False,
         null=False,
     )
+    observacao = models.CharField(
+        "Observação",
+        max_length=100,
+        default="",
+        blank=True,
+        null=True,
+    )
     quantidade = models.DecimalField(
         max_digits=9,
         decimal_places=2,
