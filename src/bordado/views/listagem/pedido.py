@@ -59,7 +59,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
                 self.CLIENTE: ["Cliente", 'cp', 'l verde'],
                 self.BORDADO_NOME: ["Bordado nome", 'cp', 'l amarelo'],
                 self.BORDADO_CODIGO: ["Código", 'cp', 'l amarelo'],
-                self.OBSERVACAO: ["Observação", 'cp', 'l amarelo'],
+                self.OBSERVACAO: ["Obs.", 'cp', 'l amarelo'],
                 self.USUARIO: ["Usuário", 'c'],
                 self.QUANDO: ["Quando", 'c'],
                 self.ENTREGA: ["", 'cp', 'c azul'],
