@@ -145,6 +145,9 @@ class PrepRows():
     def _sn(self, row, field, nao_sim=['Não', 'Sim']):
         row[field] = nao_sim[bool(row[field])]
 
+    def _round(self, row, field, decimals):
+        row[field] = round(row[field], decimals)
+
     def _str(self, row, field, default=None):
         empty = is_empty(row[field])
         if default is None:
@@ -195,6 +198,10 @@ class PrepRows():
 
     def sn(self, *args, **kwargs):
         self.custom_command(self._sn, *args, **kwargs)
+        return self
+
+    def round(self, *args, **kwargs):
+        self.custom_command(self._round, *args, **kwargs)
         return self
 
     def none(self, *args, **kwargs):
