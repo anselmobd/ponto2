@@ -29,6 +29,7 @@ class ListagemCobrancaView(
     QUANTIDADE = 'pedidoitemcobranca__pedido_item__quantidade'
     BORDADO_NOME = 'pedidoitemcobranca__pedido_item__bordado__nome'
     BORDADO_CODIGO = 'pedidoitemcobranca__pedido_item__bordado__codigo'
+    OBSERVACAO = 'pedidoitemcobranca__pedido_item__observacao'
     VALOR = 'pedidoitemcobranca__valor'
 
     def __init__(self, *args, **kwargs):
@@ -54,6 +55,7 @@ class ListagemCobrancaView(
             self.QUANTIDADE: ['Quantidade', 'r'],
             self.BORDADO_NOME: ['Bordado nome', 'c'],
             self.BORDADO_CODIGO: ['Código', 'c'],
+            self.OBSERVACAO: ['Obs.', 'c'],
             self.VALOR: ['Valor pedido', 'r'],
             'usuario__username': ["Usuário"],
             'quando': [],
@@ -96,6 +98,7 @@ class ListagemCobrancaView(
                 'informacao',
                 'parcelamento',
                 self.BORDADO_CODIGO,
+                self.OBSERVACAO,
             )
         ).str(
             (
