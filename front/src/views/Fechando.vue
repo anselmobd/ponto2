@@ -263,6 +263,7 @@ function calcAjuste() {
             <th rowspan="2">Data</th>
             <th rowspan="2">Cliente</th>
             <th colspan="2">Bordado</th>
+            <th rowspan="2">Observação</th>
           </tr>
           <tr>
             <th>Nome</th>
@@ -284,6 +285,7 @@ function calcAjuste() {
             </td>
             <td>{{pedido_item.bordado.nome}}</td>
             <td>{{pedido_item.bordado.codigo}}</td>
+            <td>{{pedido_item.observacao}}</td>
           </tr>
         </tbody>
       </table>
@@ -407,6 +409,7 @@ function calcAjuste() {
         <thead>
           <tr>
             <th>Pedido</th>
+            <th>Observação</th>
             <th>Data de entrega</th>
             <th>Quantidade</th>
             <th>Valor unitário</th>
@@ -441,6 +444,7 @@ function calcAjuste() {
                 title="Dados do fechamento do pedido"
               >{{pedido_item_bord.id}}</router-link>
             </td>
+            <td>{{ pedido_item_bord.observacao}}</td>
             <td>{{ inputStrDate2PtBrDate(pedido_item_bord.pedido.entrega, empty='-') }}</td>
             <td>{{ ptBrCurrencyFormat.format(pedido_item_bord.quantidade) }}</td>
             <td>{{ ptBrCurrencyFormat.format(pedido_item_bord.preco) }}</td>
@@ -481,6 +485,7 @@ function calcAjuste() {
           <tr>
             <th rowspan="2">Pedido</th>
             <th colspan="2">Bordado</th>
+            <th rowspan="2">Observação</th>
             <th rowspan="2">Data de entrega</th>
             <th rowspan="2">Quantidade</th>
             <th rowspan="2">Valor unitário</th>
@@ -510,6 +515,7 @@ function calcAjuste() {
             </td>
             <td>{{ pedido_item_clie.bordado.nome }}</td>
             <td>{{ pedido_item_clie.bordado.codigo }}</td>
+            <td>{{ pedido_item_clie.observacao }}</td>
             <td>{{ inputStrDate2PtBrDate(pedido_item_clie.pedido.entrega, empty='-') }}</td>
             <td>{{ ptBrCurrencyFormat.format(pedido_item_clie.quantidade) }}</td>
             <td>{{ ptBrCurrencyFormat.format(pedido_item_clie.preco) }}</td>
