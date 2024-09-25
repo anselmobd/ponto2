@@ -109,6 +109,7 @@ export function addClienteBordado(
   cliente_apelido,
   bordado_nome,
   bordado_codigo,
+  pedido_item_observacao,
   callBack
 ) {
   const params = new URLSearchParams();
@@ -123,7 +124,8 @@ export function addClienteBordado(
       bordado: {
         nome: bordado_nome,
         codigo: bordado_codigo
-      }
+      },
+      pedido_item: {observacao: pedido_item_observacao}
     },
     {params: params},
   )
