@@ -143,6 +143,8 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             self.data,
         ).none(
             'valor', Decimal('0.00')
+        ).round(
+            'valor', 2
         ).process()
 
     def prep_table(self):
