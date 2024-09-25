@@ -26,7 +26,7 @@
   cursor: not-allowed;
 }
 .pagination .disabled a {
-  background-color: #ccc;
-  color: #666;
+  background-color: #ddd;
+  color: #999;
   cursor: not-allowed;
 }
