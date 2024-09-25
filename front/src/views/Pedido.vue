@@ -381,7 +381,7 @@ watch(status, (newStatus) => {
           <th>Data<span v-if="pedido_itens_filtro_data_pedido" ><br/><span class="text-indigo-700">{{ pedido_itens_filtro_data_pedido }}</span><a href="#" class="button" @click="handleCancelaFiltroDataPedidoClick">&cross;</a></span></th>
           <th>Cliente<span v-if="pedido_itens_filtro_apelido" ><br/><span class="text-indigo-700">{{ pedido_itens_filtro_apelido }}</span><a href="#" class="button" @click="handleCancelaFiltroApelidoClick">&cross;</a></span></th>
           <th colspan="2">Bordado</th>
-          <th>Obs. pedido</th>
+          <th>Observação</th>
           <th>Ações</th>
           <th title="Usuário e Data/Hora da inserção/alteração">🛈</th>
         </tr>
