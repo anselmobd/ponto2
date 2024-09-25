@@ -26,6 +26,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
     AJUSTE = 'pedidoitem__ajuste'
     BORDADO_CODIGO = 'pedidoitem__bordado__codigo'
     BORDADO_NOME = 'pedidoitem__bordado__nome'
+    OBSERVACAO = 'pedidoitem__observacao'
     CLIENTE = 'cliente__apelido'
     COBRANCA = 'pedidoitem__cobrancas__cobranca'
     DATA = 'pedidoitem__data_pedido'
@@ -58,6 +59,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
                 self.CLIENTE: ["Cliente", 'cp', 'l verde'],
                 self.BORDADO_NOME: ["Bordado nome", 'cp', 'l amarelo'],
                 self.BORDADO_CODIGO: ["Código", 'cp', 'l amarelo'],
+                self.OBSERVACAO: ["Observação", 'cp', 'l amarelo'],
                 self.USUARIO: ["Usuário", 'c'],
                 self.QUANDO: ["Quando", 'c'],
                 self.ENTREGA: ["", 'cp', 'c azul'],
@@ -154,6 +156,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             (
                 self.BORDADO_CODIGO,
                 self.COBRANCA,
+                self.OBSERVACAO,
             )
         ).date_dash(
             (
