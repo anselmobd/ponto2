@@ -171,6 +171,7 @@ class PedidoItemAdmin(admin.ModelAdmin):
         'ordem',
         'inserido_em',
         'bordado',
+        'observacao',
         'quantidade',
         'preco',
         'cancelado',
