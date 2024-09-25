@@ -539,7 +539,7 @@ watch(status, (newStatus) => {
           <td>{{pedido_item.bordado.codigo}}</td>
           <td>
             <button
-              v-if="!pedido_item.quantidade"
+              v-if="pedido_item.quantidade == 0"
               class="button-text-shadow"
               :value="index"
               @click="handleApagarClick"
