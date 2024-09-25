@@ -186,6 +186,21 @@ class PedidoItemViewSet(viewsets.ModelViewSet):
                     })
                     raise TypeError
 
+                try:
+                    observacao = request.data['pedido_item']['observacao'],
+                except KeyError:
+                    errors.update({
+                        'pedido_item': {
+                            'observacao': ["KeyError"],
+                        }
+                    })
+                    raise TypeError
+                if isinstance(observacao, tuple):
+                    if len(observacao) > 0:
+                        observacao = observacao[0]
+                    else:
+                        observacao = None
+
                 pedido = Pedido(cliente=cliente)
                 pedido.save()
 
@@ -194,6 +209,7 @@ class PedidoItemViewSet(viewsets.ModelViewSet):
                     pedido=pedido,
                     ordem=1,
                     bordado=bordado,
+                    observacao=observacao,
                     usuario=self.request.user,
                 )
                 pedido_item.save()
