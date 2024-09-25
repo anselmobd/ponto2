@@ -118,9 +118,14 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
                 pedidoitem__cobrancas__cobranca__isnull=True)
 
     def order_query(self):
-        self.query = self.query.order_by(
-            f'-{self.DATA}', '-numero'
-        )
+        if self.ordem == 'e':
+            self.query = self.query.order_by(
+                f'-{self.ENTREGA}', self.CLIENTE, '-numero'
+            )
+        else:
+            self.query = self.query.order_by(
+                f'-{self.DATA}', '-numero'
+            )
 
     def annotate_query(self):
         self.query = self.query.annotate(

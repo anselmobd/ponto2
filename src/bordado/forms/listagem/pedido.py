@@ -17,7 +17,7 @@ class ListagemPedidoForm(forms.Form):
         ['cliente_apelido', 'numero'],
         ['data_de', 'data_ate'],
         ['entrega_de', 'entrega_ate'],
-        ['fechamento', 'cobranca'],
+        ['fechamento', 'cobranca', 'ordem'],
         ['apresentacao', 'por_pagina', 'page']
     ]
     cookie_field = ['apresentacao', 'por_pagina']
@@ -74,6 +74,16 @@ class ListagemPedidoForm(forms.Form):
     ]
     cobranca = forms.ChoiceField(
         label="Quanto à cobrança",
+        choices=CHOICES,
+        initial='',
+        required=False,
+    )
+    CHOICES = [
+        ('', "Data do pedido / Nº do pedido"),
+        ('e', "Data de entrega / Cliente / Nº do pedido"),
+    ]
+    ordem = forms.ChoiceField(
+        label="Ordem",
         choices=CHOICES,
         initial='',
         required=False,
