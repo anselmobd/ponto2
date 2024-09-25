@@ -40,6 +40,10 @@ const codigo = ref({
   error: '',
   list: []
 });
+const observacao = ref({
+  input: '',
+  error: '',
+});
 
 // componentes do template que serão referenciados
 
@@ -47,6 +51,7 @@ const inputCliente = ref(null);
 const datalistCliente = ref(null);
 const inputBordado = ref(null);
 const inputCodigo = ref(null);
+const inputObservacao = ref(null);
 
 // get set refs
 
@@ -56,6 +61,7 @@ function clearInputs(set_cliente_apelido = '', set_filtro_data_pedido = '') {
   cliente.value.input = set_cliente_apelido;
   bordado.value.input = '';
   codigo.value.input = '';
+  observacao.value.input = '';
   pedido_itens_index = '';
 }
 
@@ -64,6 +70,7 @@ function clearErrors() {
   cliente.value.error = '';
   bordado.value.error = '';
   codigo.value.error = '';
+  observacao.value.error = '';
 }
 
 // DB API calls (do) and callbacks (cb)
@@ -150,6 +157,11 @@ function cbAddClienteBordado(data, error) {
     if ('codigo' in error) {
       codigo.value.error = error.codigo.join('|');
     }
+    if ('pedido_item' in error) {
+      if ('observacao' in error.pedido_item) {
+        observacao.value.error = error.pedido_item.observacao.join('|');
+      }
+    }
   };
   getClientes(cbGetClientes);
 }
@@ -162,6 +174,7 @@ function doAddClienteBordado() {
       cliente.value.input,
       bordado.value.input,
       codigo.value.input,
+      observacao.value.input,
       cbAddClienteBordado
     );
   } else {
@@ -368,6 +381,7 @@ watch(status, (newStatus) => {
           <th>Data<span v-if="pedido_itens_filtro_data_pedido" ><br/><span class="text-indigo-700">{{ pedido_itens_filtro_data_pedido }}</span><a href="#" class="button" @click="handleCancelaFiltroDataPedidoClick">&cross;</a></span></th>
           <th>Cliente<span v-if="pedido_itens_filtro_apelido" ><br/><span class="text-indigo-700">{{ pedido_itens_filtro_apelido }}</span><a href="#" class="button" @click="handleCancelaFiltroApelidoClick">&cross;</a></span></th>
           <th colspan="2">Bordado</th>
+          <th>Obs. pedido</th>
           <th>Ações</th>
           <th title="Usuário e Data/Hora da inserção/alteração">🛈</th>
         </tr>
@@ -455,6 +469,20 @@ watch(status, (newStatus) => {
             </datalist>
           </th>
           <th>
+            <span class="text-sm text-red-700 font-bold" v-if="observacao.error" >{{ observacao.error }}<br /></span>
+            <input
+              class="w-11/12 mx-0.5 border border-solid border-slate-500 disabled:border-slate-200 rounded"
+              v-model.trim="observacao.input"
+              :disabled="status != 'i'"
+              type="text"
+              size="12"
+              name="observacao"
+              id="observacao"
+              ref="inputObservacao"
+              placeholder="Observação"
+            >
+          </th>
+          <th>
             <button
               type="button"
               @click="handleSalvaClick"
@@ -537,6 +565,7 @@ watch(status, (newStatus) => {
             <span v-else>{{pedido_item.bordado.nome}}</span>
           </td>
           <td>{{pedido_item.bordado.codigo}}</td>
+          <td>{{pedido_item.observacao}}</td>
           <td>
             <button
               v-if="pedido_item.quantidade == 0"
