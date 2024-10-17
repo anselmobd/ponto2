@@ -92,7 +92,7 @@ class PedidoItem(models.Model):
         ],
         default=0,
     )
-    contesia = models.BooleanField(
+    cortesia = models.BooleanField(
         default=False,
     )
     cancelado = models.BooleanField(
