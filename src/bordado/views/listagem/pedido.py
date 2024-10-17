@@ -87,6 +87,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             (self.filtra_valor_de_ate, [
                 self.ENTREGA, 'entrega_de', 'entrega_ate']),
             self.filtra_fechamento,
+            self.filtra_cortesia,
             self.filtra_cobranca,
             self.order_query,
             self.annotate_query,
@@ -110,6 +111,12 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             self.query = self.query.filter(entrega__isnull=False)
         elif self.fechamento == 'n':
             self.query = self.query.filter(entrega__isnull=True)
+
+    def filtra_cortesia(self):
+        if self.cortesia == 'f':
+            self.query = self.query.filter(**{self.CORTESIA: True})
+        elif self.cortesia == 'n':
+            self.query = self.query.filter(**{self.CORTESIA: False})
 
     def filtra_cobranca(self):
         if self.cobranca == 'c':
@@ -214,6 +221,8 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
     def filter_report_excludes(self):
         if self.fechamento == '':
             self.form_report_excludes.append('fechamento')
+        if self.cortesia == '':
+            self.form_report_excludes.append('cortesia')
         if self.cobranca == '':
             self.form_report_excludes.append('cobranca')
         self.form_report_excludes.append('apresentacao')
