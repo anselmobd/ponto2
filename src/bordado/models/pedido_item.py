@@ -78,7 +78,7 @@ class PedidoItem(models.Model):
         max_digits=9,
         decimal_places=2,
         validators=[
-            MinValueValidator(Decimal(0.01)),
+            MinValueValidator(Decimal(0)),
             MaxValueValidator(Decimal(1_000_000)),
         ],
         default=0,
