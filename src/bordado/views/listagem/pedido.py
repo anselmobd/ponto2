@@ -29,6 +29,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
     OBSERVACAO = 'pedidoitem__observacao'
     CLIENTE = 'cliente__apelido'
     COBRANCA = 'pedidoitem__cobrancas__cobranca'
+    CORTESIA = 'pedidoitem__cortesia'
     DATA = 'pedidoitem__data_pedido'
     ENTREGA = 'entrega'
     NUMERO = 'numero'
@@ -67,6 +68,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
                 self.PRECO: ["Preço", 'cp', 'r verde'],
                 self.PROGRAMACAO: ["Programação", 'cp', 'r verde'],
                 self.AJUSTE: ["Ajuste", 'cp', 'r verde'],
+                self.CORTESIA: ["Cortesia", 'cp', 'c azul'],
                 self.VALOR: ["", 'cp', 'r azul'],
                 self.COBRANCA: ["Cobrança", 'c', 'c'],
             },
@@ -167,6 +169,8 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             (
                 self.ENTREGA,
             )
+        ).sn(
+            self.CORTESIA
         ).str(
             (
                 self.BORDADO_NOME,
