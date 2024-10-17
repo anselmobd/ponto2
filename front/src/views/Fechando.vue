@@ -417,6 +417,7 @@ function calcAjuste() {
             <th>Programação</th>
             <th>Ajuste</th>
             <th>Valor final</th>
+            <th>Cortesia</th>
             <th>Cobranças</th>
             <th>Ação</th>
           </tr>
@@ -460,6 +461,9 @@ function calcAjuste() {
               }}
             </td>
             <td>
+              {{pedido_item_bord.cortesia ? 'Sim' : 'Não'}}
+            </td>
+            <td>
               {{ pedido_item_bord.cobrancas.length ?
                  pedido_item_bord.cobrancas.map(c => { return c.id }).join(", ") :
                  ( pedido_item_bord.pedido.entrega ? 'Não' : '-' ) }}
@@ -493,6 +497,7 @@ function calcAjuste() {
             <th rowspan="2">Programação</th>
             <th rowspan="2">Ajuste</th>
             <th rowspan="2">Valor final</th>
+            <th rowspan="2">Cortesia</th>
             <th rowspan="2">Cobrança</th>
             <th rowspan="2">Ação</th>
           </tr>
@@ -526,6 +531,9 @@ function calcAjuste() {
               (pedido_item_clie.quantidade * pedido_item_clie.preco)
               + parseFloat(pedido_item_clie.programacao) + parseFloat(pedido_item_clie.ajuste)
             ) }}</td>
+            <td>
+              {{pedido_item_clie.cortesia ? 'Sim' : 'Não'}}
+            </td>
             <td>
               {{ pedido_item_clie.cobrancas.length ?
                  pedido_item_clie.cobrancas.map(c => { return c.id }).join(", ") :
