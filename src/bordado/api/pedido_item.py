@@ -236,6 +236,7 @@ class PedidoItemViewSet(viewsets.ModelViewSet):
             pedido_item.preco = request.data['valor_unitario']
             pedido_item.programacao = request.data['programacao']
             pedido_item.ajuste = request.data['ajuste']
+            pedido_item.cortesia = request.data['cortesia']
             pedido_item.save()
 
             pedido_item.pedido.entrega = request.data['data_entrega']
