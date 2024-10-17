@@ -123,6 +123,8 @@ class PedidoItem(models.Model):
             self.ordem = (
                 PedidoItem.objects.filter(pedido=self.pedido).count() + 1
             ) * 10
+        if self.cortesia:
+            self.ajuste = -(self.quantidade * self.preco + self.programacao)
         super(PedidoItem, self).save(*args, **kwargs)
 
     class Meta:
