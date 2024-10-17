@@ -71,6 +71,8 @@ class PedidoItemViewSet(viewsets.ModelViewSet):
                     output_field=DateTimeField(),
                 )
             ).filter(
+                cortesia=False
+            ).filter(
                 Q(cobrancas__isnull=True) |
                 Q(ultima_cobranca_quando__gte=ha24horas)
             )
