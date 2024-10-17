@@ -144,6 +144,7 @@ class PedidoItemSerializer(serializers.ModelSerializer):
             'programacao',
             'ajuste',
             'cobrancas',
+            'cortesia',
             'cancelado',
             'usuario',
         ]
