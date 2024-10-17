@@ -166,6 +166,7 @@ export function saveFechamento({
   valor_unitario=null,
   programacao=null,
   ajuste=null,
+  cortesia=null,
   callBack=()=>{}
 }) {
   const params = new URLSearchParams();
@@ -179,7 +180,8 @@ export function saveFechamento({
       quantidade: quantidade,
       valor_unitario: valor_unitario,
       programacao: programacao,
-      ajuste: ajuste
+      ajuste: ajuste,
+      cortesia: cortesia
     },
     {params: params},
   )

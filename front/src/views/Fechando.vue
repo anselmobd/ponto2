@@ -39,6 +39,7 @@ const quantidade = ref(0)
 const valor_unitario = ref(0)
 const programacao = ref(0)
 const ajuste = ref(0)
+const cortesia = ref(false)
 
 // outros valores reativos
 
@@ -57,6 +58,7 @@ function cbPedidoItem(data, error) {
     valor_unitario.value = parseFloat(pedido_item.value.preco);
     programacao.value = parseFloat(pedido_item.value.programacao);
     ajuste.value = parseFloat(pedido_item.value.ajuste);
+    cortesia.value = pedido_item.value.cortesia;
     if (pedido_item.value.pedido.entrega) {
       data_entrega.value = pedido_item.value.pedido.entrega;
     } else {
@@ -97,6 +99,7 @@ function doSaveFechamento() {
       valor_unitario: valor_unitario.value,
       programacao: programacao.value,
       ajuste: ajuste.value,
+      cortesia: cortesia.value,
       callBack: cbSaveFechamento,
     });
   }
@@ -304,7 +307,8 @@ function calcAjuste() {
               <th>Valor</th>
               <th><label for="programacao">Programação</label></th>
               <th><label for="ajuste">Ajuste</label></th>
-              <th>Valor final</th>
+              <th><label for="valor_final">Valor final</label></th>
+              <th><label for="cortesia">Cortesia</label></th>
             </tr>
           </thead>
           <tbody>
@@ -384,6 +388,14 @@ function calcAjuste() {
                   @blur="inputValorFinalFocused = false"
                   @input="alerta = ''"
                   required>
+              </td>
+              <td>
+                <input
+                  type="checkbox"
+                  name="cortesia"
+                  id="cortesia"
+                  v-model="cortesia"
+                >
               </td>
             </tr>
           </tbody>
