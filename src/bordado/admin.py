@@ -174,6 +174,7 @@ class PedidoItemAdmin(admin.ModelAdmin):
         'observacao',
         'quantidade',
         'preco',
+        'cortesia',
         'cancelado',
     ]
     list_display_links = [
@@ -197,6 +198,7 @@ class PedidoItemAdmin(admin.ModelAdmin):
         'preco',
         'programacao',
         'ajuste',
+        'cortesia',
         'cancelado',
     ]
     readonly_fields = [
