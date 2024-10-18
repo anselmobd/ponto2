@@ -2,6 +2,7 @@ import { axiosPrivate } from '../common/axiosPrivate.js';
 
 export function getLancamentos({
   page=1,
+  page_size=null,
   cliente_apelido=null,
   tipo_lancamento=null,
   callBack=()=>{}
@@ -10,6 +11,9 @@ export function getLancamentos({
   params.append('format', 'json');
   if (page && page >1) {
     params.append('page', page);
+  }
+  if (page_size) {
+    params.append('page_size', page_size);
   }
   if (cliente_apelido) {
     params.append('cliente__apelido', cliente_apelido);
