@@ -7,6 +7,7 @@ import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
 import Fechando from '../views/Fechando.vue'
 import Financeiro from '../views/Financeiro.vue'
+import ConciliaCobranca from '../views/ConciliaCobranca.vue'
 import Cliente from '../views/Cliente.vue'
 import Bordado from '../views/Bordado.vue'
 import { checkVersion } from '../api/check_version.js';
@@ -51,6 +52,11 @@ const routes = [
       path: "/bordado/:id",
       name: "bordado",
       component: Bordado,
+    },
+    {
+      path: "/concilia_cobranca/:apelido",
+      name: "concilia_cobranca",
+      component: ConciliaCobranca,
     },
 ];
 

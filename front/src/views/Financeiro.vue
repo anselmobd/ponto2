@@ -290,6 +290,14 @@ function handleMaisLancamentosClick(event) {
   doGetLancamentos(2);
 }
 
+function handleConciliaCobrancaClick(event) {
+  event.preventDefault();
+  router.push({
+    name: 'concilia_cobranca',
+    params: { apelido: route.params.apelido }
+  });
+}
+
 // Lifecycle Hooks
 
 onMounted(() => {
@@ -686,6 +694,11 @@ onMounted(() => {
         v-if="lancamentos_next && !lancamentos_carregando"
         @click="handleMaisLancamentosClick"
       >Mais lançamentos</button>
+      <p class="text-center">
+        <button
+          @click="handleConciliaCobrancaClick"
+        >Concilia Cobrança</button>
+      </p>
     </section>
 
   </div>
