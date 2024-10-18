@@ -4,6 +4,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import (
     extend_schema_view,
     extend_schema,
+    OpenApiExample,
+    OpenApiParameter,
 )
 from rest_framework import (
     permissions,
@@ -28,13 +30,62 @@ __all__ = [
 
 
 @extend_schema_view(
-    **dict_keys_value(__ACTIONS, extend_schema(tags=['lancamento'])))
+    **dict_keys_value(
+        [a for a in __ACTIONS if a != 'list'],
+        extend_schema(
+            tags=['lancamento']
+        ),
+    ),
+    list=extend_schema(
+        tags=['lancamento'],
+        parameters=[
+            OpenApiParameter(
+                name='tipo_lancamento', 
+                description="Filtra os lançamentos por tipo", 
+                required=False,
+                type=str,
+                examples=[
+                    OpenApiExample(
+                        "Todos",
+                        summary="Todos",
+                        value=None
+                    ),
+                    OpenApiExample(
+                        "Pagamento",
+                        summary="Pagamento",
+                        value='pagamento'
+                    ),
+                    OpenApiExample(
+                        "Cobranca",
+                        summary="Cobrança",
+                        value='cobranca'
+                    )
+                ],
+            ),
+        ],
+    )
+)
 class LancamentoViewSet(viewsets.ModelViewSet):
     queryset = Lancamento.objects.all()
     serializer_class = LancamentoFullSerializer
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['cliente__apelido']
+
+    def get_queryset(self):
+        queryset = Lancamento.objects.all()
+        
+        tipo_lancamento = self.request.query_params.get('tipo_lancamento', None)
+        if tipo_lancamento is not None:
+            if 'pagamento'.startswith(tipo_lancamento):
+                queryset = queryset.filter(
+                    cobranca__isnull=True
+                )
+            else:  # 'cobranca'.startswith(tipo_lancamento):
+                queryset = queryset.filter(
+                    cobranca__isnull=False
+                )
+        return queryset
 
     def create(self, request, *args, **kwargs):
         if len(request.data.keys()) == 4:
