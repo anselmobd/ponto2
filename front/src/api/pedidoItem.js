@@ -6,6 +6,12 @@ function avaliarNullComoVazio(valor) {
   return valor === null ? "" : valor;
 }
 
+function avaliarLen0ComoVazio(valor) {
+  console.log('avaliarLen0ComoVazio');
+  console.log(valor);
+  return valor.length == 0 ? "" : valor;
+}
+
 export function getPedidoItens({
   page=1,
   page_size=30,
@@ -74,7 +80,8 @@ export function getPedidoItens({
         avaliarNullComoVazio(element.pedido.cliente.numero)+
         element.pedido.cliente.complemento+
         element.pedido.cliente.cidade+
-        element.pedido.cliente.uf
+        element.pedido.cliente.uf+
+        avaliarLen0ComoVazio(element.pedido.cliente.contato_set)
       ) == '';
     });
     callBack(response.data);
