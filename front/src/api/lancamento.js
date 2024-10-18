@@ -3,6 +3,7 @@ import { axiosPrivate } from '../common/axiosPrivate.js';
 export function getLancamentos({
   page=1,
   cliente_apelido=null,
+  tipo_lancamento=null,
   callBack=()=>{}
 }) {
   const params = new URLSearchParams();
@@ -12,6 +13,9 @@ export function getLancamentos({
   }
   if (cliente_apelido) {
     params.append('cliente__apelido', cliente_apelido);
+  }
+  if (tipo_lancamento) {
+    params.append('tipo_lancamento', tipo_lancamento);
   }
   axiosPrivate.get(
     '/bordado/api/lancamento/',
