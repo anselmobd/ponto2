@@ -60,22 +60,30 @@ onMounted(() => {
       <table class="w-full">
         <thead>
           <tr>
-            <th>id</th>
             <th>Data</th>
-            <th>Valor</th>
+            <th>informação</th>
+            <th class="!text-right">Valor</th>
+          </tr>
+          <tr v-if="pagamentos_error">
+            <th class="text-red-800" colspan="8">
+              {{ pagamentos_error }}
+            </th>
           </tr>
           <tr v-if="pagamentos_carregando">
-            <td colspan="3">Carregando dados dos pagamentos...</td>
+            <th colspan="3">Carregando dados dos pagamentos...</th>
           </tr>
-        </thead>
+          <tr v-if="!pagamentos_carregando && (pagamentos.length == 0)">
+            <th colspan="3">Nenhum pagamento encontrado</th>
+          </tr>
+       </thead>
         <tbody>
           <tr
             v-for="pagamento in pagamentos"
             :key="pagamento.id"
           >
-            <td>{{pagamento.id}}</td>
             <td>{{pagamento.data}}</td>
-            <td>{{pagamento.valor}}</td>
+            <td>{{ pagamento?.cobranca ? pagamento.cobranca.informacao : pagamento.informacao }}</td>
+            <td class="!text-right">{{pagamento.valor}}</td>
           </tr>
         </tbody>
       </table>
