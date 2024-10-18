@@ -694,7 +694,7 @@ onMounted(() => {
         v-if="lancamentos_next && !lancamentos_carregando"
         @click="handleMaisLancamentosClick"
       >Mais lançamentos</button>
-      <p class="text-center">
+      <p class="text-center mb-4">
         <button
           @click="handleConciliaCobrancaClick"
         >Concilia Cobrança</button>
