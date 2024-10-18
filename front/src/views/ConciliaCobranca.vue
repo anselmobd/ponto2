@@ -2,7 +2,7 @@
 import { useRoute } from "vue-router";
 import { ref, onMounted } from 'vue'
 import { getLancamentos } from '../api/lancamento.js';
-import { inputStrDate2PtBrDate, date2InputText } from "../utils/date.js";
+import { inputStrDate2PtBrDate } from "../utils/date.js";
 import { ptBrCurrencyFormat } from "../utils/numStr.js";
 
 const route = useRoute();
@@ -16,6 +16,11 @@ const pagamentos_error = ref(null)
 const cobrancas = ref([])
 const cobrancas_carregando = ref(null)
 const cobrancas_error = ref(null)
+
+// variaveis comuns
+
+const pagamento_selecionado = ref({})
+const cobrancas_selecionadas = ref({})
 
 // DB API calls (do) and callbacks (cb)
 
@@ -67,6 +72,42 @@ function doGetCobrancas() {
   });
 }
 
+// Events
+
+function handlePagamentoClick(pagamento) {
+  cobrancas_selecionadas.value = {};
+  if (pagamento_selecionado.value?.id === pagamento.id) {
+    pagamento_selecionado.value = {};
+    return;
+  };
+  pagamento_selecionado.value = pagamento;
+
+  // Filtra os registros com o valor desejado
+  const cobrancasValor = cobrancas.value.filter(row => row.valor === '-'+ pagamento_selecionado.value.valor);
+  console.log(cobrancasValor);
+
+  // Obtém o último registro filtrado com valor desejado
+  if (cobrancasValor.length > 0) {
+    const id = cobrancasValor[cobrancasValor.length-1].id;
+    cobrancas_selecionadas.value[id] = cobrancasValor[cobrancasValor.length-1];
+    scrollToRow('cobranca_' + id)
+    return
+  }
+
+  // busca últimos registros até somar o valor desejado
+  // WIP
+
+}
+
+// Utilitarios
+
+function scrollToRow(rowId) {
+  const row = document.getElementById(rowId);
+  if (row) {
+    row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
 // Lifecycle Hooks
 
 onMounted(() => {
@@ -85,81 +126,161 @@ onMounted(() => {
     
     <section id="lancamentos">
       <h3 class="my-1 font-bold text-lg text-center bg-slate-100 rounded">Não conciliados</h3>
+      <p class="text-sm">Clique em um pagamento para iniciar a conciliação com as cobranças</p>
 
       <section class="flex justify-between" id="lista_lancamentos">
 
         <section id="lista_pagamentos">
-
           <h3 class="my-1 font-bold text-lg text-center">Pagamentos</h3>
+
+          <section id="tabela_pagamentos"
+            class="flex-1 ml-2 max-h-[calc(25*1.25rem)] overflow-y-auto border border-gray-300 pl-1 pr-4 text-right">
+            <table>
+              <thead>
+                <tr>
+                  <th class="sticky top-0 bg-slate-100">Data</th>
+                  <th class="sticky top-0 bg-slate-100">Informação</th>
+                  <th class="sticky top-0 bg-slate-100 !text-right">Valor</th>
+                </tr>
+                <tr v-if="pagamentos_error">
+                  <th class="text-red-800" colspan="3">
+                    {{ pagamentos_error }}
+                  </th>
+                </tr>
+                <tr v-if="pagamentos_carregando">
+                  <th colspan="3">Carregando dados dos pagamentos...</th>
+                </tr>
+                <tr v-if="!pagamentos_carregando && (pagamentos.length == 0)">
+                  <th colspan="3">Nenhum pagamento encontrado</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  v-for="pagamento in pagamentos"
+                  :key="pagamento.id"
+                  :class="{'bg-yellow-300': pagamento.id == pagamento_selecionado.id}"
+                  @click="handlePagamentoClick(pagamento)"
+                >
+                  <td>{{inputStrDate2PtBrDate(pagamento.data)}}</td>
+                  <td>{{pagamento.informacao}}</td>
+                  <td class="!text-right">{{
+                    ptBrCurrencyFormat.format(pagamento.valor)
+                  }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+        </section>
+
+        <section id="lista_cobrancas">
+          <h3 class="my-1 font-bold text-lg text-center">Cobranças</h3>
+
+          <section id="tabela_cobrancas"
+            class="flex-1 ml-2 max-h-[calc(25*1.25rem)] overflow-y-auto border border-gray-300 pl-1 pr-4 text-right">
+            <table>
+              <thead>
+                <tr>
+                  <th class="sticky top-0 bg-slate-100">Data</th>
+                  <th class="sticky top-0 bg-slate-100">Informação</th>
+                  <!-- <th>Comunicação</th> -->
+                  <th class="sticky top-0 bg-slate-100">NF</th>
+                  <th class="sticky top-0 bg-slate-100">Cobrança</th>
+                  <th class="sticky top-0 bg-slate-100">Parcela</th>
+                  <th class="sticky top-0 bg-slate-100 !text-right">Valor</th>
+                </tr>
+                <tr v-if="cobrancas_error">
+                  <th class="text-red-800" colspan="6">
+                    {{ cobrancas_error }}
+                  </th>
+                </tr>
+                <tr v-if="cobrancas_carregando">
+                  <th colspan="6">Carregando dados das cobranças...</th>
+                </tr>
+                <tr v-if="!cobrancas_carregando && (cobrancas.length == 0)">
+                  <th colspan="6">Nenhuma cobrança encontrada</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  v-for="cobranca in cobrancas"
+                  :key="cobranca.id"
+                  :class="{'bg-yellow-300': cobranca.id in cobrancas_selecionadas}"
+                  :id="'cobranca_' + cobranca.id"
+                >
+                  <td>{{inputStrDate2PtBrDate(cobranca.data)}}</td>
+                  <td>{{cobranca.cobranca.informacao }}</td>
+                  <!-- <td>{{
+                    cobranca?.cobranca?.comunicacao?.descricao ? cobranca.cobranca.comunicacao.descricao : '-'
+                  }}</td> -->
+                  <td>{{
+                    cobranca?.cobranca?.nf ? cobranca.cobranca.nf : '-'
+                  }}</td>
+                  <td>{{
+                    cobranca?.cobranca?.id ? cobranca.cobranca.id : '-'
+                  }}</td>
+                  <td>{{
+                    cobranca?.n_parcelas > 1 ? cobranca.parcela+'/'+cobranca.n_parcelas : cobranca?.n_parcelas == 1 ? 'única' : '-'
+                  }}</td>
+                  <td class="!text-right">{{
+                    ptBrCurrencyFormat.format(-cobranca.valor)
+                  }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+        </section>
+
+      </section>
+
+    </section>
+
+    <section id="conciliando" v-if="Object.keys(pagamento_selecionado).length > 0">
+      <h3 class="my-1 font-bold text-lg text-center bg-slate-100 rounded">Conciliando</h3>
+    
+      <section class="flex justify-between" id="tabelas_conciliando">
+        
+        <section id="conciliando_pagamento">
+          <h3 class="my-1 font-bold text-lg text-center">Pagamento</h3>
           <table>
             <thead>
               <tr>
-                <th>Data</th>
-                <th>Informação</th>
-                <th class="!text-right">Valor</th>
-              </tr>
-              <tr v-if="pagamentos_error">
-                <th class="text-red-800" colspan="3">
-                  {{ pagamentos_error }}
-                </th>
-              </tr>
-              <tr v-if="pagamentos_carregando">
-                <th colspan="3">Carregando dados dos pagamentos...</th>
-              </tr>
-              <tr v-if="!pagamentos_carregando && (pagamentos.length == 0)">
-                <th colspan="3">Nenhum pagamento encontrado</th>
+                <th class="sticky top-0 bg-slate-100">Data</th>
+                <th class="sticky top-0 bg-slate-100">Informação</th>
+                <th class="sticky top-0 bg-slate-100 !text-right">Valor</th>
               </tr>
             </thead>
             <tbody>
-              <tr
-                v-for="pagamento in pagamentos"
-                :key="pagamento.id"
-              >
-                <td>{{inputStrDate2PtBrDate(pagamento.data)}}</td>
-                <td>{{pagamento.informacao}}</td>
+              <tr>
+                <td>{{inputStrDate2PtBrDate(pagamento_selecionado.data)}}</td>
+                <td>{{pagamento_selecionado.informacao}}</td>
                 <td class="!text-right">{{
-                  ptBrCurrencyFormat.format(pagamento.valor)
+                  ptBrCurrencyFormat.format(pagamento_selecionado.valor)
                 }}</td>
               </tr>
             </tbody>
           </table>
         </section>
 
-        <section id="lista_cobrancas">
+        <section id="conciliando_cobrancas">
           <h3 class="my-1 font-bold text-lg text-center">Cobranças</h3>
           <table>
             <thead>
               <tr>
-                <th>Data</th>
-                <th>Informação</th>
-                <th>Comunicação</th>
-                <th>NF</th>
-                <th>Cobrança</th>
-                <th>Parcela</th>
-                <th class="!text-right">Valor</th>
-              </tr>
-              <tr v-if="cobrancas_error">
-                <th class="text-red-800" colspan="7">
-                  {{ cobrancas_error }}
-                </th>
-              </tr>
-              <tr v-if="cobrancas_carregando">
-                <th colspan="7">Carregando dados das cobranças...</th>
-              </tr>
-              <tr v-if="!cobrancas_carregando && (cobrancas.length == 0)">
-                <th colspan="7">Nenhuma cobrança encontrada</th>
+                <th class="sticky top-0 bg-slate-100">Data</th>
+                <th class="sticky top-0 bg-slate-100">Informação</th>
+                <th class="sticky top-0 bg-slate-100">NF</th>
+                <th class="sticky top-0 bg-slate-100">Cobrança</th>
+                <th class="sticky top-0 bg-slate-100">Parcela</th>
+                <th class="sticky top-0 bg-slate-100 !text-right">Valor</th>
               </tr>
             </thead>
             <tbody>
               <tr
-                v-for="cobranca in cobrancas"
+                v-for="cobranca in Object.values(cobrancas_selecionadas)"
                 :key="cobranca.id"
               >
                 <td>{{inputStrDate2PtBrDate(cobranca.data)}}</td>
                 <td>{{cobranca.cobranca.informacao }}</td>
-                <td>{{
-                  cobranca?.cobranca?.comunicacao?.descricao ? cobranca.cobranca.comunicacao.descricao : '-'
-                }}</td>
                 <td>{{
                   cobranca?.cobranca?.nf ? cobranca.cobranca.nf : '-'
                 }}</td>
