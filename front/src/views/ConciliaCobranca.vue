@@ -1,12 +1,47 @@
 <script setup>
 import { useRoute } from "vue-router";
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { getLancamentos } from '../api/lancamento.js';
 
 const route = useRoute();
 
 // valores recebidos de DB e seus controles de visualização
 
 const pagamentos = ref([{id:1}])
+const pagamentos_carregando = ref(null)
+const pagamentos_error = ref(null)
+
+// DB API calls (do) and callbacks (cb)
+
+function cbGetPagamentos(data, error) {
+  if (data) {
+    if (data?.results) {
+      pagamentos.value = data.results
+    }
+  }
+  if (error) {
+    pagamentos_error.value = error;
+  }
+  pagamentos_carregando.value = false;
+}
+
+function doGetPagamentos() {
+  pagamentos.value = [];
+  pagamentos_carregando.value = true;
+  pagamentos_error.value = null;
+  getLancamentos({
+    page_size: 999999,
+    cliente_apelido: route.params.apelido,
+    tipo_lancamento: 'pagamento',
+    callBack: cbGetPagamentos
+  });
+}
+
+// Lifecycle Hooks
+
+onMounted(() => {
+  doGetPagamentos();
+})
 
 </script>
 
@@ -19,12 +54,18 @@ const pagamentos = ref([{id:1}])
     
     <section id="lista_pedidos">
       <h3 class="my-4 font-bold text-lg text-center">Não conciliados</h3>
-      <p>Ordem crescente de data</p>
+      <p class="text-sm">Ordem crescente de data</p>
 
+      <h3 class="my-4 font-bold text-lg text-center">Pagamentos</h3>
       <table class="w-full">
         <thead>
           <tr>
             <th>id</th>
+            <th>Data</th>
+            <th>Valor</th>
+          </tr>
+          <tr v-if="pagamentos_carregando">
+            <td colspan="3">Carregando dados dos pagamentos...</td>
           </tr>
         </thead>
         <tbody>
@@ -32,9 +73,9 @@ const pagamentos = ref([{id:1}])
             v-for="pagamento in pagamentos"
             :key="pagamento.id"
           >
-            <td>
-              {{pagamento.id}}
-            </td>
+            <td>{{pagamento.id}}</td>
+            <td>{{pagamento.data}}</td>
+            <td>{{pagamento.valor}}</td>
           </tr>
         </tbody>
       </table>
