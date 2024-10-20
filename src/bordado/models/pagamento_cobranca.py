@@ -71,3 +71,4 @@ class PagamentoCobranca(models.Model):
         db_table = 'po2_pagamento_cobranca'
         verbose_name = "Pagamento-Cobrança"
         verbose_name_plural = "Pagamentos-Cobranças"
+        unique_together = [['pagamento', 'cobranca']]
