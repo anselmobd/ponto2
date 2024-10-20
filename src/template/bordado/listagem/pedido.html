@@ -43,7 +43,7 @@
 
     {% include "layout/generic/table.html" with table=tabela only %}
 
-    {% include "layout/paginator.html" with data=tabela.data url_name='cd:novo_estoque' only %}
+    {% include "layout/paginator.html" with data=tabela.data url_name='cd:novo_estoque' noprint=1 only %}
   {% endif %}
 {% endblock %}
 
