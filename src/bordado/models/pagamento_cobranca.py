@@ -64,7 +64,7 @@ class PagamentoCobranca(models.Model):
 
     def save(self, *args, **kwargs):
         if self.id:  # se é alteração
-            self.alterado_por = logged_user
+            self.alterado_por = logged_user()
         super().save(*args, **kwargs)
 
     class Meta:
