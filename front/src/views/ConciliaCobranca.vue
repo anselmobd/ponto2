@@ -2,6 +2,7 @@
 import { useRoute } from "vue-router";
 import { ref, onMounted } from 'vue'
 import { getLancamentos } from '../api/lancamento.js';
+import { addPagamentoCobranca } from '../api/pagamento_cobranca.js';
 import { inputStrDate2PtBrDate } from "../utils/date.js";
 import { ptBrCurrencyFormat } from "../utils/numStr.js";
 
@@ -79,34 +80,42 @@ function cbAddConciliacao(data, error) {
     doGetAll();
   }
   if (error) {
-    conciliando.value.error = error.response.data.human.join('|');
-    conciliando.value.error_tech = error.response.data.tech.join('|');
+    // conciliando.value.error = error.response.data.human.join('|');
+    // conciliando.value.error_tech = error.response.data.tech.join('|');
+    conciliando.value.error = 'Erro ao adicionar conciliação';
+    conciliando.value.error_tech = error.message;
   };
 }
 
 function doAddConciliacao() {
   limpaConciliandoError();
+  // const payload= {
+  //   "pagamento": 123,
+  //   "cobrancas": [
+  //     {
+  //       "cobranca": 234,
+  //       "valor": 345,
+  //     }
+  //   ]
+  // }
+  const primeiro_id_cobranca = Object.keys(cobrancas_selecionadas.value)[0];
   const payload= {
-    "pagamento": 123,
-    "cobrancas": [
-      {
-        "cobranca": 234,
-        "valor": 345,
-      }
-    ]
+    "pagamento": pagamento_selecionado.value.id,
+    "cobranca": cobrancas_selecionadas.value[primeiro_id_cobranca].cobranca.id,
+    "valor": -cobrancas_selecionadas.value[primeiro_id_cobranca].valor
   }
-  // addLancamento({
-  //   payload: payload,
-  //   callBack: cbAddConciliacao
-  // });
-  cbAddConciliacao(null, {
-    response: {
-      data: {
-        human: ['h'],
-        tech: ['t']
-      }
-    }
+  addPagamentoCobranca({
+    payload: payload,
+    callBack: cbAddConciliacao
   });
+  // cbAddConciliacao(null, {
+  //   response: {
+  //     data: {
+  //       human: ['h'],
+  //       tech: ['t']
+  //     }
+  //   }
+  // });
 }
 
 
@@ -206,15 +215,15 @@ onMounted(() => {
                   <th class="sticky top-0 bg-slate-100 !text-right">Valor</th>
                 </tr>
                 <tr v-if="pagamentos_error">
-                  <th class="text-red-800" colspan="3">
+                  <th class="text-red-800" colspan="4">
                     {{ pagamentos_error }}
                   </th>
                 </tr>
                 <tr v-if="pagamentos_carregando">
-                  <th colspan="3">Carregando...</th>
+                  <th colspan="4">Carregando...</th>
                 </tr>
                 <tr v-if="!pagamentos_carregando && (pagamentos.length == 0)">
-                  <th colspan="3">Nenhum encontrado</th>
+                  <th colspan="4">Nenhum encontrado</th>
                 </tr>
               </thead>
               <tbody>
@@ -307,6 +316,7 @@ onMounted(() => {
           <table>
             <thead>
               <tr>
+                <th class="sticky top-0 bg-slate-100">Nº</th>
                 <th class="sticky top-0 bg-slate-100">Data</th>
                 <th class="sticky top-0 bg-slate-100">Informação</th>
                 <th class="sticky top-0 bg-slate-100 !text-right">Valor</th>
@@ -314,6 +324,7 @@ onMounted(() => {
             </thead>
             <tbody>
               <tr>
+                <td>{{pagamento_selecionado.id}}</td>
                 <td>{{inputStrDate2PtBrDate(pagamento_selecionado.data)}}</td>
                 <td>{{pagamento_selecionado.informacao}}</td>
                 <td class="!text-right">{{
