@@ -82,6 +82,9 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
         self.mount_steps = [
             self.init_query,
             self.filtra_cliente__apelido,
+            (self.filtra_icontains, [self.BORDADO_NOME, 'bordado_nome']),
+            (self.filtra_icontains, [self.BORDADO_CODIGO, 'bordado_codigo']),
+            (self.filtra_icontains, [self.OBSERVACAO, 'observacao']),
             (self.filtra_valor, ['numero']*2),
             (self.filtra_valor_de_ate, [self.DATA, 'data_de', 'data_ate']),
             (self.filtra_valor_de_ate, [

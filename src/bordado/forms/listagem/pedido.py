@@ -15,6 +15,7 @@ class ListagemPedidoForm(forms.Form):
 
     field_control = [
         ['cliente_apelido', 'numero'],
+        ['bordado_nome', 'bordado_codigo', 'observacao'],
         ['data_de', 'data_ate'],
         ['entrega_de', 'entrega_ate'],
         ['fechamento', 'cortesia', 'cobranca'],
@@ -35,6 +36,27 @@ class ListagemPedidoForm(forms.Form):
         required=False,
         widget=forms.TextInput(
             attrs={**a.number, **a.placeholder_0, **a.size_6}
+        ),
+    )
+    bordado_nome = forms.CharField(
+        label="Bordado nome",
+        required=False,
+        widget=forms.TextInput(
+            attrs={**a.string}
+        ),
+    )
+    bordado_codigo = forms.CharField(
+        label="Bordado código",
+        required=False,
+        widget=forms.TextInput(
+            attrs={**a.string}
+        ),
+    )
+    observacao = forms.CharField(
+        label="Observação",
+        required=False,
+        widget=forms.TextInput(
+            attrs={**a.string}
         ),
     )
     data_de = forms.DateField(
