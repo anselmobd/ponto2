@@ -135,7 +135,7 @@ class ListagemPedidoForm(forms.Form):
     )
     por_pagina = forms.CharField(
         label="Pedidos por página",
-        help_text="Se zero, desliga paginação.",
+        help_text="(Se zero, desliga paginação.)",
         required=True,
         initial='50',
         widget=forms.TextInput(
