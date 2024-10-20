@@ -112,6 +112,17 @@ class FiltroParaView():
                 **{data_field: valor}
             )
 
+    def filtra_icontains(self, data_field, form_field):
+        valor = (
+            self.form.data[form_field]
+            if form_field in self.form.data
+            else None
+        )
+        if valor:
+            self.query = self.query.filter(
+                **{f'{data_field}__icontains': valor}
+            )
+
     def filtra_valor_de_ate(self, data_field, form_field_de, form_field_ate):
         valor_de = (
             self.form.data[form_field_de]
