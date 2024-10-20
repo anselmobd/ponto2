@@ -12,6 +12,7 @@ from .models import (
     FormaPagamento,
     Lancamento,
     OrdemProducao,
+    PagamentoCobranca,
     Pedido,
     PedidoItem,
     PedidoItemCobranca,
@@ -403,4 +404,13 @@ class FormaPagamentoAdmin(CustomModelAdmin):
     ]
     readonly_fields = [
         'id',
+    ]
+
+@admin.register(PagamentoCobranca)
+class PagamentoCobrancaAdmin(CustomModelAdmin):
+    readonly_fields = [
+        'inserido_em',
+        'inserido_por',
+        'alterado_em',
+        'alterado_por',
     ]
