@@ -1,5 +1,6 @@
 from decimal import Decimal
 
+import django.utils.timezone
 from django.contrib.auth.models import User
 from django.core.validators import (
     MaxValueValidator,
@@ -46,13 +47,23 @@ class PagamentoCobranca(models.Model):
         User,
         on_delete=models.PROTECT,
         related_name='+',
-        verbose_name="usuário",
         default=logged_user,
+    )
+    alterado_em = models.DateTimeField(
+        default=django.utils.timezone.now
+    )
+    def first_user():
+        return User.objects.first().id
+    alterado_por = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT,
+        related_name='+',
+        default=first_user,
     )
 
     def __str__(self):
         return (
-            f"Id {self.id}: Pag.{self.pagamento} Cobr.{self.cobranca}"
+            f"Pag.({self.pagamento}) Cobr.({self.cobranca}) {self.valor}"
         )
 
     class Meta:
