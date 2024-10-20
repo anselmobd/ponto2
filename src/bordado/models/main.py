@@ -1,15 +1,3 @@
-from decimal import Decimal
-from pprint import pprint
-
-from django.contrib.auth.models import User
-from django.core.validators import (
-    MaxValueValidator,
-    MinValueValidator,
-)
-from django.db import models
-from django.utils import timezone
-
-from o2lib.datetime.tz import tz_local
 from o2lib.models.base import logged_user
 
 from bordado.models.aponta_prod import ApontamentoProducao
