@@ -17,6 +17,7 @@ from bordado.api.bordado import BordadoViewSet
 from bordado.api.cobranca import CobrancaViewSet
 from bordado.api.pedido_item import PedidoItemViewSet
 from bordado.api.lancamento import LancamentoViewSet
+from bordado.api.pagamento_cobranca import PagamentoCobrancaViewSet
 from bordado.api.rest_consts import __ACTIONS
 from bordado.models import (
     ApontamentoProducao,
@@ -51,6 +52,7 @@ __all__ = [
     'DificuldadeBordadoViewSet',
     'LancamentoViewSet',
     'OrdemProducaoViewSet',
+    'PagamentoCobrancaViewSet',
     'PedidoItemCobrancaViewSet',
     'PedidoItemViewSet',
     'PedidoViewSet',
