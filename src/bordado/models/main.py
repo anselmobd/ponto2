@@ -13,6 +13,7 @@ from bordado.models.forma_pagamento import (
 from bordado.models.op import OrdemProducao
 from bordado.models.pedido import Pedido
 from bordado.models.lancamento import Lancamento
+from bordado.models.pagamento_cobranca import PagamentoCobranca
 from bordado.models.pedido_item import PedidoItem
 from bordado.models.pedido_item_cobranca import PedidoItemCobranca
 from bordado.models.tipo_comunicacao import (
@@ -33,6 +34,7 @@ __all__ = [
     'Lancamento',
     'logged_user',
     'OrdemProducao',
+    'PagamentoCobranca',
     'Pedido',
     'PedidoItem',
     'PedidoItemCobranca',
