@@ -2,9 +2,11 @@
 {% with pag_neib=data.paginator.pag_neib|stringformat:"i" %}
 {% with pag_neibn="-"|add:pag_neib %}
 {% if data.paginator.num_pages != 1 %}
-<span class="print">
-  <p>Página {{ data.number }} de {{ data.paginator.num_pages }}</p>
-</span>
+{% if not noprint %}
+  <span class="print">
+    <p>Página {{ data.number }} de {{ data.paginator.num_pages }}</p>
+  </span>
+{% endif %}
 <span class="noprint">
   <ul class="pagination">
     {% if data.number > 1 %}
