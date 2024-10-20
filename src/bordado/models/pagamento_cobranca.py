@@ -8,7 +8,7 @@ from django.core.validators import (
 )
 from django.db import models
 
-from o2lib.models.base import logged_user
+from o2lib.models.base import first_user_id, logged_user
 
 from bordado.models.lancamento import Lancamento
 from bordado.models.cobranca import Cobranca
@@ -52,13 +52,11 @@ class PagamentoCobranca(models.Model):
     alterado_em = models.DateTimeField(
         default=django.utils.timezone.now
     )
-    def first_user():
-        return User.objects.first().id
     alterado_por = models.ForeignKey(
         User,
         on_delete=models.PROTECT,
         related_name='+',
-        default=first_user,
+        default=first_user_id,
     )
 
     def __str__(self):
