@@ -62,6 +62,11 @@ class PagamentoCobranca(models.Model):
             f"Pag.({self.pagamento}) Cobr.({self.cobranca}) {self.valor}"
         )
 
+    def save(self, *args, **kwargs):
+        if self.id:  # se é alteração
+            self.alterado_por = logged_user
+        super().save(*args, **kwargs)
+
     class Meta:
         db_table = 'po2_pagamento_cobranca'
         verbose_name = "Pagamento-Cobrança"
