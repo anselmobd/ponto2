@@ -49,14 +49,12 @@ class PagamentoCobranca(models.Model):
         related_name='+',
         default=logged_user,
     )
-    alterado_em = models.DateTimeField(
-        default=django.utils.timezone.now
-    )
+    alterado_em = models.DateTimeField(auto_now=True)
     alterado_por = models.ForeignKey(
         User,
         on_delete=models.PROTECT,
         related_name='+',
-        default=first_user_id,
+        default=logged_user,
     )
 
     def __str__(self):
