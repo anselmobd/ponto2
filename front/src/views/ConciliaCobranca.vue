@@ -138,6 +138,7 @@ onMounted(() => {
             <table>
               <thead>
                 <tr>
+                  <th class="sticky top-0 bg-slate-100">Nº</th>
                   <th class="sticky top-0 bg-slate-100">Data</th>
                   <th class="sticky top-0 bg-slate-100">Informação</th>
                   <th class="sticky top-0 bg-slate-100 !text-right">Valor</th>
@@ -161,6 +162,7 @@ onMounted(() => {
                   :class="{'bg-yellow-300': pagamento.id == pagamento_selecionado.id}"
                   @click="handlePagamentoClick(pagamento)"
                 >
+                  <td>{{pagamento.id}}</td>
                   <td>{{inputStrDate2PtBrDate(pagamento.data)}}</td>
                   <td>{{pagamento.informacao}}</td>
                   <td class="!text-right">{{
