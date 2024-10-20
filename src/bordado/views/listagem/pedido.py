@@ -95,6 +95,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             self.order_query,
             self.annotate_query,
             self.exec_query,
+            self.conta_registros,
             self.pre_prep_table,
             self.calcula_totalizador_geral,
             self.paginador,
@@ -156,6 +157,9 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
         else:
             raise StopStepsException(
                 "Filtro definido não seleciona nenhum pedido")
+
+    def conta_registros(self):
+        self.quantidade_pedidos = len(self.data)
 
     def pre_prep_table(self):
         PrepRows(
@@ -237,6 +241,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
         self.context['tabela']= {
             'data': self.data,
             'thclass': 'sticky',
+            'quantidade_pedidos': self.quantidade_pedidos,
         }
         self.table_defs.hfs_dict_context(
             self.context['tabela'],
