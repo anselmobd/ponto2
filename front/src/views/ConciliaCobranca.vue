@@ -21,6 +21,7 @@ const cobrancas_error = ref(null)
 
 const pagamento_selecionado = ref({})
 const cobrancas_selecionadas = ref({})
+const conciliando = ref({})
 
 // DB API calls (do) and callbacks (cb)
 
@@ -37,7 +38,7 @@ function cbGetPagamentos(data, error) {
 }
 
 function doGetPagamentos() {
-  pagamentos.value = [];
+  // pagamentos.value = [];
   pagamentos_carregando.value = true;
   pagamentos_error.value = null;
   getLancamentos({
@@ -61,7 +62,7 @@ function cbGetCobrancas(data, error) {
 }
 
 function doGetCobrancas() {
-  cobrancas.value = [];
+  // cobrancas.value = [];
   cobrancas_carregando.value = true;
   cobrancas_error.value = null;
   getLancamentos({
@@ -72,12 +73,49 @@ function doGetCobrancas() {
   });
 }
 
+function cbAddConciliacao(data, error) {
+  if (data) {
+    limpaConciliando();
+    doGetAll();
+  }
+  if (error) {
+    conciliando.value.error = error.response.data.human.join('|');
+    conciliando.value.error_tech = error.response.data.tech.join('|');
+  };
+}
+
+function doAddConciliacao() {
+  limpaConciliandoError();
+  const payload= {
+    "pagamento": 123,
+    "cobrancas": [
+      {
+        "cobranca": 234,
+        "valor": 345,
+      }
+    ]
+  }
+  // addLancamento({
+  //   payload: payload,
+  //   callBack: cbAddConciliacao
+  // });
+  cbAddConciliacao(null, {
+    response: {
+      data: {
+        human: ['h'],
+        tech: ['t']
+      }
+    }
+  });
+}
+
+
 // Events
 
 function handlePagamentoClick(pagamento) {
   cobrancas_selecionadas.value = {};
   if (pagamento_selecionado.value?.id === pagamento.id) {
-    pagamento_selecionado.value = {};
+    limpaConciliando();
     return;
   };
   pagamento_selecionado.value = pagamento;
@@ -99,6 +137,11 @@ function handlePagamentoClick(pagamento) {
 
 }
 
+function handleConciliaClick(event) {
+  event.preventDefault();
+  doAddConciliacao();
+}
+
 // Utilitarios
 
 function scrollToRow(rowId) {
@@ -108,11 +151,30 @@ function scrollToRow(rowId) {
   }
 }
 
+function limpaConciliandoTabelas() {
+  pagamento_selecionado.value = {};
+  cobrancas_selecionadas.value = {};
+}
+
+function limpaConciliandoError() {
+  conciliando.value = {};
+}
+
+function limpaConciliando() {
+  limpaConciliandoTabelas();
+  limpaConciliandoError();
+}
+
+function doGetAll() {
+  limpaConciliando()
+  doGetPagamentos();
+  doGetCobrancas();
+}
+
 // Lifecycle Hooks
 
 onMounted(() => {
-  doGetPagamentos();
-  doGetCobrancas();
+  doGetAll();
 })
 
 </script>
@@ -149,10 +211,10 @@ onMounted(() => {
                   </th>
                 </tr>
                 <tr v-if="pagamentos_carregando">
-                  <th colspan="3">Carregando dados dos pagamentos...</th>
+                  <th colspan="3">Carregando...</th>
                 </tr>
                 <tr v-if="!pagamentos_carregando && (pagamentos.length == 0)">
-                  <th colspan="3">Nenhum pagamento encontrado</th>
+                  <th colspan="3">Nenhum encontrado</th>
                 </tr>
               </thead>
               <tbody>
@@ -184,7 +246,6 @@ onMounted(() => {
                 <tr>
                   <th class="sticky top-0 bg-slate-100">Data</th>
                   <th class="sticky top-0 bg-slate-100">Informação</th>
-                  <!-- <th>Comunicação</th> -->
                   <th class="sticky top-0 bg-slate-100">NF</th>
                   <th class="sticky top-0 bg-slate-100">Cobrança</th>
                   <th class="sticky top-0 bg-slate-100">Parcela</th>
@@ -196,10 +257,10 @@ onMounted(() => {
                   </th>
                 </tr>
                 <tr v-if="cobrancas_carregando">
-                  <th colspan="6">Carregando dados das cobranças...</th>
+                  <th colspan="6">Carregando...</th>
                 </tr>
                 <tr v-if="!cobrancas_carregando && (cobrancas.length == 0)">
-                  <th colspan="6">Nenhuma cobrança encontrada</th>
+                  <th colspan="6">Nenhuma encontrada</th>
                 </tr>
               </thead>
               <tbody>
@@ -211,9 +272,6 @@ onMounted(() => {
                 >
                   <td>{{inputStrDate2PtBrDate(cobranca.data)}}</td>
                   <td>{{cobranca.cobranca.informacao }}</td>
-                  <!-- <td>{{
-                    cobranca?.cobranca?.comunicacao?.descricao ? cobranca.cobranca.comunicacao.descricao : '-'
-                  }}</td> -->
                   <td>{{
                     cobranca?.cobranca?.nf ? cobranca.cobranca.nf : '-'
                   }}</td>
@@ -236,7 +294,10 @@ onMounted(() => {
 
     </section>
 
-    <section id="conciliando" v-if="Object.keys(pagamento_selecionado).length > 0">
+    <section 
+      id="conciliando"
+      v-if="Object.keys(pagamento_selecionado).length > 0"
+    >
       <h3 class="my-1 font-bold text-lg text-center bg-slate-100 rounded">Conciliando</h3>
     
       <section class="flex justify-between" id="tabelas_conciliando">
@@ -300,6 +361,20 @@ onMounted(() => {
           </table>
         </section>
 
+      </section>
+
+      <section id="conciliando_botoes" class="text-center">
+        <button
+          type="button"
+          @click="handleConciliaClick"
+        >Concilia</button>
+        <p
+          v-if="conciliando.error"
+          class="text-red-800"
+          :title="conciliando.error_tech"
+        >
+          {{ conciliando.error }}
+        </p>
       </section>
 
     </section>
