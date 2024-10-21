@@ -99,26 +99,35 @@ class LancamentoViewSet(viewsets.ModelViewSet):
         queryset = Lancamento.objects.all()
         
         tipo_lancamento = self.request.query_params.get('tipo_lancamento', None)
+        conciliada = self.request.query_params.get('conciliada', None)
         if tipo_lancamento is not None:
             if 'pagamento'.startswith(tipo_lancamento):
                 queryset = queryset.filter(
                     cobranca__isnull=True
                 )
+                if conciliada is not None:
+                    if 'sim'.startswith(conciliada):
+                        queryset = queryset.filter(
+                            pagamentocobranca__isnull=False
+                        )
+                    else:  # 'nao'.startswith(conciliada):
+                        queryset = queryset.filter(
+                            pagamentocobranca__isnull=True
+                        )
             else:  # 'cobranca'.startswith(tipo_lancamento):
                 queryset = queryset.filter(
                     cobranca__isnull=False
                 )
+                if conciliada is not None:
+                    if 'sim'.startswith(conciliada):
+                        queryset = queryset.filter(
+                            cobranca__pagamentocobranca__isnull=False
+                        )
+                    else:  # 'nao'.startswith(conciliada):
+                        queryset = queryset.filter(
+                            cobranca__pagamentocobranca__isnull=True
+                        )
 
-        conciliada = self.request.query_params.get('conciliada', None)
-        if conciliada is not None:
-            if 'sim'.startswith(conciliada):
-                queryset = queryset.filter(
-                    pagamentocobranca__isnull=False
-                )
-            else:  # 'nao'.startswith(conciliada):
-                queryset = queryset.filter(
-                    pagamentocobranca__isnull=True
-                )
 
         return queryset
 
