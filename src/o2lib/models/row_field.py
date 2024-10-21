@@ -116,13 +116,21 @@ class PrepRows():
             a_link='LINK')
 
     def _default(self, row, field, default='-', field_is_empty=None):
-        empty = is_empty(row[field]) if field_is_empty is None else field_is_empty
+        empty = (
+            is_empty(row[field])
+            if field_is_empty is None
+            else field_is_empty
+        )
         if empty and default:
             row[field] = default
             return True
 
     def _to_date(self, row, field, field_is_empty=None):
-        empty = is_empty(row[field]) if field_is_empty is None else field_is_empty
+        empty = (
+            is_empty(row[field])
+            if field_is_empty is None
+            else field_is_empty
+        )
         if not empty:
             if not isinstance(row[field], datetime.date):
                 row[field] = row[field].date()
@@ -131,14 +139,20 @@ class PrepRows():
         empty = is_empty(row[field])
         if default is None:
             self._to_date(row, field, field_is_empty=empty)
-        elif not self._default(row, field, default=default, field_is_empty=empty):
+        elif not self._default(
+            row, field, default=default, field_is_empty=empty
+        ):
             self._to_date(row, field, field_is_empty=empty)
 
     def _date_dash(self, row, field):
         self._date(row, field, default='-')
 
     def _to_str(self, row, field, field_is_empty=None):
-        empty = is_empty(row[field]) if field_is_empty is None else field_is_empty
+        empty = (
+            is_empty(row[field])
+            if field_is_empty is None
+            else field_is_empty
+        )
         if not empty:
             row[field] = str(row[field])
 
@@ -152,7 +166,9 @@ class PrepRows():
         empty = is_empty(row[field])
         if default is None:
             self._to_str(row, field, field_is_empty=empty)
-        elif not self._default(row, field, default=default, field_is_empty=empty):
+        elif not self._default(
+            row, field, default=default, field_is_empty=empty
+        ):
             self._to_str(row, field, field_is_empty=empty)
 
     def _str_dash(self, row, field):
