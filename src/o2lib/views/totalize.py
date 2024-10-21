@@ -14,9 +14,8 @@ def totalize_data(data, config, return_not_append=False):
         if len(data) < 2:
             return
 
-    totrow = data[0].copy()
-    for key in totrow.keys():
-        totrow[key] = ''
+    all_keys = data[0].keys()
+    totrow = {key: '' for key in all_keys}
 
     if 'row_style' in config:
         totrow['|STYLE'] = config['row_style']
@@ -25,25 +24,23 @@ def totalize_data(data, config, return_not_append=False):
 
     if 'class_suffix' in config:
         class_suffix = config['class_suffix']
-        keys = [key for key in totrow.keys() if '|' not in key]
+        keys = [key for key in all_keys if '|' not in key]
         for key in keys:
             totrow[f'{key}|CLASS'] = f'{key}{class_suffix}'
 
-    sum = {key: 0 for key in config['sum']}
+    for key in config['sum']:
+        totrow[key] = 0
+
+    has_row_if = 'row_if' in config
     for row in data:
-        do_sum = True
-        if 'row_if' in config:
-            do_sum = row[config['row_if']]
-        for key in sum:
+        do_sum = row[config['row_if']] if has_row_if else True
+        for key in config['sum']:
             if do_sum:
-                sum[key] += row[key]
+                totrow[key] += row[key]
 
     if 'descr' in config:
         for key in config['descr']:
             totrow[key] = config['descr'][key]
-
-    for key in sum:
-        totrow[key] = sum[key]
 
     if 'count' in config:
         for key in config['count']:
