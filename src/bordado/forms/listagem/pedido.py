@@ -18,7 +18,7 @@ class ListagemPedidoForm(forms.Form):
         ['bordado_nome', 'bordado_codigo', 'observacao'],
         ['data_de', 'data_ate'],
         ['entrega_de', 'entrega_ate'],
-        ['fechamento', 'cortesia', 'cobranca'],
+        ['fechamento', 'cortesia', 'cobranca', 'pagamento'],
         ['ordem', 'apresentacao'],
         ['por_pagina', 'page']
     ]
@@ -85,7 +85,7 @@ class ListagemPedidoForm(forms.Form):
         ('n', "Não fechado"),
     ]
     fechamento = forms.ChoiceField(
-        label="Quanto ao fechamento",
+        label="Fechamento",
         choices=CHOICES,
         initial='',
         required=False,
@@ -96,7 +96,7 @@ class ListagemPedidoForm(forms.Form):
         ('n', "Não Cortesia"),
     ]
     cortesia = forms.ChoiceField(
-        label="Quanto à cortesia",
+        label="Cortesia",
         choices=CHOICES,
         initial='',
         required=False,
@@ -107,7 +107,18 @@ class ListagemPedidoForm(forms.Form):
         ('n', "Não cobrado"),
     ]
     cobranca = forms.ChoiceField(
-        label="Quanto à cobrança",
+        label="Cobrança",
+        choices=CHOICES,
+        initial='',
+        required=False,
+    )
+    CHOICES = [
+        ('', "Não filtra"),
+        ('p', "Pago"),
+        ('n', "Não pago"),
+    ]
+    pagamento = forms.ChoiceField(
+        label="Pagamento",
         choices=CHOICES,
         initial='',
         required=False,

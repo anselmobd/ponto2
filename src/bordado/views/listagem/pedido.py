@@ -33,6 +33,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
     DATA = 'pedidoitem__data_pedido'
     ENTREGA = 'entrega'
     NUMERO = 'numero'
+    PAGAMENTO = 'pedidoitem__cobrancas__cobranca__pagamentocobranca__pagamento'
     PRECO = 'pedidoitem__preco'
     PROGRAMACAO = 'pedidoitem__programacao'
     QUANDO = 'pedidoitem__inserido_em'
@@ -71,6 +72,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
                 self.CORTESIA: ["Cortesia", 'cp', 'c azul'],
                 self.VALOR: ["", 'cp', 'r azul'],
                 self.COBRANCA: ["Cobrança", 'c', 'c'],
+                self.PAGAMENTO: ["Pagamento", 'c', 'c'],
             },
             style={
                 'azul': "background-color: lightblue;",
@@ -92,6 +94,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             self.filtra_fechamento,
             self.filtra_cortesia,
             self.filtra_cobranca,
+            self.filtra_pagamento,
             self.order_query,
             self.annotate_query,
             self.exec_query,
@@ -129,6 +132,14 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
         elif self.cobranca == 'n':
             self.query = self.query.filter(
                 pedidoitem__cobrancas__cobranca__isnull=True)
+
+    def filtra_pagamento(self):
+        if self.pagamento == 'p':
+            self.query = self.query.filter(
+                **{f'{self.PAGAMENTO}__isnull': False})
+        elif self.pagamento == 'n':
+            self.query = self.query.filter(
+                **{f'{self.PAGAMENTO}__isnull': True})
 
     def order_query(self):
         if self.ordem == 'e':
@@ -177,6 +188,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             (
                 self.BORDADO_CODIGO,
                 self.COBRANCA,
+                self.PAGAMENTO,
                 self.OBSERVACAO,
             )
         ).date_dash(
