@@ -182,7 +182,11 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
         PrepRows(
             self.data,
         ).none(
-            'valor', Decimal('0.00')
+            (
+                'valor',
+                self.COBRANCA_VALOR,
+            ),
+            Decimal('0.00')
         ).round(
             'valor', 2
         ).process()
@@ -203,8 +207,6 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
                 self.COBRANCA_VENCIMENTO,
                 self.PAGAMENTO_DATA,
             )
-        ).none(
-            self.COBRANCA_VALOR, '-'
         ).sn(
             self.CORTESIA
         ).str(
@@ -218,7 +220,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
         totalize_data(
             dados,
             {
-                'sum': ['valor'],
+                'sum': ['valor', self.COBRANCA_VALOR],
                 'descr': {self.CLIENTE: descr},
                 'row_style':
                     "font-weight: bold;"
