@@ -62,6 +62,29 @@ __all__ = [
                     )
                 ],
             ),
+            OpenApiParameter(
+                name='conciliada', 
+                description="Filtra pela conciliação", 
+                required=False,
+                type=str,
+                examples=[
+                    OpenApiExample(
+                        "Todos",
+                        summary="Todos",
+                        value=None
+                    ),
+                    OpenApiExample(
+                        "Sim",
+                        summary="Sim",
+                        value='sim'
+                    ),
+                    OpenApiExample(
+                        "Não",
+                        summary="Não",
+                        value='nao'
+                    )
+                ],
+            ),
         ],
     )
 )
@@ -85,6 +108,18 @@ class LancamentoViewSet(viewsets.ModelViewSet):
                 queryset = queryset.filter(
                     cobranca__isnull=False
                 )
+
+        conciliada = self.request.query_params.get('conciliada', None)
+        if conciliada is not None:
+            if 'sim'.startswith(conciliada):
+                queryset = queryset.filter(
+                    pagamentocobranca__isnull=False
+                )
+            else:  # 'nao'.startswith(conciliada):
+                queryset = queryset.filter(
+                    pagamentocobranca__isnull=True
+                )
+
         return queryset
 
     def create(self, request, *args, **kwargs):
