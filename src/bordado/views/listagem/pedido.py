@@ -29,7 +29,8 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
     OBSERVACAO = 'pedidoitem__observacao'
     CLIENTE = 'cliente__apelido'
     COBRANCA = 'pedidoitem__cobrancas__cobranca'
-    COBRANCA_DATA = 'pedidoitem__cobrancas__cobranca__data'
+    COBRANCA_VALOR = 'pedidoitem__cobrancas__cobranca__valor'
+    COBRANCA_VENCIMENTO = 'pedidoitem__cobrancas__cobranca__lancamento__data'
     CORTESIA = 'pedidoitem__cortesia'
     DATA = 'pedidoitem__data_pedido'
     ENTREGA = 'entrega'
@@ -74,9 +75,10 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
                 self.CORTESIA: ["Cortesia", 'cp', 'c azul'],
                 self.VALOR: ["", 'cp', 'r azul'],
                 self.COBRANCA: ["Cobrança", 'c', 'c'],
-                self.COBRANCA_DATA: ["Cobr. data", 'c', 'c'],
+                self.COBRANCA_VALOR: ["Valor", 'c', 'r'],
+                self.COBRANCA_VENCIMENTO: ["Vencimento", 'c', 'c'],
                 self.PAGAMENTO: ["Pagamento", 'c', 'c'],
-                self.PAGAMENTO_DATA: ["Pag. data", 'c', 'c'],
+                self.PAGAMENTO_DATA: ["Data", 'c', 'c'],
             },
             style={
                 'azul': "background-color: lightblue;",
@@ -198,7 +200,11 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
         ).date_dash(
             (
                 self.ENTREGA,
+                self.COBRANCA_VENCIMENTO,
+                self.PAGAMENTO_DATA,
             )
+        ).none(
+            self.COBRANCA_VALOR, '-'
         ).sn(
             self.CORTESIA
         ).str(
