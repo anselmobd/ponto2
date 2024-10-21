@@ -5,6 +5,7 @@ export function getLancamentos({
   page_size=null,
   cliente_apelido=null,
   tipo_lancamento=null,
+  conciliada=1,
   callBack=()=>{}
 }) {
   const params = new URLSearchParams();
@@ -20,6 +21,9 @@ export function getLancamentos({
   }
   if (tipo_lancamento) {
     params.append('tipo_lancamento', tipo_lancamento);
+  }
+  if (conciliada) {
+    params.append('conciliada', conciliada);
   }
   axiosPrivate.get(
     '/bordado/api/lancamento/',

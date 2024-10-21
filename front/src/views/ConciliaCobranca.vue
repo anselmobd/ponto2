@@ -46,6 +46,7 @@ function doGetPagamentos() {
     page_size: 999999,
     cliente_apelido: route.params.apelido,
     tipo_lancamento: 'pagamento',
+    conciliada: 'nao',
     callBack: cbGetPagamentos
   });
 }
@@ -117,7 +118,6 @@ function doAddConciliacao() {
   //   }
   // });
 }
-
 
 // Events
 
