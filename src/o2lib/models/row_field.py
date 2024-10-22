@@ -178,6 +178,20 @@ class PrepRows():
         if row[field] is None:
             row[field] = default
 
+    def _sub_sequence(self, row, field, key='id'):
+        self.sequence_control = getattr(self, 'sequence_control', {})
+        if key not in self.sequence_control:
+            self.sequence_control[key] = {
+                'value': row[key],
+                'sequence': -1
+            }
+        if self.sequence_control[key]['value'] == row[key]:
+            self.sequence_control[key]['sequence'] += 1
+        else:
+            self.sequence_control[key]['value'] = row[key]
+            self.sequence_control[key]['sequence'] = 0
+        row[field] = self.sequence_control[key]['sequence']
+
     def custom_command(self, command, *args, **kwargs):
         self.__basic_steps.append(
             self.prep_args([command]+list(args)+[kwargs])
@@ -222,6 +236,10 @@ class PrepRows():
 
     def none(self, *args, **kwargs):
         self.custom_command(self._none, *args, **kwargs)
+        return self
+
+    def sub_sequence(self, *args, **kwargs):
+        self.custom_command(self._sub_sequence, *args, **kwargs)
         return self
 
     def process(self):
