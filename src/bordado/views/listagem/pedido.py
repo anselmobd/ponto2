@@ -224,6 +224,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             {
                 'sum': ['valor', self.COBRANCA_VALOR],
                 'descr': {self.CLIENTE: descr},
+                'row_if': {'valor': {False: 'seq'}},
                 'row_style':
                     "font-weight: bold;"
                     "background-image: linear-gradient(#DDD, white);",
