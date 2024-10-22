@@ -181,6 +181,8 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
     def pre_prep_table(self):
         PrepRows(
             self.data,
+        ).sub_sequence(
+            'seq', self.NUMERO
         ).none(
             (
                 'valor',
