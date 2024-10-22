@@ -10,6 +10,20 @@ __all__ = [
 
 
 def totalize_data(data, config, return_not_append=False):
+    '''
+    Exemplos de uso do row_if
+        'row_if': 'field',
+            equivale a
+        'row_if': {'*': {True: 'field'}},
+
+        'row_if': {'*': {False: 'field'}},
+
+        'row_if': {
+            'field_1': {False: 'field_2', True: 'field_3'},
+            'field_4': {False: 'field_5', True: 'field_6'},
+        },
+
+    '''
     if 'flags' in config and 'NO_TOT_1' in config['flags']:
         if len(data) < 2:
             return
@@ -31,11 +45,36 @@ def totalize_data(data, config, return_not_append=False):
     for key in config['sum']:
         totrow[key] = 0
 
-    has_row_if = 'row_if' in config
-    for row in data:
-        do_sum = row[config['row_if']] if has_row_if else True
+    row_if = config.get('row_if', {})
+    if not isinstance(row_if, dict):
+        row_if = {
+            key: {True: row_if}
+            for key in config['sum']
+        }
+    if row_if:
+        if '*' in row_if:
+            for key in config['sum']:
+                if key not in row_if:
+                    row_if[key] = row_if['*'].copy()
+            del(row_if['*'])
         for key in config['sum']:
-            if do_sum:
+            if key not in row_if:
+                row_if[key] = None
+        def do_sum(row, key):
+            return (
+                row_if[key] is None or
+                all([
+                    bool_key == bool(row[row_if[key][bool_key]])
+                    for bool_key in row_if[key]
+                ])
+            )
+    else:
+        def do_sum(row, key):
+            return True
+
+    for row in data:
+        for key in config['sum']:
+            if do_sum(row, key):
                 totrow[key] += row[key]
 
     if 'descr' in config:
