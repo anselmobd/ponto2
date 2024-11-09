@@ -17,6 +17,7 @@ from django.db.models.functions import (
     Cast,
     Concat,
     LPad,
+    Round,
 )
 
 from o2lib.models.dictlist import queryset2dictlist
@@ -76,10 +77,11 @@ def get_pedido_financeiro_mes(
     )
 
     query = query.annotate(
-        valor=(
+        valor=Round(
             F('pedidoitem__quantidade') * F('pedidoitem__preco') +
             F('pedidoitem__programacao') +
-            F('pedidoitem__ajuste')
+            F('pedidoitem__ajuste'),
+            precision=2
         )
     )
 

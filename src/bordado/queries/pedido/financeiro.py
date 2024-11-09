@@ -39,10 +39,11 @@ def get_pedido_financeiro(cliente=None):
     }
 
     for row in pedido_data:
-        row['valor'] = (
+        row['valor'] = round(
             row['pedidoitem__quantidade'] * row['pedidoitem__preco']
             + row['pedidoitem__programacao']
-            + row['pedidoitem__ajuste']
+            + row['pedidoitem__ajuste'],
+            2,
         )
         status = (
             'fechado'
