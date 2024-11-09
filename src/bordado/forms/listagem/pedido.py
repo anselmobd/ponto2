@@ -16,7 +16,7 @@ class ListagemPedidoForm(forms.Form):
     field_control = [
         ['cliente_apelido', 'numero'],
         ['bordado_nome', 'bordado_codigo', 'observacao'],
-        ['data_de', 'data_ate'],
+        # ['data_de', 'data_ate'],
         ['entrega_de', 'entrega_ate'],
         ['cobranca_de', 'cobranca_ate'],
         ['fechamento', 'cortesia', 'cobranca', 'pagamento'],
