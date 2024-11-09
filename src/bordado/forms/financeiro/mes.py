@@ -37,7 +37,7 @@ class FinanceiroMesForm(forms.Form):
     num_meses = forms.IntegerField(
         label='Nº meses',
         required=True,
-        initial=3,
+        initial=1,
         widget=forms.TextInput(
             attrs={**a.number, **a.placeholder_0, **a.size_5}
         ),
