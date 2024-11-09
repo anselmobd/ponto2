@@ -29,7 +29,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
     OBSERVACAO = 'pedidoitem__observacao'
     CLIENTE = 'cliente__apelido'
     COBRANCA = 'pedidoitem__cobrancas__cobranca'
-    COBRANCA_VALOR = 'pedidoitem__cobrancas__cobranca__valor'
+    COBRANCA_VALOR = 'pedidoitem__cobrancas__valor'
     COBRANCA_VENCIMENTO = 'pedidoitem__cobrancas__cobranca__lancamento__data'
     CORTESIA = 'pedidoitem__cortesia'
     DATA = 'pedidoitem__data_pedido'
