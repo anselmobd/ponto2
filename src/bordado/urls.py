@@ -23,6 +23,7 @@ from bordado.api.rest import (
 )
 from bordado.views.analise.cliente import AnaliseClienteView
 from bordado.views.analise.cobranca import AnaliseCobrancaView
+from bordado.views.analise.pagamento import AnalisePagamentoView
 from bordado.views.financeiro.mes import FinanceiroMesView
 from bordado.views.listagem.cobranca import ListagemCobrancaView
 from bordado.views.listagem.lancamento import ListagemLancamentoView
@@ -88,6 +89,11 @@ urlpatterns = [
         'analise_cobranca',
         AnaliseCobrancaView.as_view(),
         name='analise_cobranca',
+    ),
+    path(
+        'analise_pagamento',
+        AnalisePagamentoView.as_view(),
+        name='analise_pagamento',
     ),
     re_path(
         r'^analise_cliente/(?P<apelido>.+)?/?$',
