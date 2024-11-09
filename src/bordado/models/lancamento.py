@@ -85,8 +85,18 @@ class Lancamento(models.Model):
     )
     quando = models.DateTimeField(auto_now=True)
 
+    def id_str(self):
+        return f"{self.id}"
+ 
+    def data_str(self):
+        return f"{self.data:%d/%m/%Y}"
+
+    def cliente_str(self):
+        return f"{self.cliente}"
+ 
     def __str__(self):
-        return f"{self.id}: {self.data} {self.cliente}"
+        return " ".join(
+            [self.id_str(), self.data_str(), self.cliente_str()])
 
     class Meta:
         db_table = 'po2_lancamento'

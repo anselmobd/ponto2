@@ -9,6 +9,7 @@ from django.core.validators import (
 from django.db import models
 
 from o2lib.models.base import logged_user
+from o2lib.strings import join_non_empty
 
 from bordado.models.cliente import Cliente
 from bordado.models.tipo_comunicacao import TipoComunicacao
@@ -66,10 +67,19 @@ class Cobranca(models.Model):
     )
     quando = models.DateTimeField(auto_now=True)
  
-    def __str__(self):
-        nf = f" - NF {self.nf}" if self.nf else ""
-        return f"{self.id} - {self.data}{nf}"
+    def id_str(self):
+        return f"{self.id}"
+ 
+    def nf_str(self):
+        return f"NF {self.nf}" if self.nf else ""
+ 
+    def data_str(self):
+        return f"{self.data:%d/%m/%Y}"
 
+    def __str__(self):
+        return join_non_empty(
+            " ", [self.id_str(), self.data_str(), self.nf_str()])
+    
     class Meta:
         db_table = 'po2_cobranca'
         verbose_name = "Cobrança"
