@@ -27,7 +27,7 @@ from o2lib.views.base.get_post import O2BaseGetPostView
 from o2lib.views.base.exception import StopStepsException
 
 from bordado.forms.analise.pagamento import AnalisePagamentoForm
-from bordado.models import Cobranca
+from bordado.models import Lancamento
 from bordado.views.base.filtro import FiltroParaView
 
 
@@ -38,7 +38,7 @@ class AnalisePagamentoView(
         LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
 
     CLIENTE = 'cliente__apelido'
-    VALOR = 'pedidoitemcobranca__valor'
+    VALOR = 'valor'
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -87,7 +87,9 @@ class AnalisePagamentoView(
         self.totaliza_field = self.totaliza_fields[self.totaliza]
 
     def init_query(self):
-        self.query = Cobranca.objects
+        self.query = Lancamento.objects.filter(
+            cobranca__isnull=True
+        )
 
     def values_query(self):
         self.query = self.query.annotate(
@@ -173,6 +175,8 @@ class AnalisePagamentoView(
         qdict['data_de'] = data_de
         qdict['data_ate'] = data_ate
 
+        qdict['tipo_lancamento'] = 'r'
+
         return qdict.urlencode()
 
     def pre_prep_table(self):
@@ -195,7 +199,7 @@ class AnalisePagamentoView(
 
             row[f"{self.totaliza_field}|TARGET"] = 'blank'
             row[f"{self.totaliza_field}|A"] = "?".join([
-                reverse('bordado:listagem_cobranca', args=[]),
+                reverse('bordado:listagem_lancamento', args=[]),
                 self.mount_url_query(row),
             ])
 
