@@ -32,7 +32,7 @@ class AnaliseClienteView(
         self.cleaned_data2self = True
         self.cleaned_data2context = True
         self.template_name = "bordado/analise/cliente.html"
-        self.title_name = "Cliente - Analise"
+        self.title_name = "Cliente - Análise"
         self.get_args = ['apelido']
         self.get_vars2form = True
 

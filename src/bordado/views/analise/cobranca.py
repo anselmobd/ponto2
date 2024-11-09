@@ -47,7 +47,7 @@ class AnaliseCobrancaView(
         self.cleaned_data2self = True
         self.cleaned_data2context = True
         self.template_name = 'bordado/analise/cobranca.html'
-        self.title_name = 'Cobrança - Analise'
+        self.title_name = 'Cobrança - Análise'
 
         self.totaliza_fields = {
             'c': self.CLIENTE,
