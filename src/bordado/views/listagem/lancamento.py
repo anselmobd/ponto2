@@ -39,6 +39,7 @@ class ListagemLancamentoView(
         self.cleaned_data2context = True
         self.template_name = 'bordado/listagem/lancamento.html'
         self.title_name = "Lançamento - Listagem"
+        self.get_vars2form = True
 
         self.form_report_excludes = []
         self.table_defs = TableDefsHBpSD({
