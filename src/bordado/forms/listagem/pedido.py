@@ -18,6 +18,7 @@ class ListagemPedidoForm(forms.Form):
         ['bordado_nome', 'bordado_codigo', 'observacao'],
         ['data_de', 'data_ate'],
         ['entrega_de', 'entrega_ate'],
+        ['cobranca_de', 'cobranca_ate'],
         ['fechamento', 'cortesia', 'cobranca', 'pagamento'],
         ['ordem', 'apresentacao'],
         ['por_pagina', 'page']
@@ -75,6 +76,16 @@ class ListagemPedidoForm(forms.Form):
         widget=forms.DateInput(attrs={'type': 'date'}),
     )
     entrega_ate = forms.DateField(
+        label="Até",
+        required=False,
+        widget=forms.DateInput(attrs={'type': 'date'}),
+    )
+    cobranca_de = forms.DateField(
+        label="Data de cobrança: De",
+        required=False,
+        widget=forms.DateInput(attrs={'type': 'date'}),
+    )
+    cobranca_ate = forms.DateField(
         label="Até",
         required=False,
         widget=forms.DateInput(attrs={'type': 'date'}),
