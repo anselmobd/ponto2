@@ -179,8 +179,20 @@ class FinanceiroMesView(
             self.valores_inteiros(row)
 
     def sort_totais_pedidos(self):
-        self.totais_pedidos.sort(
-            key=operator.itemgetter('saldo_geral', 'cliente__apelido'))
+        if self.ordem == 'c':
+            self.totais_pedidos.sort(
+                key=operator.itemgetter('cliente__apelido'))
+        elif self.ordem == 'f':
+            self.totais_pedidos.sort(
+                key=operator.itemgetter(
+                    self.fname('saldo', *self.meses[1])))
+        elif self.ordem == 'i':
+            self.totais_pedidos.sort(
+                key=operator.itemgetter(
+                    self.fname('saldo', *self.meses[-1])))
+        else:
+            self.totais_pedidos.sort(
+                key=operator.itemgetter('saldo_geral', 'cliente__apelido'))
 
     def mount_totais_defs(self):
         definicao = {

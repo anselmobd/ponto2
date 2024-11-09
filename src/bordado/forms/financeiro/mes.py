@@ -16,6 +16,7 @@ class FinanceiroMesForm(forms.Form):
 
     field_control = [
         ['ano', 'mes', 'num_meses'],
+        ['ordem']
     ]
 
     ano = forms.IntegerField(
@@ -41,6 +42,17 @@ class FinanceiroMesForm(forms.Form):
         widget=forms.TextInput(
             attrs={**a.number, **a.placeholder_0, **a.size_5}
         ),
+    )
+    CHOICES = [
+        ('', "Saldo geral"),
+        ('c', "Cliente"),
+        ('f', "Mês final"),
+        ('i', "Mês inicial"),
+    ]
+    ordem = forms.ChoiceField(
+        choices=CHOICES,
+        initial='',
+        required=False,
     )
 
     def __init__(self, *args, **kwargs):
