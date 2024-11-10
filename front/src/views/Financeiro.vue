@@ -487,16 +487,8 @@ onMounted(() => {
                   type="text"
                   name="parcelamento"
                   id="parcelamento"
-                  placeholder="10 30 60"
-                  list="parcelamento-list"
                   required
                 >
-                <datalist id="parcelamento-list">
-                  <option>0</option>
-                  <option>10</option>
-                  <option>10 30 60</option>
-                  <option>30 60 90</option>
-                </datalist>
               </td>
             </tr>
           </tbody>
