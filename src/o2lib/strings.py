@@ -75,7 +75,7 @@ def noneifempty(value):
     return noneif(value, '')
 
 
-def split_non_empty(text, sep):
+def split_non_empty(text, sep=" "):
     return [
         t.strip()
         for t in text.split(sep)
