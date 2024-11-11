@@ -13,8 +13,8 @@ from rest_framework import (
 )
 from rest_framework.response import Response
 
+from o2lib.datetime.convert import parcelas_str2int_list
 from o2lib.dict import dict_keys_value
-from o2lib.string import split_numbers
 from o2lib.number import parcela_i_de_n_de_valor
 
 from bordado.api.rest_consts import __ACTIONS
@@ -26,7 +26,6 @@ from bordado.models import (
     PedidoItemCobranca,
 )
 from bordado.serializers.full.cobranca import CobrancaSerializer
-
 
 __all__ = [
     'CobrancaViewSet',
@@ -107,22 +106,40 @@ class CobrancaViewSet(viewsets.ModelViewSet):
                         total_cobrado -= float(pedido_item_cobranca_valor)
 
                 try:
-                    parcelas_str = split_numbers(request.data.get('parcelamento', ''))
-                    if not parcelas_str:
-                        parcelas_str = ['0']
-                    parcelas = list(map(int, parcelas_str))
-                    n_parcelas = len(parcelas)
-                    cobranca_data = datetime.datetime.strptime(cobranca.data, "%Y-%m-%d")
+                    cobranca_data = datetime.datetime.strptime(
+                        cobranca.data, "%Y-%m-%d").date()
                 except Exception as e:
-                    errors['human'].append("Erro ao inserir de lancamento.")
+                    errors['human'].append("Erro ao montar data de cobranca.")
                     errors['tech'].append(repr(e))
+                    raise TypeError
+
+                try:
+                    parcelamento = request.data.get('parcelamento', '')
+                    if not parcelamento:
+                        parcelas = [0]
+                    else:
+                        parcelas = parcelas_str2int_list(
+                            cobranca_data, parcelamento)
+                    n_parcelas = len(parcelas)
+                except Exception as e:
+                    errors['human'].append("Erro ao montar lista de parcelas.")
+                    errors['tech'].append(repr(e))
+                    raise TypeError
+
+                if parcelas[0] < 0:
+                    errors['human'].append(
+                        "Não é possível ter parcela anterior à cobrança.")
+                    errors['tech'].append(repr(parcelas))
                     raise TypeError
 
                 for i, parcela in enumerate(parcelas, start=1):
                     try:
                         lancamento = Lancamento(
                             cliente=cliente,
-                            data=cobranca_data + datetime.timedelta(days=parcela),
+                            data=(
+                                cobranca_data +
+                                datetime.timedelta(days=parcela)
+                            ),
                             cobranca=cobranca,
                             parcela=i,
                             n_parcelas=n_parcelas,
@@ -141,7 +158,6 @@ class CobrancaViewSet(viewsets.ModelViewSet):
                     status=status.HTTP_201_CREATED,
                 )
             except Exception as e:
-                pprint(e)
                 return Response(errors, status=status.HTTP_400_BAD_REQUEST)
         
         return super().create(request, *args, **kwargs)
