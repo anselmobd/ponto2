@@ -67,8 +67,8 @@ class AnaliseClienteView(
         )
         self.totais_defs = TableDefsHpS(
             {
-                'fechado': ['Pedidos não cobrados', 'r'],
-                'cobrado': ['Cobranças', 'r'],
+                'fechado': ['Pedidos abertos', 'r'],
+                'cobrado': ['Cobrado', 'r'],
                 'recebido': ['Recebimentos', 'r'],
                 'saldo_atual': ['Saldo atual', 'r'],
                 'areceber': ['A receber', 'r'],
@@ -78,8 +78,8 @@ class AnaliseClienteView(
         self.totais_mes_defs = TableDefsHpS(
             {
                 'mes': ['Mês'],
-                'fechado': ['Pedidos não cobrados', 'r'],
-                'cobrado': ['Cobranças', 'r'],
+                'fechado': ['Pedidos abertos', 'r'],
+                'cobrado': ['Cobrado', 'r'],
                 'recebido': ['Recebimentos', 'r'],
                 'saldo_atual': ['Saldo atual', 'r'],
                 'areceber': ['A receber', 'r'],
