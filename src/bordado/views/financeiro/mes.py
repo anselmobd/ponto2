@@ -208,7 +208,7 @@ class FinanceiroMesView(
             else:
                 space = True
             definicao[self.fname('fechado', ano, mes)] = \
-                [('Pedidos<br/>em aberto',), 'r amarelo']
+                [('Pedidos<br/>abertos',), 'r amarelo']
             definicao[self.fname('cobrado', ano, mes)] = \
                 [('<br/>Cobrado',), 'r vermelho']
             definicao[self.fname('recebido', ano, mes)] = \
