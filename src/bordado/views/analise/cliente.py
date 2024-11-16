@@ -70,7 +70,9 @@ class AnaliseClienteView(
                 'fechado': ['Pedidos não cobrados', 'r'],
                 'cobrado': ['Cobranças', 'r'],
                 'recebido': ['Recebimentos', 'r'],
-                'saldo': ['', 'r'],
+                'saldo_atual': ['Saldo atual', 'r'],
+                'areceber': ['A receber', 'r'],
+                'saldo': ['Saldo geral', 'r'],
             }
         )
         self.totais_mes_defs = TableDefsHpS(
@@ -79,7 +81,9 @@ class AnaliseClienteView(
                 'fechado': ['Pedidos não cobrados', 'r'],
                 'cobrado': ['Cobranças', 'r'],
                 'recebido': ['Recebimentos', 'r'],
-                'saldo': ['', 'r'],
+                'saldo_atual': ['Saldo atual', 'r'],
+                'areceber': ['A receber', 'r'],
+                'saldo': ['Saldo geral', 'r'],
             }
         )
 
@@ -187,8 +191,12 @@ class AnaliseClienteView(
         totais_lancamentos = get_lancamento_financeiro(
             self.cliente_data[0]['id'])
         totais.update(totais_lancamentos)
-        totais['saldo'] = (
+        totais['saldo_atual'] = (
             totais['recebido'] - totais['cobrado'] - totais['fechado'])
+        totais['saldo'] = (
+            totais['recebido'] - totais['cobrado'] -
+            totais['fechado'] - totais['areceber']
+        )
 
         config_totais = {
             'data': [totais],
@@ -203,7 +211,9 @@ class AnaliseClienteView(
     def totais_pedidos_por_mes(self):
         totais_pedidos = get_pedido_financeiro_mes(self.cliente_data[0]['id'])
         totais_lancamentos = get_lancamento_financeiro_mes(
-            self.cliente_data[0]['id'])
+            self.cliente_data[0]['id'],
+            separa_areceber=True,
+        )
         meses_set = set([
             *[ item['mes'] for item in totais_pedidos],
             *[ item['mes'] for item in totais_lancamentos],
@@ -239,13 +249,23 @@ class AnaliseClienteView(
                     if mes_lancamento
                     else Decimal('0.00')
                 ),
+                'areceber': (
+                    mes_lancamento[0]['areceber']
+                    if mes_lancamento
+                    else Decimal('0.00')
+                ),
             })
 
         for row in totais:
             row['mes'] = '/'.join(row['mes'].split('-')[::-1])
             if row['fechado'] is None:
                 row['fechado'] = Decimal('0.00')
-            row['saldo'] = row['recebido'] - row['cobrado'] - row['fechado']
+            row['saldo_atual'] = (
+                row['recebido'] - row['cobrado'] - row['fechado'])
+            row['saldo'] = (
+                row['recebido'] - row['cobrado'] -
+                row['fechado'] - row['areceber']
+            )
 
         config_totais = {
             'data': totais,
