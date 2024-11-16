@@ -23,6 +23,8 @@ class FinanceiroMesForm(forms.Form):
         label='Até ano',
         required=True,
         initial=ano_atual,
+        min_value=2023,
+        max_value=2060,
         widget=forms.TextInput(
             attrs={**a.autofocus, **a.number, **a.placeholder_0, **a.size_6}
         ),
@@ -31,6 +33,8 @@ class FinanceiroMesForm(forms.Form):
         label='Mês',
         required=True,
         initial=mes_atual,
+        min_value=1,
+        max_value=12,
         widget=forms.TextInput(
             attrs={**a.number, **a.placeholder_0, **a.size_6}
         ),
@@ -39,6 +43,8 @@ class FinanceiroMesForm(forms.Form):
         label='Nº meses',
         required=True,
         initial=1,
+        min_value=0,
+        max_value=12,
         widget=forms.TextInput(
             attrs={**a.number, **a.placeholder_0, **a.size_5}
         ),
