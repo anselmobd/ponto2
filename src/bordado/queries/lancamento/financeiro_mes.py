@@ -20,6 +20,7 @@ from django.db.models.functions import (
     Concat,
     LPad,
 )
+from django.utils.timezone import now
 
 from o2lib.models.dictlist import queryset2dictlist
 
@@ -34,6 +35,7 @@ def get_lancamento_financeiro_mes(
         ano=None,
         mes=None,
         group_by='mes',  ## mes ou cliente
+        separa_areceber=False,
         ):
 
     if group_by == 'mes':
@@ -91,7 +93,16 @@ def get_lancamento_financeiro_mes(
         recebido=Q(cobranca__isnull=True),
     )
 
-    query = query.values(group_field, 'recebido')
+    if separa_areceber:
+        query = query.annotate(
+            futuro=ExpressionWrapper(
+                Q(data__gt=now().date()),
+                output_field=BooleanField()
+            )
+        )
+        query = query.values(group_field, 'recebido', 'futuro')
+    else:
+        query = query.values(group_field, 'recebido')
 
     query = query.annotate(
         total=Sum('modulo_valor')
@@ -104,7 +115,13 @@ def get_lancamento_financeiro_mes(
     por_grupo = {}
     for item in grupo_status:
         grupo = item[group_field]
-        status = 'recebido' if item['recebido'] else 'cobrado'
+        if item['recebido']:
+            status = 'recebido'
+        else:
+            if separa_areceber:
+                status = 'areceber' if item['futuro'] else 'cobrado'
+            else:
+                status = 'cobrado'
         valor = item['total']
         
         if grupo not in por_grupo:
@@ -112,6 +129,7 @@ def get_lancamento_financeiro_mes(
                 group_field: grupo,
                 'cobrado': Decimal('0.00'),
                 'recebido': Decimal('0.00'),
+                'areceber': Decimal('0.00'),
             }
         
         por_grupo[grupo][status] = valor
