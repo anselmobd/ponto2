@@ -86,6 +86,8 @@ class FinanceiroMesView(
     def valores_inteiros(self, row):
         for field in self.fields_meses:
             row[field] = int(row[field])
+
+    def spaces(self, row):
         space = False
         for ano, mes in self.meses[::-1]:
             if space:
@@ -177,6 +179,7 @@ class FinanceiroMesView(
                 "Nada selecionado")
         for row in self.totais_pedidos:
             self.valores_inteiros(row)
+            self.spaces(row)
 
     def sort_totais_pedidos(self):
         if self.ordem == 'c':
