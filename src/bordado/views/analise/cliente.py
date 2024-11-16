@@ -184,9 +184,11 @@ class AnaliseClienteView(
 
     def totais_pedidos(self):
         totais = get_pedido_financeiro(self.cliente_data[0]['id'])
-        totais_lancamentos = get_lancamento_financeiro(self.cliente_data[0]['id'])
+        totais_lancamentos = get_lancamento_financeiro(
+            self.cliente_data[0]['id'])
         totais.update(totais_lancamentos)
-        totais['saldo'] = totais['recebido'] - totais['cobrado'] - totais['fechado']
+        totais['saldo'] = (
+            totais['recebido'] - totais['cobrado'] - totais['fechado'])
 
         config_totais = {
             'data': [totais],
