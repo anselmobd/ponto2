@@ -132,7 +132,7 @@ def get_lancamento_financeiro_mes(
                 'areceber': Decimal('0.00'),
             }
         
-        por_grupo[grupo][status] = valor
+        por_grupo[grupo][status] += valor
 
     result = list(por_grupo.values())
     return result
