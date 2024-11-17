@@ -75,7 +75,10 @@ class FinanceiroMesView(
     def mount_fields_meses(self):
         self.fields_meses = []
         for ano, mes in self.meses:
-            for tipo in ['saldo', 'recebido', 'cobrado', 'fechado']:
+            tipos = ['saldo', 'recebido', 'cobrado', 'fechado']
+            if (not ano) and (self.num_meses == 0):
+                tipos.extend(['areceber', 'saldo_atual'])
+            for tipo in tipos:
                 self.fields_meses.append(self.fname(tipo, ano, mes))
 
     def mount_row_zerada(self):
@@ -124,7 +127,8 @@ class FinanceiroMesView(
         lancamento_mes = get_lancamento_financeiro_mes(
             ano=ano,
             mes=mes,
-            group_by='cliente'
+            group_by='cliente',
+            separa_areceber=(self.num_meses==0),
         )
         self.add_to_dictdata(lancamento_mes, valores_dict, 'cliente__apelido')
 
@@ -134,6 +138,14 @@ class FinanceiroMesView(
                 - row['cobrado']
                 - row['fechado']
             )
+            if self.num_meses == 0:
+                row['saldo_atual'] = row['saldo']
+                row['saldo'] = (
+                    row['recebido']
+                    - row['cobrado']
+                    - row['fechado']
+                    - row['areceber']
+                )
 
         if callable(filtro):
             return {
@@ -155,10 +167,13 @@ class FinanceiroMesView(
         self.meses_dict = {}
         for ano, mes in self.meses:
             filtro = None if ano else self.filtro_tem_saldo
+            tipos = ['saldo', 'recebido', 'cobrado', 'fechado']
+            if (not ano) and (self.num_meses == 0):
+                tipos.extend(['areceber', 'saldo_atual'])
             valores_dict = self.get_valores_dict_mes(ano, mes, filtro)
             translate_fields = {
                 tipo: self.fname(tipo, ano, mes)
-                for tipo in ['saldo', 'recebido', 'cobrado', 'fechado']
+                for tipo in tipos
             }
             for cliente, row in valores_dict.items():
                 if cliente not in self.meses_dict:
@@ -217,6 +232,11 @@ class FinanceiroMesView(
                 definicao[self.fname('saldo', ano, mes)] = \
                     [(f'{mes:02d}/{ano}<br/>Saldo',), 'r azul']
             else:
+                if self.num_meses == 0:
+                    definicao[self.fname('saldo_atual', ano, mes)] = \
+                        [('Atual<br/>Saldo',), 'r azulao']
+                    definicao[self.fname('areceber', ano, mes)] = \
+                        [('<br/>A receber',), 'r vermelho']
                 definicao[self.fname('saldo', ano, mes)] = \
                     [('Geral<br/>Saldo',), 'r azulao']
         self.totais_defs = TableDefsHpS(
@@ -264,10 +284,7 @@ class FinanceiroMesView(
         totalize_data(
             self.totais_pedidos,
             {
-                'sum': [
-                    field for field in self.fields_meses
-                    if not field.startswith('saldo')
-                ],
+                'sum': self.fields_meses,
                 'descr': {'cliente__apelido': 'Totais'},
                 'row_style':
                     "font-weight: bold;"
