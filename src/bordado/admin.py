@@ -170,6 +170,7 @@ class PedidoAdmin(admin.ModelAdmin):
 @admin.register(PedidoItem)
 class PedidoItemAdmin(admin.ModelAdmin):
     list_display = [
+        'id',
         'data_pedido',
         'pedido',
         'ordem',
@@ -182,6 +183,7 @@ class PedidoItemAdmin(admin.ModelAdmin):
         'cancelado',
     ]
     list_display_links = [
+        'id',
         'data_pedido',
         'pedido',
         'ordem',
@@ -191,6 +193,7 @@ class PedidoItemAdmin(admin.ModelAdmin):
         'pedido',
     ]
     fields = [
+        'id',
         'data_pedido',
         'pedido',
         'ordem',
@@ -206,6 +209,7 @@ class PedidoItemAdmin(admin.ModelAdmin):
         'cancelado',
     ]
     readonly_fields = [
+        'id',
         'ordem',
         'usuario',
         'inserido_em',
