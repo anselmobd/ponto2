@@ -113,9 +113,12 @@ class PedidoItem(models.Model):
         return self.pedido.cliente
 
     def __str__(self):
+        quantidade = self.quantidade
+        if quantidade == int(quantidade):
+            quantidade = int(quantidade)
         return (
-            f"{self.id}: {self.pedido.numero:04d}/{self.ordem} "
-            f"{self.quantidade}*'{self.bordado}'"
+            f"{self.id}: {self.pedido}/{self.ordem} "
+            f"{quantidade}*'{self.bordado}'"
         )
 
     def save(self, *args, **kwargs):
