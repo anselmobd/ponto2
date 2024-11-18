@@ -190,7 +190,6 @@ class PedidoItemAdmin(admin.ModelAdmin):
     ]
     list_filter = [
         'pedido__cliente',
-        'pedido',
     ]
     fields = [
         'id',
@@ -213,6 +212,10 @@ class PedidoItemAdmin(admin.ModelAdmin):
         'ordem',
         'usuario',
         'inserido_em',
+    ]
+    search_fields = [
+        'id',
+        'observacao',
     ]
 
 
