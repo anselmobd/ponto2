@@ -141,13 +141,16 @@ class BordadoAdmin(admin.ModelAdmin):
 @admin.register(Pedido)
 class PedidoAdmin(admin.ModelAdmin):
     list_display = [
-        '__str__',
+        'numero',
         'cliente',
         'inserido_em',
         'entrega',
         'cancelado',
     ]
-    list_display_links = ['cliente', '__str__']
+    list_display_links = [
+        'numero',
+        'cliente',
+    ]
     list_filter = [
         'cliente',
     ]
