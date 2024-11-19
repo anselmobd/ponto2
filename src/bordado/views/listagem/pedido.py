@@ -1,8 +1,9 @@
+import datetime
 from decimal import Decimal
 from pprint import pprint
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import F
+from django.db.models import F, Q
 
 from o2lib.form.form_report import form_report
 from o2lib.models.row_field import PrepRows
@@ -29,14 +30,21 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
     OBSERVACAO = 'pedidoitem__observacao'
     CLIENTE = 'cliente__apelido'
     COBRANCA = 'pedidoitem__cobrancas__cobranca'
-    COBRANCA_VALOR = 'pedidoitem__cobrancas__valor'
-    COBRANCA_VENCIMENTO = 'pedidoitem__cobrancas__cobranca__lancamento__data'
+    COBRANCA_PEDIDO_VALOR = 'pedidoitem__cobrancas__valor'
+    COBRANCA_VALOR = 'pedidoitem__cobrancas__cobranca__valor'
+    PARCELA_COBRADA_VALOR = 'parcela_cobrada_valor'
+    PARCELA_RECEBER_VALOR = 'parcela_receber_valor'
+    PARCELA_VALOR = 'pedidoitem__cobrancas__cobranca__lancamento__valor'
+    PARCELA_VENCIMENTO = 'pedidoitem__cobrancas__cobranca__lancamento__data'
     CORTESIA = 'pedidoitem__cortesia'
     DATA = 'pedidoitem__data_pedido'
     ENTREGA = 'entrega'
     NUMERO = 'numero'
     PAGAMENTO = 'pedidoitem__cobrancas__cobranca__pagamentocobranca__pagamento'
-    PAGAMENTO_DATA = 'pedidoitem__cobrancas__cobranca__pagamentocobranca__pagamento__data'
+    PAGAMENTO_DATA = (
+        'pedidoitem__cobrancas__cobranca__'
+        'pagamentocobranca__pagamento__data'
+    )
     PRECO = 'pedidoitem__preco'
     PROGRAMACAO = 'pedidoitem__programacao'
     QUANDO = 'pedidoitem__inserido_em'
@@ -57,6 +65,10 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
         self.get_vars2form = True
 
         self.form_report_excludes = []
+        self.calculated_fields = [
+            self.PARCELA_COBRADA_VALOR,
+            self.PARCELA_RECEBER_VALOR,
+        ]
         self.table_defs = TableDefsHBpSD(
             {
                 self.NUMERO: ["Nº", 'c', 'c'],
@@ -75,8 +87,14 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
                 self.CORTESIA: ["Cortesia", 'cp', 'c azul'],
                 self.VALOR: ["", 'cp', 'r azul'],
                 self.COBRANCA: ["Cobrança", 'c', 'c'],
-                self.COBRANCA_VALOR: ["Valor", 'c', 'r'],
-                self.COBRANCA_VENCIMENTO: ["Vencimento", 'c', 'c'],
+                self.COBRANCA_VALOR: ["Cobrança Valor", 'c', 'r'],
+                self.COBRANCA_PEDIDO_VALOR: ["Cobrança Pedido Valor", 'c', 'r'],
+                self.PARCELA_VALOR: ["Parcela Valor", 'c', 'r'],
+                self.PARCELA_COBRADA_VALOR: [
+                    "Parcela Pedido Cobrada Valor", 'c', 'r'],
+                self.PARCELA_RECEBER_VALOR: [
+                    "Parcela Pedido Receber Valor", 'c', 'r'],
+                self.PARCELA_VENCIMENTO: ["Parcela Vencimento", 'c', 'c'],
                 self.PAGAMENTO: ["Pagamento", 'c', 'c'],
                 self.PAGAMENTO_DATA: ["Data", 'c', 'c'],
             },
@@ -100,7 +118,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             self.filtra_cobranca,
             self.filtra_pagamento,
             (self.filtra_valor_de_ate, [
-                self.COBRANCA_VENCIMENTO, 'cobranca_de', 'cobranca_ate']),
+                self.PARCELA_VENCIMENTO, 'cobranca_de', 'cobranca_ate']),
             self.filtra_fechamento,
             self.filtra_cortesia,
             self.order_query,
@@ -169,8 +187,50 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
         )
             
     def exec_query(self):
+        # query = Pedido.objects.filter(
+        #     cliente__apelido='Waiwai'
+        # ).filter(
+        #     numero=1919
+        # ).filter(
+        #     Q(pedidoitem__cobrancas__cobranca__lancamento__data__gte= '2024-11-01') &
+        #     Q(pedidoitem__cobrancas__cobranca__lancamento__data__lte= '2024-11-30') &
+        #     Q(pedidoitem__cobrancas__cobranca__isnull=False)
+        # ).annotate(
+        #     valor=(
+        #         F(self.QUANTIDADE) * F(self.PRECO) +
+        #         F(self.PROGRAMACAO) +
+        #         F(self.AJUSTE)
+        #     )
+        # )
+        # fields = [
+        #     'numero',
+        #     'pedidoitem__data_pedido',
+        #     'cliente__apelido',
+        #     'pedidoitem__bordado__nome',
+        #     'pedidoitem__bordado__codigo',
+        #     'pedidoitem__observacao',
+        #     'pedidoitem__usuario__username',
+        #     'pedidoitem__inserido_em',
+        #     'entrega',
+        #     'pedidoitem__quantidade',
+        #     'pedidoitem__preco',
+        #     'pedidoitem__programacao',
+        #     'pedidoitem__ajuste',
+        #     'pedidoitem__cortesia',
+        #     'valor',
+        #     'pedidoitem__cobrancas__cobranca',
+        #     'pedidoitem__cobrancas__cobranca__valor',
+        #     'pedidoitem__cobrancas__valor',
+        #     'pedidoitem__cobrancas__cobranca__lancamento__valor',
+        #     'pedidoitem__cobrancas__cobranca__lancamento__data',
+        #     'pedidoitem__cobrancas__cobranca__pagamentocobranca__pagamento',
+        #     'pedidoitem__cobrancas__cobranca__'
+        #         'pagamentocobranca__pagamento__data',
+        # ]
+        # print(query.values(*fields).query)
+        # print(len(query.values(*fields)))
         self.data = self.query.values(
-            *self.table_defs.all_fields)
+            *(set(self.table_defs.all_fields) - set(self.calculated_fields)))
         if self.data:
             self.data = queryset2dictlist(self.data)
         else:
@@ -179,6 +239,28 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
 
     def conta_registros(self):
         self.quantidade_pedidos = len(self.data)
+
+    def prep_parcela_cobrada_valor(self, row):
+        return self.prep_parcela_valor(row, True)
+
+    def prep_parcela_receber_valor(self, row):
+        return self.prep_parcela_valor(row, False)
+
+    def prep_parcela_valor(self, row, cobrada=True):
+        if row[self.COBRANCA_VALOR] == 0:
+            return Decimal('0.00')
+        if cobrada:
+            ok = row[self.PARCELA_VENCIMENTO] <= datetime.date.today()
+        else:
+            ok = row[self.PARCELA_VENCIMENTO] > datetime.date.today()
+        if not ok:
+            return Decimal('0.00')
+        return round(
+            row[self.PARCELA_VALOR] *
+            row[self.COBRANCA_PEDIDO_VALOR] /
+            row[self.COBRANCA_VALOR],
+            2,
+        )
 
     def pre_prep_table(self):
         PrepRows(
@@ -189,10 +271,20 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             (
                 'valor',
                 self.COBRANCA_VALOR,
+                self.PARCELA_VALOR,
+                self.COBRANCA_PEDIDO_VALOR,
             ),
             Decimal('0.00')
         ).round(
             'valor', 2
+        ).abs(
+            self.PARCELA_VALOR,
+        ).exec(
+            self.PARCELA_COBRADA_VALOR,
+            self.prep_parcela_cobrada_valor
+        ).exec(
+            self.PARCELA_RECEBER_VALOR,
+            self.prep_parcela_receber_valor
         ).process()
 
     def prep_table(self):
@@ -208,7 +300,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
         ).date_dash(
             (
                 self.ENTREGA,
-                self.COBRANCA_VENCIMENTO,
+                self.PARCELA_VENCIMENTO,
                 self.PAGAMENTO_DATA,
             )
         ).sn(
@@ -224,9 +316,17 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
         totalize_data(
             dados,
             {
-                'sum': ['valor', self.COBRANCA_VALOR],
+                'sum': [
+                    'valor',
+                    self.COBRANCA_PEDIDO_VALOR,
+                    self.PARCELA_COBRADA_VALOR,
+                    self.PARCELA_RECEBER_VALOR,
+                ],
                 'descr': {self.CLIENTE: descr},
-                'row_if': {'valor': {False: 'seq'}},
+                'row_if': {
+                    'valor': {False: 'seq'},
+                    self.COBRANCA_PEDIDO_VALOR: {False: 'seq'},
+                },
                 'row_style':
                     "font-weight: bold;"
                     "background-image: linear-gradient(#DDD, white);",
