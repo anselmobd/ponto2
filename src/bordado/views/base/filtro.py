@@ -123,27 +123,21 @@ class FiltroParaView():
             )
 
     def filtra_valor_de_ate(self, data_field, form_field_de, form_field_ate):
-        valor_de = (
-            self.form.data[form_field_de]
-            if form_field_de in self.form.data
-            else None
-        )
-        valor_ate = (
-            self.form.data[form_field_ate]
-            if form_field_ate in self.form.data
-            else None
-        )
-        if valor_de or valor_ate:
-            if valor_de == valor_ate:
-                self.query = self.query.filter(
-                    **{data_field: valor_de}
-                )
-                return
+        filtro = self.get_filtro_valor_de_ate(
+            data_field, form_field_de, form_field_ate)
+        if filtro:
+            self.query = self.query.filter(**filtro)
+
+    def get_filtro_valor_de_ate(
+            self, data_field, form_field_de, form_field_ate):
+        valor_de = self._value_from_form(form_field_de)
+        valor_ate = self._value_from_form(form_field_ate)
+        filtro = {}
+        if valor_de == valor_ate and valor_de:
+            filtro[data_field] = valor_de
+        else:
             if valor_de:
-                self.query = self.query.filter(
-                    **{f"{data_field}__gte": valor_de}
-                )
+                filtro[f"{data_field}__gte"] = valor_de
             if valor_ate:
-                self.query = self.query.filter(
-                    **{f"{data_field}__lte": valor_ate}
-                )
+                filtro[f"{data_field}__lte"] = valor_ate
+        return filtro
