@@ -19,6 +19,13 @@ class FiltroParaView():
     self.form: O form da view
     """
 
+    def _value_from_form(self, form_field):
+        return (
+            self.form.data[form_field]
+            if form_field in self.form.data
+            else None
+        )
+
     def filtra_cliente__apelido(
             self,
             data_field='cliente__apelido',
@@ -31,11 +38,7 @@ class FiltroParaView():
             form_field em self.form.data = cliente_apelido
             query_attr em self = query
         """
-        apelido = (
-            self.form.data[form_field]
-            if form_field in self.form.data
-            else None
-        )
+        apelido = self._value_from_form(form_field)
 
         def do_filtra():
             setattr(self, query_attr,
@@ -102,11 +105,7 @@ class FiltroParaView():
                     raise StopStepsException("Filtro de cliente mal definido")
 
     def filtra_valor(self, data_field, form_field):
-        valor = (
-            self.form.data[form_field]
-            if form_field in self.form.data
-            else None
-        )
+        valor = self._value_from_form(form_field)
         if valor:
             self.query = self.query.filter(
                 **{data_field: valor}
