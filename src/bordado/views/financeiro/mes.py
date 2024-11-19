@@ -251,11 +251,12 @@ class FinanceiroMesView(
         )
 
     def mount_url_query(
-            self, row, ano, mes, cobranca='n',
+            self, row, ano, mes, cobranca='n', apresentacao='p',
             data_de='entrega_de', data_ate='entrega_ate'):
         qdict = QueryDict('', mutable=True)
         qdict['cliente_apelido'] = row['cliente__apelido']
         qdict['cobranca'] = cobranca
+        qdict['apresentacao'] = apresentacao
         if ano and mes:
             qdict[data_de] = f'{ano}-{mes:02d}-01'
             dt = strymd2date(
@@ -280,6 +281,16 @@ class FinanceiroMesView(
                     row[f"{field}|A"] = "?".join([
                         reverse('bordado:listagem_pedido'),
                         self.mount_url_query(row, ano, mes),
+                    ])
+                field = self.fname('cobrado', ano, mes)
+                if row[field]:
+                    row[f"{field}|TARGET"] = 'blank'
+                    row[f"{field}|A"] = "?".join([
+                        reverse('bordado:listagem_pedido'),
+                        self.mount_url_query(
+                            row, ano, mes, cobranca='c', apresentacao='c',
+                            data_de='cobranca_de', data_ate='cobranca_ate',
+                        ),
                     ])
 
     def calcula_totalizador(self):
