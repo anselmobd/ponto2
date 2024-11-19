@@ -81,7 +81,7 @@ class ListagemPedidoForm(forms.Form):
         widget=forms.DateInput(attrs={'type': 'date'}),
     )
     cobranca_de = forms.DateField(
-        label="Data de cobrança: De",
+        label="Data de parcela de cobrança: De",
         required=False,
         widget=forms.DateInput(attrs={'type': 'date'}),
     )
