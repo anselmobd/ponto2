@@ -114,20 +114,24 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
 
         self.mount_steps = [
             self.init_query,
-            self.filtra_cliente__apelido,
-            (self.filtra_icontains, [self.BORDADO_NOME, 'bordado_nome']),
-            (self.filtra_icontains, [self.BORDADO_CODIGO, 'bordado_codigo']),
-            (self.filtra_icontains, [self.OBSERVACAO, 'observacao']),
-            (self.filtra_valor, ['numero']*2),
-            (self.filtra_valor_de_ate, [self.DATA, 'data_de', 'data_ate']),
-            (self.filtra_valor_de_ate, [
-                self.ENTREGA, 'entrega_de', 'entrega_ate']),
-            self.filtra_cobranca,
-            self.filtra_pagamento,
-            (self.filtra_valor_de_ate, [
-                self.PARCELA_VENCIMENTO, 'cobranca_de', 'cobranca_ate']),
-            self.filtra_fechamento,
-            self.filtra_cortesia,
+            (self.get_filtro_cliente__apelido, 'filtro'),
+            (self.get_filtro_icontains, 'filtro',
+             [self.BORDADO_NOME, 'bordado_nome']),
+            (self.get_filtro_icontains, 'filtro',
+             [self.BORDADO_CODIGO, 'bordado_codigo']),
+            (self.get_filtro_icontains, 'filtro',
+             [self.OBSERVACAO, 'observacao']),
+            (self.get_filtro_valor, 'filtro', ['numero']*2),
+            (self.get_filtro_valor_de_ate, 'filtro',
+             [self.DATA, 'data_de', 'data_ate']),
+            (self.get_filtro_valor_de_ate, 'filtro',
+             [self.ENTREGA, 'entrega_de', 'entrega_ate']),
+            (self.get_filtro_valor_de_ate,  'filtro',
+             [self.PARCELA_VENCIMENTO, 'cobranca_de', 'cobranca_ate']),
+            self.get_filtro_fechamento,
+            self.get_filtro_cortesia,
+            self.get_filtro_cobranca,
+            self.get_filtro_pagamento,
             self.order_query,
             self.annotate_query,
             self.exec_query,
@@ -146,34 +150,31 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
 
     def init_query(self):
         self.query = Pedido.objects
+        self.filtro = {}
 
-    def filtra_fechamento(self):
+    def get_filtro_fechamento(self):
         if self.fechamento == 'f':
-            self.query = self.query.filter(entrega__isnull=False)
+            self.filtro[f'{self.ENTREGA}__isnull'] = False
         elif self.fechamento == 'n':
-            self.query = self.query.filter(entrega__isnull=True)
+            self.filtro[f'{self.ENTREGA}__isnull'] = True
 
-    def filtra_cortesia(self):
+    def get_filtro_cortesia(self):
         if self.cortesia == 'f':
-            self.query = self.query.filter(**{self.CORTESIA: True})
+            self.filtro[self.CORTESIA] = True
         elif self.cortesia == 'n':
-            self.query = self.query.filter(**{self.CORTESIA: False})
+            self.filtro[self.CORTESIA] = False
 
-    def filtra_cobranca(self):
+    def get_filtro_cobranca(self):
         if self.cobranca == 'c':
-            self.query = self.query.filter(
-                pedidoitem__cobrancas__cobranca__isnull=False)
+            self.filtro[f'{self.COBRANCA}__isnull'] = False
         elif self.cobranca == 'n':
-            self.query = self.query.filter(
-                pedidoitem__cobrancas__cobranca__isnull=True)
+            self.filtro[f'{self.COBRANCA}__isnull'] = True
 
-    def filtra_pagamento(self):
+    def get_filtro_pagamento(self):
         if self.pagamento == 'p':
-            self.query = self.query.filter(
-                **{f'{self.PAGAMENTO}__isnull': False})
+            self.filtro[f'{self.PAGAMENTO}__isnull'] = False
         elif self.pagamento == 'n':
-            self.query = self.query.filter(
-                **{f'{self.PAGAMENTO}__isnull': True})
+            self.filtro[f'{self.PAGAMENTO}__isnull'] = True
 
     def order_query(self):
         if self.ordem == 'e':
@@ -195,49 +196,9 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
         )
             
     def exec_query(self):
-        # query = Pedido.objects.filter(
-        #     cliente__apelido='Waiwai'
-        # ).filter(
-        #     numero=1919
-        # ).filter(
-        #     Q(pedidoitem__cobrancas__cobranca__lancamento__data__gte= '2024-11-01') &
-        #     Q(pedidoitem__cobrancas__cobranca__lancamento__data__lte= '2024-11-30') &
-        #     Q(pedidoitem__cobrancas__cobranca__isnull=False)
-        # ).annotate(
-        #     valor=(
-        #         F(self.QUANTIDADE) * F(self.PRECO) +
-        #         F(self.PROGRAMACAO) +
-        #         F(self.AJUSTE)
-        #     )
-        # )
-        # fields = [
-        #     'numero',
-        #     'pedidoitem__data_pedido',
-        #     'cliente__apelido',
-        #     'pedidoitem__bordado__nome',
-        #     'pedidoitem__bordado__codigo',
-        #     'pedidoitem__observacao',
-        #     'pedidoitem__usuario__username',
-        #     'pedidoitem__inserido_em',
-        #     'entrega',
-        #     'pedidoitem__quantidade',
-        #     'pedidoitem__preco',
-        #     'pedidoitem__programacao',
-        #     'pedidoitem__ajuste',
-        #     'pedidoitem__cortesia',
-        #     'valor',
-        #     'pedidoitem__cobrancas__cobranca',
-        #     'pedidoitem__cobrancas__cobranca__valor',
-        #     'pedidoitem__cobrancas__valor',
-        #     'pedidoitem__cobrancas__cobranca__lancamento__valor',
-        #     'pedidoitem__cobrancas__cobranca__lancamento__data',
-        #     'pedidoitem__cobrancas__cobranca__pagamentocobranca__pagamento',
-        #     'pedidoitem__cobrancas__cobranca__'
-        #         'pagamentocobranca__pagamento__data',
-        # ]
-        # print(query.values(*fields).query)
-        # print(len(query.values(*fields)))
-        self.data = self.query.values(
+        self.data = self.query.filter(
+            **self.filtro
+        ).values(
             *(set(self.table_defs.all_fields) - set(self.calculated_fields)))
         if self.data:
             self.data = queryset2dictlist(self.data)
