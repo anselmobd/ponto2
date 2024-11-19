@@ -32,20 +32,28 @@ class FiltroParaView():
             form_field='cliente_apelido',
             query_attr='query',
             apenas_um=True):
+        filtro = self.get_filtro_cliente__apelido(
+            data_field, form_field, apenas_um)
+        if filtro:
+            setattr(self, query_attr,
+                getattr(self, query_attr).filter(**filtro)
+            )
+
+    def get_filtro_cliente__apelido(
+            self,
+            data_field='cliente__apelido',
+            form_field='cliente_apelido',
+            apenas_um=True):
         """
         defaults:
             data_field em self.query = cliente__apelido
             form_field em self.form.data = cliente_apelido
-            query_attr em self = query
         """
         apelido = self._value_from_form(form_field)
+        filtro = {}
 
         def do_filtra():
-            setattr(self, query_attr,
-                getattr(self, query_attr).filter(
-                    **{data_field: apelido}
-                )
-            )
+            filtro[data_field] = apelido
             self.form.data[form_field] = apelido
 
         if apelido:
@@ -72,7 +80,7 @@ class FiltroParaView():
                 if len(clientes) == 1:
                     apelido = clientes[0].apelido
                     do_filtra()
-                    return
+                    return filtro
 
                 msg_erro = ''
                 if not clientes:
@@ -94,15 +102,12 @@ class FiltroParaView():
                         f"({', '.join(apelidos)})"
                     )
                 else:
-                    setattr(self, query_attr,
-                        getattr(self, query_attr).filter(
-                            **{f'{data_field}__icontains': apelido}
-                        )
-                    )
+                    filtro[f'{data_field}__icontains'] = apelido
 
                 if msg_erro:
                     self.form.errors[form_field] = [msg_erro]
                     raise StopStepsException("Filtro de cliente mal definido")
+        return filtro
 
     def filtra_valor(self, data_field, form_field):
         filtro = self.get_filtro_valor(
