@@ -32,6 +32,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
     COBRANCA = 'pedidoitem__cobrancas__cobranca'
     COBRANCA_PEDIDO_VALOR = 'pedidoitem__cobrancas__valor'
     COBRANCA_VALOR = 'pedidoitem__cobrancas__cobranca__valor'
+    PARCELA_PEDIDO_VALOR = 'parcela_pedido_valor'
     PARCELA_COBRADA_VALOR = 'parcela_cobrada_valor'
     PARCELA_RECEBER_VALOR = 'parcela_receber_valor'
     PARCELA_VALOR = 'pedidoitem__cobrancas__cobranca__lancamento__valor'
@@ -66,6 +67,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
 
         self.form_report_excludes = []
         self.calculated_fields = [
+            self.PARCELA_PEDIDO_VALOR,
             self.PARCELA_COBRADA_VALOR,
             self.PARCELA_RECEBER_VALOR,
         ]
@@ -89,12 +91,15 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
                 self.COBRANCA: ["Cobrança", 'c', 'c'],
                 self.COBRANCA_VALOR: ["Cobrança Valor", 'c', 'r'],
                 self.COBRANCA_PEDIDO_VALOR: ["Cobrança Pedido Valor", 'c', 'r'],
-                self.PARCELA_VALOR: ["Parcela Valor", 'c', 'r'],
+                self.PARCELA_VALOR: ["Parcela Valor", 'c', 'r ouro'],
+                self.PARCELA_PEDIDO_VALOR: [
+                    "Parcela Pedido Valor", 'c', 'r ouro'],
                 self.PARCELA_COBRADA_VALOR: [
-                    "Parcela Pedido Cobrada Valor", 'c', 'r'],
+                    "Parcela Pedido Cobrada Valor", 'c', 'r ouro'],
                 self.PARCELA_RECEBER_VALOR: [
-                    "Parcela Pedido Receber Valor", 'c', 'r'],
-                self.PARCELA_VENCIMENTO: ["Parcela Vencimento", 'c', 'c'],
+                    "Parcela Pedido Receber Valor", 'c', 'r ouro'],
+                self.PARCELA_VENCIMENTO: [
+                    "Parcela Vencimento", 'c', 'c ouro'],
                 self.PAGAMENTO: ["Pagamento", 'c', 'c'],
                 self.PAGAMENTO_DATA: ["Data", 'c', 'c'],
             },
@@ -102,6 +107,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
                 'azul': "background-color: lightblue;",
                 'verde': "background-color: lightgreen;",
                 'amarelo': "background-color: khaki;",
+                'ouro': "background-color: lightgoldenrodyellow;",
             },
         )
 
@@ -240,21 +246,25 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
     def conta_registros(self):
         self.quantidade_pedidos = len(self.data)
 
+    def prep_parcela_pedido_valor(self, row):
+        return self.prep_parcela_valor(row)
+
     def prep_parcela_cobrada_valor(self, row):
-        return self.prep_parcela_valor(row, True)
+        return self.prep_parcela_valor(row, 'c')
 
     def prep_parcela_receber_valor(self, row):
-        return self.prep_parcela_valor(row, False)
+        return self.prep_parcela_valor(row, 'r')
 
-    def prep_parcela_valor(self, row, cobrada=True):
+    def prep_parcela_valor(self, row, cobrada_receber=None):
         if row[self.COBRANCA_VALOR] == 0:
             return Decimal('0.00')
-        if cobrada:
-            ok = row[self.PARCELA_VENCIMENTO] <= datetime.date.today()
-        else:
-            ok = row[self.PARCELA_VENCIMENTO] > datetime.date.today()
-        if not ok:
-            return Decimal('0.00')
+        if cobrada_receber:
+            if cobrada_receber == 'c':
+                ok = row[self.PARCELA_VENCIMENTO] <= datetime.date.today()
+            else:
+                ok = row[self.PARCELA_VENCIMENTO] > datetime.date.today()
+            if not ok:
+                return Decimal('0.00')
         return round(
             row[self.PARCELA_VALOR] *
             row[self.COBRANCA_PEDIDO_VALOR] /
@@ -279,6 +289,9 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             'valor', 2
         ).abs(
             self.PARCELA_VALOR,
+        ).exec(
+            self.PARCELA_PEDIDO_VALOR,
+            self.prep_parcela_pedido_valor
         ).exec(
             self.PARCELA_COBRADA_VALOR,
             self.prep_parcela_cobrada_valor
@@ -319,6 +332,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
                 'sum': [
                     'valor',
                     self.COBRANCA_PEDIDO_VALOR,
+                    self.PARCELA_PEDIDO_VALOR,
                     self.PARCELA_COBRADA_VALOR,
                     self.PARCELA_RECEBER_VALOR,
                 ],
