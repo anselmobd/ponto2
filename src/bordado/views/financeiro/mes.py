@@ -292,6 +292,16 @@ class FinanceiroMesView(
                             data_de='cobranca_de', data_ate='cobranca_ate',
                         ),
                     ])
+                field = self.fname('areceber', ano, mes)
+                if field in row and row[field]:
+                    row[f"{field}|TARGET"] = 'blank'
+                    row[f"{field}|A"] = "?".join([
+                        reverse('bordado:listagem_pedido'),
+                        self.mount_url_query(
+                            row, ano, mes, cobranca='c', apresentacao='c',
+                            data_de='cobranca_de', data_ate='cobranca_ate',
+                        ),
+                    ])
 
     def calcula_totalizador(self):
         totalize_data(
