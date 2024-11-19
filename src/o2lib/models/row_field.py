@@ -192,6 +192,9 @@ class PrepRows():
             self.sequence_control[key]['sequence'] = 0
         row[field] = self.sequence_control[key]['sequence']
 
+    def _exec(self, row, field, func):
+        row[field] = func(row)
+
     def custom_command(self, command, *args, **kwargs):
         self.__basic_steps.append(
             self.prep_args([command]+list(args)+[kwargs])
@@ -240,6 +243,10 @@ class PrepRows():
 
     def sub_sequence(self, *args, **kwargs):
         self.custom_command(self._sub_sequence, *args, **kwargs)
+        return self
+
+    def exec(self, *args, **kwargs):
+        self.custom_command(self._exec, *args, **kwargs)
         return self
 
     def process(self):
