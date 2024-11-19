@@ -11,6 +11,7 @@ from o2lib.models.dictlist import queryset2dictlist
 from o2lib.table_defs import TableDefsHBpSD
 from o2lib.views.base.get_post import O2BaseGetPostView
 from o2lib.views.base.exception import StopStepsException
+from o2lib.views.group import group_rowspan
 from o2lib.views.totalize import totalize_data
 from o2lib.views.paginator import paginator_basic
 
@@ -132,6 +133,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             self.exec_query,
             self.conta_registros,
             self.pre_prep_table,
+            self.group_table,
             self.calcula_totalizador_geral,
             self.paginador,
             self.prep_table,
@@ -325,6 +327,29 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             '<Erro!>',
         ).process()
 
+    def group_table(self):
+        self.group = [
+            self.NUMERO,
+            self.DATA,
+            self.CLIENTE,
+            self.BORDADO_NOME,
+            self.BORDADO_CODIGO,
+            self.OBSERVACAO,
+            self.USUARIO,
+            self.QUANDO,
+            self.ENTREGA,
+            self.QUANTIDADE,
+            self.PRECO,
+            self.PROGRAMACAO,
+            self.AJUSTE,
+            self.CORTESIA,
+            self.VALOR,
+            self.COBRANCA,
+            self.COBRANCA_VALOR,
+            self.COBRANCA_PEDIDO_VALOR,
+        ]
+        group_rowspan(self.data, self.group)
+
     def calcula_totalizador(self, dados, descr):
         totalize_data(
             dados,
@@ -383,6 +408,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
     def context_table(self):
         self.context['tabela']= {
             'data': self.data,
+            'group': self.group,
             'thclass': 'sticky',
             'quantidade_pedidos': self.quantidade_pedidos,
         }
