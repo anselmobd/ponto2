@@ -105,11 +105,17 @@ class FiltroParaView():
                     raise StopStepsException("Filtro de cliente mal definido")
 
     def filtra_valor(self, data_field, form_field):
+        filtro = self.get_filtro_valor(
+            data_field, form_field)
+        if filtro:
+            self.query = self.query.filter(**filtro)
+
+    def get_filtro_valor(self, data_field, form_field):
         valor = self._value_from_form(form_field)
+        filtro = {}
         if valor:
-            self.query = self.query.filter(
-                **{data_field: valor}
-            )
+            filtro[data_field] = valor
+        return filtro
 
     def filtra_icontains(self, data_field, form_field):
         filtro = self.get_filtro_icontains(
