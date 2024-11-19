@@ -195,6 +195,9 @@ class PrepRows():
     def _exec(self, row, field, func):
         row[field] = func(row)
 
+    def _abs(self, row, field):
+        row[field] = abs(row[field])
+
     def custom_command(self, command, *args, **kwargs):
         self.__basic_steps.append(
             self.prep_args([command]+list(args)+[kwargs])
@@ -247,6 +250,10 @@ class PrepRows():
 
     def exec(self, *args, **kwargs):
         self.custom_command(self._exec, *args, **kwargs)
+        return self
+
+    def abs(self, *args, **kwargs):
+        self.custom_command(self._abs, *args, **kwargs)
         return self
 
     def process(self):
