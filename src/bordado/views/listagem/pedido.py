@@ -260,7 +260,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
     def prep_parcela_valor(self, row, cobrada_receber=None):
         if row[self.COBRANCA_VALOR] == 0:
             return Decimal('0.00')
-        if cobrada_receber:
+        if cobrada_receber and row[self.PARCELA_VENCIMENTO]:
             if cobrada_receber == 'c':
                 ok = row[self.PARCELA_VENCIMENTO] <= datetime.date.today()
             else:
