@@ -250,17 +250,19 @@ class FinanceiroMesView(
             },
         )
 
-    def mount_url_query(self, row, ano, mes):
+    def mount_url_query(
+            self, row, ano, mes, cobranca='n',
+            data_de='entrega_de', data_ate='entrega_ate'):
         qdict = QueryDict('', mutable=True)
         qdict['cliente_apelido'] = row['cliente__apelido']
-        qdict['cobranca'] = 'n'
+        qdict['cobranca'] = cobranca
         if ano and mes:
-            qdict['entrega_de'] = f'{ano}-{mes:02d}-01'
+            qdict[data_de] = f'{ano}-{mes:02d}-01'
             dt = strymd2date(
                 f'{ano}-{mes}-01'
             )
             dt = dt+relativedelta(months=+1)
-            qdict['entrega_ate'] = ymd(yesterday(dt))
+            qdict[data_ate] = ymd(yesterday(dt))
         return qdict.urlencode()
 
     def prep_data(self):
