@@ -179,11 +179,16 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
     def order_query(self):
         if self.ordem == 'e':
             self.query = self.query.order_by(
-                f'-{self.ENTREGA}', self.CLIENTE, '-numero'
+                f'-{self.ENTREGA}',
+                self.CLIENTE,
+                '-numero',
+                self.PARCELA_VENCIMENTO,
             )
         else:
             self.query = self.query.order_by(
-                f'-{self.DATA}', '-numero'
+                f'-{self.DATA}',
+                '-numero',
+                self.PARCELA_VENCIMENTO,
             )
 
     def annotate_query(self):
