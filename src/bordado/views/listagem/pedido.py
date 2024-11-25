@@ -187,6 +187,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             self.query = self.query.order_by(
                 f'-{self.ENTREGA}',
                 self.CLIENTE,
+                f'-{self.DATA}',
                 '-numero',
                 self.PARCELA_VENCIMENTO,
             )
