@@ -177,16 +177,16 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             self.filtro[f'{self.PAGAMENTO}__isnull'] = True
 
     def order_query(self):
-        if self.ordem == 'e':
+        if self.ordem == 'p':
             self.query = self.query.order_by(
-                f'-{self.ENTREGA}',
-                self.CLIENTE,
+                f'-{self.DATA}',
                 '-numero',
                 self.PARCELA_VENCIMENTO,
             )
         else:
             self.query = self.query.order_by(
-                f'-{self.DATA}',
+                f'-{self.ENTREGA}',
+                self.CLIENTE,
                 '-numero',
                 self.PARCELA_VENCIMENTO,
             )
