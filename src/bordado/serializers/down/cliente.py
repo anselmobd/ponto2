@@ -7,14 +7,15 @@ from bordado.models import (
     FormaPagamento,
     TipoComunicacao,
 )
-from bordado.serializers.simple.tipo_comunicacao import TipoComunicacaoSimpleSerializer
-from bordado.serializers.simple.forma_pagamento import FormaPagamentoSimpleSerializer
+from bordado.serializers.simple.tipo_comunicacao import (
+    TipoComunicacaoSimpleSerializer)
+from bordado.serializers.simple.forma_pagamento import (
+    FormaPagamentoSimpleSerializer)
 
 
 __all__ = [
     'ClienteDownSerializer',
 ]
-
 
 
 class ContatoSerializer(serializers.ModelSerializer):
@@ -30,10 +31,13 @@ class ContatoSerializer(serializers.ModelSerializer):
 
 
 class ClienteDownSerializer(serializers.ModelSerializer):
-    usuario = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=False)
-    comunicacao = serializers.PrimaryKeyRelatedField(queryset=TipoComunicacao.objects.all(), required=False)
+    usuario = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(), required=False)
+    comunicacao = serializers.PrimaryKeyRelatedField(
+        queryset=TipoComunicacao.objects.all(), required=False)
     comunicacao_obj = serializers.SerializerMethodField()
-    forma_pagamento = serializers.PrimaryKeyRelatedField(queryset=FormaPagamento.objects.all(), required=False)
+    forma_pagamento = serializers.PrimaryKeyRelatedField(
+        queryset=FormaPagamento.objects.all(), required=False)
     forma_pagamento_obj = serializers.SerializerMethodField()
     contato_set = ContatoSerializer(many=True, read_only=True)
 
