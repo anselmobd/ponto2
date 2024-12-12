@@ -642,6 +642,7 @@ onMounted(() => {
             <th>Cobrança</th>
             <th>Parcela</th>
             <th>Valor</th>
+            <th>Status</th>
             <th>Saldo</th>
           </tr>
           <tr v-if="lancamentos_error">
@@ -670,6 +671,15 @@ onMounted(() => {
                 'text-green-800': !lancamento.cobranca,
               }"
             >{{ ptBrCurrencyFormat.format(lancamento.valor) }}</td>
+            <td
+              :class="{
+                'text-green-800': lancamento.valor_total_recebido,
+                'text-red-800': lancamento.cobranca && !lancamento.valor_total_recebido,
+              }"
+            >{{ lancamento.cobranca ?
+              ( lancamento.valor_total_recebido ? 'Recebido' : 'Aberto'
+              ) :
+              '-' }}</td>
             <td class="!text-right">{{ ptBrCurrencyFormat.format(lancamento.saldo_cliente) }}</td>
           </tr>
         </tbody>
