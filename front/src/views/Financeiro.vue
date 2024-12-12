@@ -673,13 +673,23 @@ onMounted(() => {
             >{{ ptBrCurrencyFormat.format(lancamento.valor) }}</td>
             <td
               :class="{
-                'text-green-800': lancamento.valor_total_recebido,
-                'text-red-800': lancamento.cobranca && !lancamento.valor_total_recebido,
+                'text-green-800':
+                  ( lancamento.valor_total_recebido ||
+                    lancamento.valor_total_pago
+                  ),
+                'text-red-800':
+                  ( lancamento.cobranca &&
+                    !lancamento.valor_total_recebido
+                  ) ||
+                  ( !lancamento.cobranca &&
+                    !lancamento.valor_total_pago
+                  ),
               }"
             >{{ lancamento.cobranca ?
               ( lancamento.valor_total_recebido ? 'Recebido' : 'Aberto'
               ) :
-              '-' }}</td>
+              ( lancamento.valor_total_pago ? 'Conciliado' : 'Aberto'
+              ) }}</td>
             <td class="!text-right">{{ ptBrCurrencyFormat.format(lancamento.saldo_cliente) }}</td>
           </tr>
         </tbody>
