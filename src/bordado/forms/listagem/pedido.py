@@ -136,6 +136,7 @@ class ListagemPedidoForm(forms.Form):
     )
     CHOICES = [
         ('', "Data de entrega / Cliente / Nº do pedido"),
+        ('c', "Cliente / Data de entrega / Nº do pedido"),
         ('p', "Data do pedido / Nº do pedido"),
     ]
     ordem = forms.ChoiceField(
