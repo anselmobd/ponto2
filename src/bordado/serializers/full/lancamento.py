@@ -49,10 +49,29 @@ class CobrancaSerializer(serializers.ModelSerializer):
         ]
 
 
+class PagamentoCobrancaSerializer(serializers.ModelSerializer):
+    inserido_por = UserSimpleSerializer()
+    alterado_por = UserSimpleSerializer()
+
+    class Meta:
+        model = PagamentoCobranca
+        fields = [
+            'id',
+            'cobranca',
+            'valor',
+            'inserido_em',
+            'inserido_por',
+            'alterado_em',
+            'alterado_por',
+        ]
+
+
 class LancamentoFullSerializer(serializers.ModelSerializer):
     cliente = ClienteDownSerializer()
     cobranca = CobrancaSerializer()
     usuario = UserSimpleSerializer()
+    pagamentocobranca_set = PagamentoCobrancaSerializer(
+        many=True, read_only=True)
     valor_total_recebido = serializers.SerializerMethodField()
 
     def get_valor_total_recebido(self, instance):
@@ -79,5 +98,6 @@ class LancamentoFullSerializer(serializers.ModelSerializer):
             'saldo_empresa',
             'usuario',
             'quando',
+            'pagamentocobranca_set',
             'valor_total_recebido',
         ]

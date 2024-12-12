@@ -93,6 +93,7 @@ class LancamentoViewSet(viewsets.ModelViewSet):
         'cliente',
         'cobranca',
         'usuario',
+        'pagamentocobranca_set',
     )
     serializer_class = LancamentoFullSerializer
     permission_classes = [permissions.IsAuthenticated]
