@@ -313,7 +313,9 @@ onMounted(() => {
   <div>
     <section id="titulo" class="flex pt-4 place-content-between">
       <h2 class="inline font-bold text-xl">Financeiro do cliente <span class="text-indigo-700">{{ route.params.apelido }}</span></h2>
-      <a title="Voltar" class="button text-xl cursor-pointer" @click.prevent="router.go(-1)">&#x2190;</a>
+      <a title="Voltar" class="button text-xl cursor-pointer"
+        @click.prevent="router.push({name: 'pedido'});"
+      >&#x2190;</a>
     </section>
 
     <section id="preferencias_cliente" class="bg-slate-100 rounded p-4">
