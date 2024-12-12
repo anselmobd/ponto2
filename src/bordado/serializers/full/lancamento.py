@@ -1,8 +1,11 @@
 from rest_framework import serializers
 
+from django.db.models import Sum
+
 from bordado.models import (
     Cobranca,
     Lancamento,
+    PagamentoCobranca,
     PedidoItemCobranca,
 )
 from bordado.serializers.down.cliente import ClienteDownSerializer
@@ -50,6 +53,15 @@ class LancamentoFullSerializer(serializers.ModelSerializer):
     cliente = ClienteDownSerializer()
     cobranca = CobrancaSerializer()
     usuario = UserSimpleSerializer()
+    valor_total_recebido = serializers.SerializerMethodField()
+
+    def get_valor_total_recebido(self, instance):
+        return PagamentoCobranca.objects.filter(
+            cobranca=instance.cobranca
+        ).aggregate(
+            total=Sum('valor', default=0)
+        )['total']
+
 
     class Meta:
         model = Lancamento
@@ -67,4 +79,5 @@ class LancamentoFullSerializer(serializers.ModelSerializer):
             'saldo_empresa',
             'usuario',
             'quando',
+            'valor_total_recebido',
         ]
