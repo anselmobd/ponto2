@@ -1,4 +1,5 @@
 <script setup>
+import router from '@/router'
 import { useRoute } from "vue-router";
 import { ref, onMounted } from 'vue'
 import { getLancamentos } from '../api/lancamento.js';
@@ -146,6 +147,13 @@ function handlePagamentoClick(pagamento) {
 
 }
 
+function handleVoltarClick(event) {
+  router.push({
+    name: 'financeiro',
+    params: { apelido: route.params.apelido }
+  });
+}
+
 function handleConciliaClick(event) {
   event.preventDefault();
   doAddConciliacao();
@@ -192,7 +200,9 @@ onMounted(() => {
   <div>
     <section id="titulo" class="flex pt-4 place-content-between">
       <h2 class="inline font-bold text-xl">Conciliação de cobrança do cliente <span class="text-indigo-700">{{ route.params.apelido }}</span></h2>
-      <a title="Voltar" class="button text-xl cursor-pointer" @click.prevent="router.go(-1)">&#x2190;</a>
+      <a title="Voltar" class="button text-xl cursor-pointer"
+        @click.prevent="handleVoltarClick"
+      >&#x2190;</a>
     </section>
     
     <section id="lancamentos">
