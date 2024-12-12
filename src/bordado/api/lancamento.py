@@ -89,7 +89,11 @@ __all__ = [
     )
 )
 class LancamentoViewSet(viewsets.ModelViewSet):
-    queryset = Lancamento.objects.all()
+    queryset = Lancamento.objects.prefetch_related(
+        'cliente',
+        'cobranca',
+        'usuario',
+    )
     serializer_class = LancamentoFullSerializer
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
