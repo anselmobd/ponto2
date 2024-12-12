@@ -35,7 +35,14 @@ __all__ = [
 @extend_schema_view(
     **dict_keys_value(__ACTIONS, extend_schema(tags=['cobranca'])))
 class CobrancaViewSet(viewsets.ModelViewSet):
-    queryset = Cobranca.objects.all()
+    queryset = Cobranca.objects.prefetch_related(
+        'cliente',
+        'comunicacao',
+        'usuario',
+        'pedidoitemcobranca_set',
+        'lancamento_set',
+        'pagamentocobranca_set',
+    )
     serializer_class = CobrancaSerializer
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
