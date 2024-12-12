@@ -437,8 +437,7 @@ function calcAjuste() {
         <tbody>
           <tr
             :class="{
-              'font-bold': pedido_item_bord.id == fechando_id,
-              'bg-slate-100': pedido_item_bord.id == fechando_id
+              'pedido_atual': pedido_item_bord.id == fechando_id,
             }"
             v-for="pedido_item_bord in pedido_itens_bordado"
             :key="pedido_item_bord.id"
@@ -573,6 +572,12 @@ table  {
 }
 th, td {
   @apply border border-solid border-slate-300 text-center
+}
+tr.pedido_atual {
+  @apply font-bold bg-slate-100
+}
+tr:hover td {
+  @apply bg-slate-200
 }
 button, .button {
   @apply mx-0.5 my-[1px] px-2 py-0.5 rounded-lg bg-sky-700 font-bold text-slate-100
