@@ -5,7 +5,10 @@ export function getLancamentos({
   page_size=null,
   cliente_apelido=null,
   tipo_lancamento=null,
-  conciliada=1,
+  conciliada=null,
+  ultima_data=null,
+  ultimo_id=null,
+  ate_ultimo_aberto=null,
   callBack=()=>{}
 }) {
   const params = new URLSearchParams();
@@ -24,6 +27,15 @@ export function getLancamentos({
   }
   if (conciliada) {
     params.append('conciliada', conciliada);
+  }
+  if (ultima_data) {
+    params.append('ultima_data', ultima_data);
+  }
+  if (ultimo_id) {
+    params.append('ultimo_id', ultimo_id);
+  }
+  if (ate_ultimo_aberto) {
+    params.append('ate_ultimo_aberto', ate_ultimo_aberto);
   }
   axiosPrivate.get(
     '/bordado/api/lancamento/',
