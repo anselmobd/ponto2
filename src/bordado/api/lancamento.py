@@ -218,7 +218,8 @@ class LancamentoViewSet(viewsets.ModelViewSet):
                             cobranca__pagamentocobranca__isnull=True
                         )
 
-        return queryset
+        # Aplica a ordenação padrão do modelo explicitamente
+        return queryset.order_by(*Lancamento._meta.ordering)
 
     def create(self, request, *args, **kwargs):
         if len(request.data.keys()) == 4:
