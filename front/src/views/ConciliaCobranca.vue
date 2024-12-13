@@ -92,7 +92,10 @@ function doAddConciliacao() {
   const payload= {
     "pagamento": pagamento_selecionado.value.id,
     "cobranca": cobranca_selecionada.value.cobranca.id,
-    "valor": -cobranca_selecionada.value.valor
+    "valor": Math.min(
+      pagamento_selecionado.value.valor,
+      -cobranca_selecionada.value.valor
+    )
   }
   addPagamentoCobranca({
     payload: payload,
