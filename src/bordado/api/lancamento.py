@@ -1,5 +1,6 @@
 from pprint import pprint
 
+from django.db.models import Sum
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import (
@@ -146,7 +147,16 @@ class LancamentoViewSet(viewsets.ModelViewSet):
         ate_ultimo_aberto = self.request.query_params.get(
             'ate_ultimo_aberto', None)
         
-        queryset = Lancamento.objects.all()
+        queryset = Lancamento.objects.annotate(
+            valor_total_recebido=Sum(
+                'cobranca__pagamentocobranca__valor',
+                default=0
+            ),
+            valor_total_pago=Sum(
+                'pagamentocobranca__valor',
+                default=0
+            )
+        )
 
         if ultima_data is not None:
             queryset = queryset.filter(

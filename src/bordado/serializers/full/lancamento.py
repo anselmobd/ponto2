@@ -72,22 +72,27 @@ class LancamentoFullSerializer(serializers.ModelSerializer):
     usuario = UserSimpleSerializer()
     pagamentocobranca_set = PagamentoCobrancaSerializer(
         many=True, read_only=True)
-    valor_total_recebido = serializers.SerializerMethodField()
-    valor_total_pago = serializers.SerializerMethodField()
+    valor_total_recebido = serializers.DecimalField(
+        max_digits=10, decimal_places=2, read_only=True)
+    valor_total_pago = serializers.DecimalField(
+        max_digits=10, decimal_places=2, read_only=True)
+    
+    # valor_total_recebido = serializers.SerializerMethodField()
+    # valor_total_pago = serializers.SerializerMethodField()
 
-    def get_valor_total_recebido(self, instance):
-        return PagamentoCobranca.objects.filter(
-            cobranca=instance.cobranca
-        ).aggregate(
-            total=Sum('valor', default=0)
-        )['total']
+    # def get_valor_total_recebido(self, instance):
+    #     return PagamentoCobranca.objects.filter(
+    #         cobranca=instance.cobranca
+    #     ).aggregate(
+    #         total=Sum('valor', default=0)
+    #     )['total']
 
-    def get_valor_total_pago(self, instance):
-        return PagamentoCobranca.objects.filter(
-            pagamento=instance
-        ).aggregate(
-            total=Sum('valor', default=0)
-        )['total']
+    # def get_valor_total_pago(self, instance):
+    #     return PagamentoCobranca.objects.filter(
+    #         pagamento=instance
+    #     ).aggregate(
+    #         total=Sum('valor', default=0)
+    #     )['total']
 
     class Meta:
         model = Lancamento
