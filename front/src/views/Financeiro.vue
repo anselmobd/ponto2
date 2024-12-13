@@ -197,9 +197,11 @@ function cbGetLancamentos(data, error) {
     } else if (lancamentos_carregando.value == 2) {
       lancamentos.value = lancamentos.value.concat(data.results);
     }
-    const ultimoLancamento = data.results[data.results.length - 1];
-    lancamentos_ultima_data.value = ultimoLancamento.data;
-    lancamentos_ultimo_id.value = ultimoLancamento.id;
+    if (data.results.length) {
+      const ultimoLancamento = data.results[data.results.length - 1];
+      lancamentos_ultima_data.value = ultimoLancamento.data;
+      lancamentos_ultimo_id.value = ultimoLancamento.id;
+    }
   }
   if (error) {
     lancamentos_error.value = error;
