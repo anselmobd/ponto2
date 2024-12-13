@@ -25,9 +25,14 @@ const cobrancas_carregando = ref(null)
 const cobrancas_error = ref(null)
 
 const lancamentos = ref([])
-const lancamentos_carregando = ref(1)  // 0: carregado; 1: carregando; 2: carregando mais
+const lancamentos_carregando = ref(1)
+// 0: carregado
+// 1: carregando quantidade padrão
+// 2: carregando mais quantidade padrão
+// 3: carregando até último em aberto
 const lancamentos_error = ref(null)
-const lancamentos_next = ref(1);
+const lancamentos_ultima_data = ref(null)
+const lancamentos_ultimo_id = ref(null)
 
 // variaveis comuns
 
@@ -186,15 +191,15 @@ function doAddCobranca(callBack) {
 }
 
 function cbGetLancamentos(data, error) {
-  if (data) {
-    if (data?.results) {
-      if (lancamentos_carregando.value == 1) {
-        lancamentos.value = data.results;
-      } else if (lancamentos_carregando.value == 2) {
-        lancamentos.value = lancamentos.value.concat(data.results);
-      }
-      lancamentos_next.value = data.next;
+  if (data?.results) {
+    if ([1, 3].includes(lancamentos_carregando.value)) {
+      lancamentos.value = data.results;
+    } else if (lancamentos_carregando.value == 2) {
+      lancamentos.value = lancamentos.value.concat(data.results);
     }
+    const ultimoLancamento = data.results[data.results.length - 1];
+    lancamentos_ultima_data.value = ultimoLancamento.data;
+    lancamentos_ultimo_id.value = ultimoLancamento.id;
   }
   if (error) {
     lancamentos_error.value = error;
@@ -204,14 +209,24 @@ function cbGetLancamentos(data, error) {
 
 function doGetLancamentos(carregando) {
   lancamentos_carregando.value = carregando;
-  if (lancamentos_carregando.value == 1) {
+  if ([1, 3].includes(lancamentos_carregando.value)) {
     lancamentos.value = [];
-    lancamentos_next.value = 1;
+    lancamentos_ultima_data.value = null;
+    lancamentos_ultimo_id.value = null;
+  }
+  let page_size = null;
+  let ate_ultimo_aberto = null;
+  if (lancamentos_carregando.value == 3) {
+    page_size = 999999;
+    ate_ultimo_aberto = 's';
   }
   lancamentos_error.value = null;
   getLancamentos({
-    page: lancamentos_next.value,
+    page_size: page_size,
     cliente_apelido: route.params.apelido,
+    ultima_data: lancamentos_ultima_data.value,
+    ultimo_id: lancamentos_ultimo_id.value,
+    ate_ultimo_aberto: ate_ultimo_aberto,
     callBack: cbGetLancamentos
   });
 }
@@ -285,9 +300,19 @@ function handleSalvaLancamentoClick(event) {
   doAddLancamento();
 }
 
+function handleRecarregaLancamentosClick(event) {
+  event.preventDefault();
+  doGetLancamentos(1);
+}
+
 function handleMaisLancamentosClick(event) {
   event.preventDefault();
   doGetLancamentos(2);
+}
+
+function handleLancamentosEmAbertoClick(event) {
+  event.preventDefault();
+  doGetLancamentos(3);
 }
 
 function handleConciliaCobrancaClick(event) {
@@ -704,12 +729,25 @@ onMounted(() => {
           <tr v-if="lancamentos_carregando == 2">
             <td colspan="9">Carregando mais lançamentos...</td>
           </tr>
+          <tr v-if="lancamentos_carregando == 3">
+            <td colspan="9">Carregando lançamentos até último em aberto...</td>
+          </tr>
         </tfoot>
       </table>
+
       <button
-        v-if="lancamentos_next && !lancamentos_carregando"
+        v-if="!lancamentos_carregando"
         @click="handleMaisLancamentosClick"
       >Mais lançamentos</button>
+      <button
+        v-if="!lancamentos_carregando"
+        @click="handleLancamentosEmAbertoClick"
+      >Lançamentos até último em aberto</button>
+      <button
+        v-if="!lancamentos_carregando"
+        @click="handleRecarregaLancamentosClick"
+      >Recarrega lançamentos</button>
+
       <p class="text-center mb-4">
         <button
           @click="handleConciliaCobrancaClick"
