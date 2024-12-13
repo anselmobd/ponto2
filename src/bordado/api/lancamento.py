@@ -38,6 +38,8 @@ __all__ = [
         ),
     ),
     list=extend_schema(
+        summary="Lista lançamentos",
+        description="Lista lançamentos em ordem decrescente de data e id",
         tags=['lancamento'],
         parameters=[
             OpenApiParameter(
@@ -88,15 +90,15 @@ __all__ = [
             ),
             OpenApiParameter(
                 name='ultima_data', 
-                description=("Data do par data/id que identifica o último "
-                    "registro que o cliente já tem"), 
+                description=("Data do par data/id que identifica o registro "
+                    "anterior ao primeiro listado"), 
                 required=False,
                 type=OpenApiTypes.DATE,
             ),
             OpenApiParameter(
                 name='ultimo_id', 
-                description=("Id do par data/id que identifica o último "
-                    "registro que o cliente já tem"), 
+                description=("Id do par data/id que identifica o registro "
+                    "anterior ao primeiro listado"), 
                 required=False,
                 type=OpenApiTypes.INT64,
             ),
