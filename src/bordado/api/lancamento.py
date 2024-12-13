@@ -1,6 +1,7 @@
 from pprint import pprint
 
 from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import (
     extend_schema_view,
     extend_schema,
@@ -85,6 +86,20 @@ __all__ = [
                     )
                 ],
             ),
+            OpenApiParameter(
+                name='ultima_data', 
+                description=("Data do par data/id que identifica o último "
+                    "registro que o cliente já tem"), 
+                required=False,
+                type=OpenApiTypes.DATE,
+            ),
+            OpenApiParameter(
+                name='ultimo_id', 
+                description=("Id do par data/id que identifica o último "
+                    "registro que o cliente já tem"), 
+                required=False,
+                type=OpenApiTypes.INT64,
+            ),
         ],
     )
 )
@@ -105,6 +120,17 @@ class LancamentoViewSet(viewsets.ModelViewSet):
         
         tipo_lancamento = self.request.query_params.get('tipo_lancamento', None)
         conciliada = self.request.query_params.get('conciliada', None)
+        ultima_data = self.request.query_params.get('ultima_data', None)
+        ultimo_id = self.request.query_params.get('ultimo_id', None)
+        if ultima_data is not None:
+            queryset = queryset.filter(
+                data__lte=ultima_data
+            )
+        if ultimo_id is not None:
+            queryset = queryset.exclude(
+                data=ultima_data,
+                id__gte=ultimo_id,
+            )
         if tipo_lancamento is not None:
             if 'pagamento'.startswith(tipo_lancamento):
                 queryset = queryset.filter(
