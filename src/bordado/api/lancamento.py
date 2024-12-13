@@ -100,6 +100,24 @@ __all__ = [
                 required=False,
                 type=OpenApiTypes.INT64,
             ),
+            OpenApiParameter(
+                name='ate_ultimo_aberto', 
+                description="Carrega lançamentos até último em aberto", 
+                required=False,
+                type=str,
+                examples=[
+                    OpenApiExample(
+                        "Desligado",
+                        summary="Desligado",
+                        value=None
+                    ),
+                    OpenApiExample(
+                        "Ligado",
+                        summary="Busca último em aberto e lista até ele",
+                        value='s'
+                    )
+                ],
+            ),
         ],
     )
 )
@@ -116,21 +134,48 @@ class LancamentoViewSet(viewsets.ModelViewSet):
     filterset_fields = ['cliente__apelido']
 
     def get_queryset(self):
-        queryset = Lancamento.objects.all()
-        
+
+        cliente__apelido = self.request.query_params.get(
+            'cliente__apelido', None)
         tipo_lancamento = self.request.query_params.get('tipo_lancamento', None)
         conciliada = self.request.query_params.get('conciliada', None)
         ultima_data = self.request.query_params.get('ultima_data', None)
         ultimo_id = self.request.query_params.get('ultimo_id', None)
+        ate_ultimo_aberto = self.request.query_params.get(
+            'ate_ultimo_aberto', None)
+        
+        queryset = Lancamento.objects.all()
+
         if ultima_data is not None:
             queryset = queryset.filter(
                 data__lte=ultima_data
             )
+
         if ultimo_id is not None:
             queryset = queryset.exclude(
                 data=ultima_data,
                 id__gte=ultimo_id,
             )
+
+        if ate_ultimo_aberto is not None:
+            ultimo_lancamento = Lancamento.objects.filter(
+                cliente__apelido=cliente__apelido
+            ).filter(
+                pagamentocobranca__isnull=True
+            ).filter(
+                cobranca__pagamentocobranca__isnull=True
+            ).order_by(
+                'data',
+                'id',
+            )
+            if ultimo_lancamento:
+                queryset = queryset.filter(
+                    data__gte=ultimo_lancamento[0].data
+                ).exclude(
+                    data=ultimo_lancamento[0].data,
+                    id__lt=ultimo_lancamento[0].id,
+                )
+
         if tipo_lancamento is not None:
             if 'pagamento'.startswith(tipo_lancamento):
                 queryset = queryset.filter(
@@ -158,7 +203,6 @@ class LancamentoViewSet(viewsets.ModelViewSet):
                         queryset = queryset.filter(
                             cobranca__pagamentocobranca__isnull=True
                         )
-
 
         return queryset
 
