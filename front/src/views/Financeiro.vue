@@ -681,7 +681,7 @@ onMounted(() => {
             </th>
           </tr>
           <tr v-if="!lancamentos_carregando && (lancamentos.length == 0)">
-            <th colspan="8">Nenhum lançamento encontrado</th>
+            <th colspan="10">Nenhum lançamento encontrado</th>
           </tr>
         </thead>
         <tbody>
@@ -726,13 +726,13 @@ onMounted(() => {
         </tbody>
         <tfoot>
           <tr v-if="lancamentos_carregando == 1">
-            <td colspan="9">Carregando lançamentos...</td>
+            <td colspan="10">Carregando lançamentos...</td>
           </tr>
           <tr v-if="lancamentos_carregando == 2">
-            <td colspan="9">Carregando mais lançamentos...</td>
+            <td colspan="10">Carregando mais lançamentos...</td>
           </tr>
           <tr v-if="lancamentos_carregando == 3">
-            <td colspan="9">Carregando lançamentos até último em aberto...</td>
+            <td colspan="10">Carregando lançamentos até último em aberto...</td>
           </tr>
         </tfoot>
       </table>
