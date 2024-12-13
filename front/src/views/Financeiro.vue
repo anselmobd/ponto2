@@ -744,12 +744,12 @@ onMounted(() => {
       <button
         v-if="!lancamentos_carregando"
         @click="handleLancamentosEmAbertoClick"
-      >Lançamentos até último em aberto</button>
+      >Até último em aberto</button>
       <button
         v-if="!lancamentos_carregando"
         @click="handleRecarregaLancamentosClick"
-      >Recarrega lançamentos</button>
-
+      >Recarrega</button>
+      <p>&nbsp;</p>
       <p class="text-center mb-4">
         <button
           @click="handleConciliaCobrancaClick"
