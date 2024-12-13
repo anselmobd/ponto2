@@ -175,6 +175,8 @@ class LancamentoViewSet(viewsets.ModelViewSet):
                     data=ultimo_lancamento[0].data,
                     id__lt=ultimo_lancamento[0].id,
                 )
+            else:
+                queryset = queryset.filter(id=-1)
 
         if tipo_lancamento is not None:
             if 'pagamento'.startswith(tipo_lancamento):
