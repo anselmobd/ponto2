@@ -125,12 +125,12 @@ __all__ = [
     )
 )
 class LancamentoViewSet(viewsets.ModelViewSet):
-    queryset = Lancamento.objects.prefetch_related(
-        'cliente',
-        'cobranca',
-        'usuario',
-        'pagamentocobranca_set',
-    )
+    # queryset = Lancamento.objects.prefetch_related(
+    #     'cliente',
+    #     'cobranca',
+    #     'usuario',
+    #     'pagamentocobranca_set',
+    # )
     serializer_class = LancamentoFullSerializer
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
@@ -147,7 +147,16 @@ class LancamentoViewSet(viewsets.ModelViewSet):
         ate_ultimo_aberto = self.request.query_params.get(
             'ate_ultimo_aberto', None)
         
-        queryset = Lancamento.objects.annotate(
+        queryset = Lancamento.objects.all()
+
+        queryset = queryset.prefetch_related(
+            'cliente',
+            'cobranca',
+            'usuario',
+            'pagamentocobranca_set',
+        )
+
+        queryset = queryset.annotate(
             valor_total_recebido=Sum(
                 'cobranca__pagamentocobranca__valor',
                 default=0
