@@ -704,22 +704,58 @@ onMounted(() => {
             >{{ ptBrCurrencyFormat.format(lancamento.valor) }}</td>
             <td
               :class="{
-                'text-green-800':
-                  ( lancamento.valor_total_recebido ||
-                    lancamento.valor_total_pago
+                'text-orange-500':
+                  ( ( lancamento.cobranca &&
+                      ( lancamento.valor_total_recebido > 0 ) &&
+                      ( lancamento.valor_total_recebido < -lancamento.valor )
+                    ) ||
+                    ( !lancamento.cobranca &&
+                      ( lancamento.valor_total_pago > 0 ) &&
+                      ( lancamento.valor_total_pago < lancamento.valor )
+                    )
                   ),
                 'text-red-800':
-                  ( lancamento.cobranca &&
-                    !lancamento.valor_total_recebido
+                  ( lancamento.cobranca && 
+                    ( lancamento.valor_total_recebido == 0 )
                   ) ||
                   ( !lancamento.cobranca &&
-                    !lancamento.valor_total_pago
+                    ( lancamento.valor_total_pago == 0 )
+                  ),
+                'text-green-800':
+                  ( ( lancamento.cobranca && 
+                      ( lancamento.valor_total_recebido == 
+                        -lancamento.valor
+                      )
+                    ) ||
+                    ( !lancamento.cobranca &&
+                      ( lancamento.valor_total_pago == 
+                        lancamento.valor
+                      )
+                    )
                   ),
               }"
-            >{{ lancamento.cobranca ?
-              ( lancamento.valor_total_recebido ? 'Recebido' : 'Aberto'
+            >
+            <!-- rec {{ lancamento.valor_total_recebido }}|
+            pag {{ lancamento.valor_total_pago }}|
+            val {{ lancamento.valor }}|
+            val+rec {{ lancamento.valor + lancamento.valor_total_recebido }}|
+            val-pag {{ lancamento.valor - lancamento.valor_total_pago }}|
+            rec_0{{( lancamento.valor_total_recebido == 0 )}}
+            rec_full{{( lancamento.valor_total_recebido == -lancamento.valor )}}
+            rec_parc{{( ( lancamento.valor_total_recebido > 0 ) &&
+                      ( lancamento.valor_total_recebido < -lancamento.valor ) )}} -->
+            {{ lancamento.cobranca ?
+              ( lancamento.valor_total_recebido ? (
+                  lancamento.valor_total_recebido - lancamento.cobranca?.valor == 0
+                  ? 'Recebido'
+                  : 'Parcial'
+                ) : 'Aberto'
               ) :
-              ( lancamento.valor_total_pago ? 'Conciliado' : 'Aberto'
+              ( lancamento.valor_total_pago ? (
+                  lancamento.valor_total_pago - lancamento.valor == 0
+                  ? 'Conciliado'
+                  : 'Parcial'
+                ) : 'Aberto'
               ) }}</td>
             <td class="!text-right">{{ ptBrCurrencyFormat.format(lancamento.saldo_cliente) }}</td>
           </tr>
