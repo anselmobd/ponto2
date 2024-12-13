@@ -637,6 +637,7 @@ onMounted(() => {
       <table class="w-full">
         <thead>
           <tr>
+            <th>Nº</th>
             <th>Data</th>
             <th>Informação</th>
             <th>Comunicação</th>
@@ -661,6 +662,7 @@ onMounted(() => {
             v-for="lancamento in lancamentos"
             :key="lancamento.id"
           >
+            <td>{{ lancamento.id }}</td>
             <td>{{ inputStrDate2PtBrDate(lancamento.data) }}</td>
             <td>{{ lancamento?.cobranca ? lancamento.cobranca.informacao : lancamento.informacao }}</td>
             <td>{{ lancamento?.cobranca?.comunicacao?.descricao ? lancamento.cobranca.comunicacao.descricao : '-' }}</td>
@@ -697,10 +699,10 @@ onMounted(() => {
         </tbody>
         <tfoot>
           <tr v-if="lancamentos_carregando == 1">
-            <td colspan="8">Carregando lançamentos...</td>
+            <td colspan="9">Carregando lançamentos...</td>
           </tr>
           <tr v-if="lancamentos_carregando == 2">
-            <td colspan="8">Carregando mais lançamentos...</td>
+            <td colspan="9">Carregando mais lançamentos...</td>
           </tr>
         </tfoot>
       </table>
