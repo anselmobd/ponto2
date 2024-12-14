@@ -92,10 +92,7 @@ function doAddConciliacao() {
   const payload= {
     "pagamento": pagamento_selecionado.value.id,
     "cobranca": cobranca_selecionada.value.cobranca.id,
-    "valor": Math.min(
-      pagamento_selecionado.value.valor,
-      -cobranca_selecionada.value.valor
-    )
+    "valor": valor_conciliacao.value,
   }
   addPagamentoCobranca({
     payload: payload,
@@ -135,6 +132,7 @@ function handleCobrancaClick(cobranca) {
     console.log(cobranca)
     if (cobranca_selecionada.value?.id === cobranca.id) {
       cobranca_selecionada.value = {};
+      valor_conciliacao.value = '-';
       return;
     };
     cobranca_selecionada.value = cobranca;
@@ -159,7 +157,9 @@ function handleConciliaClick(event) {
 function setValorConciliacao() {
   valor_conciliacao.value = ptBrCurrencyFormat.format(
     Math.min(
-      pagamento_selecionado.value?.valor, -cobranca_selecionada.value?.valor
+      pagamento_selecionado.value?.valor,
+      cobranca_selecionada.value?.cobranca.valor -
+        cobranca_selecionada.value?.valor_total_recebido
     )
   );
 }
@@ -272,17 +272,18 @@ onMounted(() => {
                   <th class="sticky top-0 bg-slate-100">Cobrança</th>
                   <th class="sticky top-0 bg-slate-100">Parcela</th>
                   <th class="sticky top-0 bg-slate-100 !text-right">Valor</th>
+                  <th class="sticky top-0 bg-slate-100 !text-right">A conciliar</th>
                 </tr>
                 <tr v-if="cobrancas_error">
-                  <th class="text-red-800" colspan="6">
+                  <th class="text-red-800" colspan="7">
                     {{ cobrancas_error }}
                   </th>
                 </tr>
                 <tr v-if="cobrancas_carregando">
-                  <th colspan="6">Carregando...</th>
+                  <th colspan="7">Carregando...</th>
                 </tr>
                 <tr v-if="!cobrancas_carregando && (cobrancas.length == 0)">
-                  <th colspan="6">Nenhuma encontrada</th>
+                  <th colspan="7">Nenhuma encontrada</th>
                 </tr>
               </thead>
               <tbody>
@@ -305,7 +306,10 @@ onMounted(() => {
                     cobranca?.n_parcelas > 1 ? cobranca.parcela+'/'+cobranca.n_parcelas : cobranca?.n_parcelas == 1 ? 'única' : '-'
                   }}</td>
                   <td class="!text-right">{{
-                    ptBrCurrencyFormat.format(-cobranca.valor)
+                    ptBrCurrencyFormat.format(cobranca.cobranca.valor)
+                  }}</td>
+                  <td class="!text-right">{{
+                    ptBrCurrencyFormat.format(cobranca.cobranca.valor - cobranca.valor_total_recebido)
                   }}</td>
                 </tr>
               </tbody>
