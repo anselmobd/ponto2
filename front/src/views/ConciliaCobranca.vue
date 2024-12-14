@@ -209,13 +209,13 @@ onMounted(() => {
     
     <section id="lancamentos">
       <h3 class="my-1 font-bold text-lg text-center bg-slate-100 rounded">Não conciliados</h3>
-      <p class="text-sm">Clique em um pagamento para iniciar a conciliação com as cobranças</p>
+      <p class="text-center">Clique em um pagamento e em uma cobrança para concilia-los.</p>
 
       <section class="flex justify-between" id="lista_lancamentos">
 
         <section id="lista_pagamentos">
           <h3 class="my-1 font-bold text-lg text-center">Pagamentos</h3>
-          {{ Object.keys(pagamento_selecionado).length }}
+
           <section id="tabela_pagamentos"
             class="flex-1 ml-2 max-h-[calc(25*1.25rem)] overflow-y-auto border border-gray-300 pl-1 pr-4 text-right">
             <table>
@@ -225,17 +225,18 @@ onMounted(() => {
                   <th class="sticky top-0 bg-slate-100">Data</th>
                   <th class="sticky top-0 bg-slate-100">Informação</th>
                   <th class="sticky top-0 bg-slate-100 !text-right">Valor</th>
+                  <th class="sticky top-0 bg-slate-100 !text-right">Em aberto</th>
                 </tr>
                 <tr v-if="pagamentos_error">
-                  <th class="text-red-800" colspan="4">
+                  <th class="text-red-800" colspan="5">
                     {{ pagamentos_error }}
                   </th>
                 </tr>
                 <tr v-if="pagamentos_carregando">
-                  <th colspan="4">Carregando...</th>
+                  <th colspan="5">Carregando...</th>
                 </tr>
                 <tr v-if="!pagamentos_carregando && (pagamentos.length == 0)">
-                  <th colspan="4">Nenhum encontrado</th>
+                  <th colspan="5">Nenhum encontrado</th>
                 </tr>
               </thead>
               <tbody>
@@ -251,6 +252,9 @@ onMounted(() => {
                   <td class="!text-right">{{
                     ptBrCurrencyFormat.format(pagamento.valor)
                   }}</td>
+                  <td class="!text-right">{{
+                    ptBrCurrencyFormat.format(pagamento.valor - pagamento.valor_total_pago)
+                  }}</td>
                 </tr>
               </tbody>
             </table>
@@ -259,7 +263,7 @@ onMounted(() => {
 
         <section id="lista_cobrancas">
           <h3 class="my-1 font-bold text-lg text-center">Cobranças</h3>
-          {{ Object.keys(cobranca_selecionada).length }}
+
           <section id="tabela_cobrancas"
             class="flex-1 ml-2 max-h-[calc(25*1.25rem)] overflow-y-auto border border-gray-300 pl-1 pr-4 text-right">
             <table>
@@ -324,7 +328,7 @@ onMounted(() => {
       id="conciliando"
       v-if="Object.keys(pagamento_selecionado).length > 0"
     >
-      <h3 class="my-1 font-bold text-lg text-center bg-slate-100 rounded">Conciliando</h3>
+      <h3 class="my-1 font-bold text-lg text-center bg-slate-100 rounded">Conciliação</h3>
     
       <section class="flex justify-between" id="tabelas_conciliando">
         
@@ -360,7 +364,7 @@ onMounted(() => {
             type="button"
             @click="handleConciliaClick"
             :disabled="!Object.keys(cobranca_selecionada).length"
-            >Concilia</button>
+            >Conciliar</button>
           <p
             v-if="conciliando.error"
             class="text-red-800"
@@ -396,8 +400,8 @@ onMounted(() => {
                 <td>{{
                   cobranca_selecionada?.n_parcelas > 1 ? cobranca_selecionada.parcela+'/'+cobranca_selecionada.n_parcelas : cobranca_selecionada?.n_parcelas == 1 ? 'única' : '-'
                 }}</td>
-                <td class="!text-right">{{
-                  ptBrCurrencyFormat.format(-cobranca_selecionada.valor)
+                <td class="!text-right">{{ cobranca_selecionada.valor ?
+                  ptBrCurrencyFormat.format(-cobranca_selecionada.valor) : '-'
                 }}</td>
               </tr>
             </tbody>
