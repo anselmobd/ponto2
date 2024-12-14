@@ -132,7 +132,7 @@ function handleCobrancaClick(cobranca) {
     console.log(cobranca)
     if (cobranca_selecionada.value?.id === cobranca.id) {
       cobranca_selecionada.value = {};
-      valor_conciliacao.value = '-';
+      valor_conciliacao.value = null;
       return;
     };
     cobranca_selecionada.value = cobranca;
@@ -155,12 +155,10 @@ function handleConciliaClick(event) {
 // Utilitarios
 
 function setValorConciliacao() {
-  valor_conciliacao.value = ptBrCurrencyFormat.format(
-    Math.min(
-      pagamento_selecionado.value?.valor,
-      cobranca_selecionada.value?.cobranca.valor -
-        cobranca_selecionada.value?.valor_total_recebido
-    )
+  valor_conciliacao.value = Math.min(
+    pagamento_selecionado.value?.valor,
+    cobranca_selecionada.value?.cobranca.valor -
+      cobranca_selecionada.value?.valor_total_recebido
   );
 }
 
@@ -183,6 +181,7 @@ function limpaConciliandoError() {
 function limpaConciliando() {
   limpaConciliandoSelecoes();
   limpaConciliandoError();
+  valor_conciliacao.value = null;
 }
 
 function doGetAll() {
@@ -272,7 +271,7 @@ onMounted(() => {
                   <th class="sticky top-0 bg-slate-100">Cobrança</th>
                   <th class="sticky top-0 bg-slate-100">Parcela</th>
                   <th class="sticky top-0 bg-slate-100 !text-right">Valor</th>
-                  <th class="sticky top-0 bg-slate-100 !text-right">A conciliar</th>
+                  <th class="sticky top-0 bg-slate-100 !text-right">Em aberto</th>
                 </tr>
                 <tr v-if="cobrancas_error">
                   <th class="text-red-800" colspan="7">
@@ -356,7 +355,7 @@ onMounted(() => {
         <section id="conciliando_botoes" class="text-center border-x-8 border-white">
           <h3 class="my-1 font-bold text-lg text-center">Valor</h3>
           <p>&nbsp;</p>
-          <p class="text-2xl">{{ valor_conciliacao || '-' }}</p>
+          <p class="text-2xl">{{ valor_conciliacao ? ptBrCurrencyFormat.format(valor_conciliacao) : '-' }}</p>
           <button
             type="button"
             @click="handleConciliaClick"
