@@ -745,18 +745,19 @@ onMounted(() => {
             rec_parc{{( ( lancamento.valor_total_recebido > 0 ) &&
                       ( lancamento.valor_total_recebido < -lancamento.valor ) )}} -->
             {{ lancamento.cobranca ?
-              ( lancamento.valor_total_recebido ? (
+              ( lancamento.valor_total_recebido != 0 ? (
                   lancamento.valor_total_recebido - lancamento.cobranca?.valor == 0
                   ? 'Recebido'
                   : 'Parcial'
                 ) : 'Aberto'
               ) :
-              ( lancamento.valor_total_pago ? (
+              ( lancamento.valor_total_pago != 0 ? (
                   lancamento.valor_total_pago - lancamento.valor == 0
                   ? 'Conciliado'
                   : 'Parcial'
                 ) : 'Aberto'
-              ) }}</td>
+              )
+            }}</td>
             <td class="!text-right">{{ ptBrCurrencyFormat.format(lancamento.saldo_cliente) }}</td>
           </tr>
         </tbody>
