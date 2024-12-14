@@ -207,11 +207,12 @@ class LancamentoViewSet(viewsets.ModelViewSet):
                 if conciliada is not None:
                     if 'sim'.startswith(conciliada):
                         queryset = queryset.filter(
-                            pagamentocobranca__isnull=False
+                            # pagamentocobranca__isnull=False
+                            valor=F('valor_total_pago')
                         )
                     else:  # 'nao'.startswith(conciliada):
-                        queryset = queryset.filter(
-                            pagamentocobranca__isnull=True
+                        queryset = queryset.exclude(
+                            valor=F('valor_total_pago')
                         )
             else:  # 'cobranca'.startswith(tipo_lancamento):
                 queryset = queryset.filter(
