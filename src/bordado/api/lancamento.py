@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from django.db.models import Sum
+from django.db.models import F, Sum
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import (
@@ -220,11 +220,12 @@ class LancamentoViewSet(viewsets.ModelViewSet):
                 if conciliada is not None:
                     if 'sim'.startswith(conciliada):
                         queryset = queryset.filter(
-                            cobranca__pagamentocobranca__isnull=False
+                            # cobranca__pagamentocobranca__isnull=False
+                            valor=-F('valor_total_recebido')
                         )
                     else:  # 'nao'.startswith(conciliada):
-                        queryset = queryset.filter(
-                            cobranca__pagamentocobranca__isnull=True
+                        queryset = queryset.exclude(
+                            valor=-F('valor_total_recebido')
                         )
 
         # Aplica a ordenação padrão do modelo explicitamente
