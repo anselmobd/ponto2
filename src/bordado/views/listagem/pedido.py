@@ -43,6 +43,8 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
     ENTREGA = 'entrega'
     NUMERO = 'numero'
     PAGAMENTO = 'pedidoitem__cobrancas__cobranca__pagamentocobranca__pagamento'
+    PAGAMENTO_VALOR = \
+        'pedidoitem__cobrancas__cobranca__pagamentocobranca__valor'
     PAGAMENTO_DATA = (
         'pedidoitem__cobrancas__cobranca__'
         'pagamentocobranca__pagamento__data'
@@ -102,6 +104,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
                 self.PARCELA_VENCIMENTO: [
                     "Parcela Vencimento", 'c', 'c ouro'],
                 self.PAGAMENTO: ["Pagamento", 'c', 'c'],
+                self.PAGAMENTO_VALOR: ["Valor", 'c', 'r'],
                 self.PAGAMENTO_DATA: ["Data", 'c', 'c'],
             },
             style={
