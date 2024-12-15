@@ -112,7 +112,14 @@ function handlePagamentoClick(pagamento) {
 
   // Filtra os registros com o valor desejado
   const cobrancasValor = cobrancas.value.filter(
-    row => row.valor === '-'+ pagamento_selecionado.value.valor);
+    row => (
+      -Number(row.valor) -
+      Number(row.valor_total_recebido)
+    ) == (
+      Number(pagamento_selecionado.value.valor) -
+      Number(pagamento_selecionado.value.valor_total_pago)
+    )
+  );
   console.log(cobrancasValor);
 
   // Obtém o último registro filtrado com valor desejado
