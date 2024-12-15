@@ -1,7 +1,7 @@
 <script setup>
 import router from '@/router'
 import { useRoute } from "vue-router";
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { getLancamentos } from '../api/lancamento.js';
 import { addPagamentoCobranca } from '../api/pagamento_cobranca.js';
 import { inputStrDate2PtBrDate } from "../utils/date.js";
@@ -22,6 +22,8 @@ const cobrancas_error = ref(null)
 // variaveis comuns
 
 const pagamento_selecionado = ref({})
+const pagamento_valores_para_soma = ref({})
+const pagamento_soma_auxiliar = ref(0)
 const cobranca_selecionada = ref({})
 const valor_conciliacao = ref(0)
 const conciliando = ref({})
@@ -41,6 +43,7 @@ function cbGetPagamentos(data, error) {
 }
 
 function doGetPagamentos() {
+  pagamento_valores_para_soma.value = {};
   pagamentos_carregando.value = true;
   pagamentos_error.value = null;
   getLancamentos({
@@ -102,7 +105,21 @@ function doAddConciliacao() {
 
 // Events
 
-function handlePagamentoClick(pagamento) {
+function handlePagamentoCtrlClick(pagamento) {
+  if (pagamento.id in pagamento_valores_para_soma.value) {
+    delete pagamento_valores_para_soma.value[pagamento.id];
+  } else {
+    pagamento_valores_para_soma.value[pagamento.id] = (
+      pagamento.valor - pagamento.valor_total_pago
+    );
+  }
+}
+
+function handlePagamentoClick(pagamento, event) {
+  console.log(event);
+  if (event.ctrlKey) {
+    return
+  }
   cobranca_selecionada.value = {}
   if (pagamento_selecionado.value?.id === pagamento.id) {
     limpaConciliando();
@@ -197,6 +214,13 @@ function doGetAll() {
   doGetCobrancas();
 }
 
+// Watcher
+
+watch(pagamento_valores_para_soma, (newValue, oldValue) => {
+  pagamento_soma_auxiliar.value = Object.values(newValue).reduce(
+    (total, valor) => total + valor, 0);
+}, { deep: true });
+
 // Lifecycle Hooks
 
 onMounted(() => {
@@ -216,7 +240,8 @@ onMounted(() => {
     
     <section id="lancamentos">
       <h3 class="my-1 font-bold text-lg text-center bg-slate-100 rounded">Não conciliados</h3>
-      <p class="text-center">Clique em um pagamento e em uma cobrança para concilia-los.</p>
+      <p class="text-center">Clique em um pagamento e em uma cobrança para concilia-los.<br>Control-clique para somar valores em aberto.
+      </p>
 
       <section class="flex justify-between" id="lista_lancamentos">
 
@@ -251,7 +276,7 @@ onMounted(() => {
                   v-for="pagamento in pagamentos"
                   :key="pagamento.id"
                   :class="{'bg-yellow-300': pagamento.id == pagamento_selecionado.id}"
-                  @click="handlePagamentoClick(pagamento)"
+                  @click="handlePagamentoClick(pagamento, $event)"
                 >
                   <td>{{pagamento.id}}</td>
                   <td>{{inputStrDate2PtBrDate(pagamento.data)}}</td>
@@ -259,12 +284,23 @@ onMounted(() => {
                   <td class="!text-right">{{
                     ptBrCurrencyFormat.format(pagamento.valor)
                   }}</td>
-                  <td class="!text-right">{{
-                    ptBrCurrencyFormat.format(pagamento.valor - pagamento.valor_total_pago)
+                  <td class="!text-right"
+                    @click.ctrl="handlePagamentoCtrlClick(pagamento)"
+                    :class="{'font-bold':
+                      pagamento.id in pagamento_valores_para_soma}"
+                  >{{
+                    ptBrCurrencyFormat.format(
+                      pagamento.valor - pagamento.valor_total_pago)
                   }}</td>
                 </tr>
               </tbody>
             </table>
+            <p
+              class="font-bold"
+              v-if="pagamento_soma_auxiliar"
+              @click.ctrl="pagamento_valores_para_soma = {}"
+            >Soma auxiliar = {{ ptBrCurrencyFormat.format(
+              pagamento_soma_auxiliar) }}</p>
           </section>
         </section>
 
