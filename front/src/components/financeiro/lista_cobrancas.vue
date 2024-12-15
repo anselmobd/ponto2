@@ -4,8 +4,8 @@ import { ptBrCurrencyFormat } from "/src/utils/numStr.js";
 
 defineProps({
   cobrancas_error: Object,
-  cobrancas_carregando: Object,
-  cobrancas: Object,
+  cobrancas_carregando: Boolean,
+  cobrancas: Array,
 });
 
 </script>
