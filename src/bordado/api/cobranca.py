@@ -41,7 +41,7 @@ class CobrancaViewSet(viewsets.ModelViewSet):
         'usuario',
         'pedidoitemcobranca_set',
         'lancamento_set',
-        'pagamentocobranca_set',
+        # 'pagamentocobranca_set',
     )
     serializer_class = CobrancaSerializer
     permission_classes = [permissions.IsAuthenticated]

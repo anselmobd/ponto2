@@ -1,11 +1,11 @@
 from rest_framework import serializers
 
-from django.db.models import Sum
+# from django.db.models import Sum
 
 from bordado.models import (
     Cobranca,
     Lancamento,
-    PagamentoCobranca,
+    # PagamentoCobranca,
     PedidoItemCobranca,
 )
 from bordado.serializers.down.cliente import ClienteDownSerializer
@@ -15,21 +15,21 @@ from bordado.serializers.simple.tipo_comunicacao import (
 from bordado.serializers.simple.user import UserSimpleSerializer
 
 
-class PagamentoCobrancaSerializer(serializers.ModelSerializer):
-    inserido_por = UserSimpleSerializer()
-    alterado_por = UserSimpleSerializer()
+# class PagamentoCobrancaSerializer(serializers.ModelSerializer):
+#     inserido_por = UserSimpleSerializer()
+#     alterado_por = UserSimpleSerializer()
 
-    class Meta:
-        model = PagamentoCobranca
-        fields = [
-            'id',
-            'pagamento',
-            'valor',
-            'inserido_em',
-            'inserido_por',
-            'alterado_em',
-            'alterado_por',
-        ]
+#     class Meta:
+#         model = PagamentoCobranca
+#         fields = [
+#             'id',
+#             'pagamento',
+#             'valor',
+#             'inserido_em',
+#             'inserido_por',
+#             'alterado_em',
+#             'alterado_por',
+#         ]
 
 
 class PedidoItemCobrancasSerializer(serializers.ModelSerializer):
@@ -74,16 +74,16 @@ class CobrancaSerializer(serializers.ModelSerializer):
         many=True, read_only=True)
     lancamento_set = LancamentoSerializer(
         many=True, read_only=True)
-    pagamentocobranca_set = PagamentoCobrancaSerializer(
-        many=True, read_only=True)
-    valor_total_recebido = serializers.SerializerMethodField()
+    # pagamentocobranca_set = PagamentoCobrancaSerializer(
+    #     many=True, read_only=True)
+    # valor_total_recebido = serializers.SerializerMethodField()
     
-    def get_valor_total_recebido(self, instance):
-        return PagamentoCobranca.objects.filter(
-            cobranca=instance
-        ).aggregate(
-            total=Sum('valor', default=0)
-        )['total']
+    # def get_valor_total_recebido(self, instance):
+    #     return PagamentoCobranca.objects.filter(
+    #         cobranca=instance
+    #     ).aggregate(
+    #         total=Sum('valor', default=0)
+    #     )['total']
 
     class Meta:
         model = Cobranca
@@ -100,6 +100,6 @@ class CobrancaSerializer(serializers.ModelSerializer):
             'quando',
             'pedidoitemcobranca_set',
             'lancamento_set',
-            'pagamentocobranca_set',
-            'valor_total_recebido',
+            # 'pagamentocobranca_set',
+            # 'valor_total_recebido',
         ]
