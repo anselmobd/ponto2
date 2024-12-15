@@ -158,7 +158,7 @@ class LancamentoViewSet(viewsets.ModelViewSet):
 
         queryset = queryset.annotate(
             valor_total_recebido=Sum(
-                'cobranca__pagamentocobranca__valor',
+                'pagamentos__valor',
                 default=0
             ),
             valor_total_pago=Sum(
