@@ -91,7 +91,7 @@ function doAddConciliacao() {
   limpaConciliandoError();
   const payload= {
     "pagamento": pagamento_selecionado.value.id,
-    "cobranca": cobranca_selecionada.value.cobranca.id,
+    "cobranca": cobranca_selecionada.value.id,
     "valor": valor_conciliacao.value,
   }
   addPagamentoCobranca({
