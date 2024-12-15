@@ -381,20 +381,20 @@ onMounted(() => {
             <th>Código</th>
           </tr>
           <tr v-if="pedido_itens_error">
-            <th class="text-red-800" colspan="8">
+            <th class="text-red-800" colspan="10">
               {{ pedido_itens_error }}
             </th>
           </tr>
           <tr v-if="tipo_comunicacao_error">
-            <th class="text-red-800" colspan="8">
+            <th class="text-red-800" colspan="10">
               {{ tipo_comunicacao_error }}
             </th>
           </tr>
           <tr v-if="pedido_itens_carregando">
-            <td colspan="8">Carregando dados dos pedidos...</td>
+            <td colspan="10">Carregando dados dos pedidos...</td>
           </tr>
           <tr v-if="!pedido_itens_carregando && (pedido_itens.length == 0)">
-            <td colspan="8">Nenhum pedido encontrado</td>
+            <td colspan="10">Nenhum pedido encontrado</td>
           </tr>
         </thead>
         <tbody>
