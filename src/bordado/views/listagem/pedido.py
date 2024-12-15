@@ -42,12 +42,15 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
     DATA = 'pedidoitem__data_pedido'
     ENTREGA = 'entrega'
     NUMERO = 'numero'
-    PAGAMENTO = 'pedidoitem__cobrancas__cobranca__pagamentocobranca__pagamento'
-    PAGAMENTO_VALOR = \
-        'pedidoitem__cobrancas__cobranca__pagamentocobranca__valor'
+    PAGAMENTO = \
+        'pedidoitem__cobrancas__cobranca__lancamento__pagamentos__pagamento'
+    PAGAMENTO_VALOR = (
+        'pedidoitem__cobrancas__cobranca__'
+        'lancamento__pagamentos__pagamento__valor'
+    )
     PAGAMENTO_DATA = (
         'pedidoitem__cobrancas__cobranca__'
-        'pagamentocobranca__pagamento__data'
+        'lancamento__pagamentos__pagamento__data'
     )
     PRECO = 'pedidoitem__preco'
     PROGRAMACAO = 'pedidoitem__programacao'
@@ -252,6 +255,16 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             2,
         )
 
+    def prep_parcela_pagamento_valor(self, row):
+        if not row[self.PAGAMENTO_VALOR]:
+            return Decimal('0.00')
+        return round(
+            row[self.PAGAMENTO_VALOR] *
+            row[self.COBRANCA_PEDIDO_VALOR] /
+            row[self.COBRANCA_VALOR],
+            2,
+        )
+
     def pre_prep_table(self):
         PrepRows(
             self.data,
@@ -278,6 +291,9 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
         ).exec(
             self.PARCELA_RECEBER_VALOR,
             self.prep_parcela_receber_valor
+        ).exec(
+            self.PAGAMENTO_VALOR,
+            self.prep_parcela_pagamento_valor
         ).process()
 
     def prep_table(self):
