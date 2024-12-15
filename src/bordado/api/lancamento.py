@@ -184,7 +184,7 @@ class LancamentoViewSet(viewsets.ModelViewSet):
             ).filter(
                 pagamentocobranca__isnull=True
             ).filter(
-                cobranca__pagamentocobranca__isnull=True
+                pagamentos__isnull=True
             ).order_by(
                 'data',
                 'id',
