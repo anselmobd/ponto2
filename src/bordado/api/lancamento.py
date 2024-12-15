@@ -179,22 +179,31 @@ class LancamentoViewSet(viewsets.ModelViewSet):
             )
 
         if ate_ultimo_aberto is not None:
-            ultimo_lancamento = Lancamento.objects.filter(
+            lancamentos_em_aberto = Lancamento.objects.filter(
                 cliente__apelido=cliente__apelido
-            ).filter(
-                pagamentocobranca__isnull=True
-            ).filter(
-                pagamentos__isnull=True
-            ).order_by(
-                'data',
-                'id',
-            )
-            if ultimo_lancamento:
+            ).annotate(
+                valor_total_recebido=Sum(
+                    'pagamentos__valor',
+                    default=0
+                ),
+                valor_total_pago=Sum(
+                    'pagamentocobranca__valor',
+                    default=0
+                )
+            ).exclude(
+                cobranca__isnull=True,
+                valor=F('valor_total_pago')
+            ).exclude(
+                cobranca__isnull=False,
+                valor=-F('valor_total_recebido')
+            ).order_by('data', 'id')
+
+            if lancamentos_em_aberto:
                 queryset = queryset.filter(
-                    data__gte=ultimo_lancamento[0].data
+                    data__gte=lancamentos_em_aberto[0].data
                 ).exclude(
-                    data=ultimo_lancamento[0].data,
-                    id__lt=ultimo_lancamento[0].id,
+                    data=lancamentos_em_aberto[0].data,
+                    id__lt=lancamentos_em_aberto[0].id,
                 )
             else:
                 queryset = queryset.filter(id=-1)
