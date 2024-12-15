@@ -8,6 +8,7 @@ import { getLancamentos, addLancamento } from '../api/lancamento.js';
 import { getTiposComunicacao } from '../api/tipo_comunicacao.js';
 import { inputStrDate2PtBrDate, date2InputText } from "../utils/date.js";
 import { ptBrCurrencyFormat } from "../utils/numStr.js";
+import lista_cobrancas from '../components/financeiro/lista_cobrancas.vue';
 
 const route = useRoute();
 
@@ -544,47 +545,14 @@ onMounted(() => {
     </section>
 
     <section id="lista_comunicados">
-      <h3 class="my-4 font-bold text-lg text-center">Comunicados de cobrança</h3>
-      <table class="w-full">
-        <thead>
-          <tr>
-            <th>Nº</th>
-            <th>Informação</th>
-            <th>Tipo</th>
-            <th>NF</th>
-            <th>Valor</th>
-            <th>Pedido</th>
-            <th>Data</th>
-            <th>Parcelamento</th>
-          </tr>
-          <tr v-if="cobrancas_error">
-            <th colspan="8" class="text-red-800">
-              {{ cobrancas_error }}
-            </th>
-          </tr>
-          <tr v-if="cobrancas_carregando">
-            <td colspan="8">Carregando dados dos comunicados de cobrança...</td>
-          </tr>
-          <tr v-if="!cobrancas_carregando && (cobrancas.length == 0)">
-            <td colspan="8">Nenhum comunicado de cobrança encontrado</td>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="cobranca in cobrancas"
-            :key="cobranca.id"
-          >
-            <td>{{ cobranca.id }}</td>
-            <td>{{ cobranca.informacao }}</td>
-            <td>{{ cobranca.comunicacao.descricao }}</td>
-            <td>{{ cobranca.nf }}</td>
-            <td class="!text-right">{{ ptBrCurrencyFormat.format(cobranca.valor) }}</td>
-            <td>{{ cobranca.pedidos_ids }}</td>
-            <td>{{ inputStrDate2PtBrDate(cobranca.data) }}</td>
-            <td>{{ cobranca.parcelamento }}</td>
-          </tr>
-        </tbody>
-      </table>
+      <h3 class="my-4 font-bold text-lg text-center">Cobranças</h3>
+
+      <lista_cobrancas
+        :cobrancas_error="cobrancas_error"
+        :cobrancas_carregando="cobrancas_carregando"
+        :cobrancas="cobrancas"
+      />
+
     </section>
     
     <section id="insere_lancamento">
