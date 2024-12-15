@@ -221,7 +221,7 @@ onMounted(() => {
             <table>
               <thead>
                 <tr>
-                  <th class="sticky top-0 bg-slate-100">Nº</th>
+                  <th class="sticky top-0 bg-slate-100">Lançamento</th>
                   <th class="sticky top-0 bg-slate-100">Data</th>
                   <th class="sticky top-0 bg-slate-100">Informação</th>
                   <th class="sticky top-0 bg-slate-100 !text-right">Valor</th>
@@ -269,6 +269,7 @@ onMounted(() => {
             <table>
               <thead>
                 <tr>
+                  <th class="sticky top-0 bg-slate-100">Lançamento</th>
                   <th class="sticky top-0 bg-slate-100">Data</th>
                   <th class="sticky top-0 bg-slate-100">Informação</th>
                   <th class="sticky top-0 bg-slate-100">NF</th>
@@ -278,15 +279,15 @@ onMounted(() => {
                   <th class="sticky top-0 bg-slate-100 !text-right">Em aberto</th>
                 </tr>
                 <tr v-if="cobrancas_error">
-                  <th class="text-red-800" colspan="7">
+                  <th class="text-red-800" colspan="8">
                     {{ cobrancas_error }}
                   </th>
                 </tr>
                 <tr v-if="cobrancas_carregando">
-                  <th colspan="7">Carregando...</th>
+                  <th colspan="8">Carregando...</th>
                 </tr>
                 <tr v-if="!cobrancas_carregando && (cobrancas.length == 0)">
-                  <th colspan="7">Nenhuma encontrada</th>
+                  <th colspan="8">Nenhuma encontrada</th>
                 </tr>
               </thead>
               <tbody>
@@ -297,6 +298,7 @@ onMounted(() => {
                   :id="'cobranca_' + cobranca.id"
                   @click="handleCobrancaClick(cobranca)"
                 >
+                  <td>{{ cobranca.id }}</td>
                   <td>{{inputStrDate2PtBrDate(cobranca.data)}}</td>
                   <td>{{cobranca.cobranca.informacao }}</td>
                   <td>{{
@@ -337,7 +339,7 @@ onMounted(() => {
           <table>
             <thead>
               <tr>
-                <th class="sticky top-0 bg-slate-100">Nº</th>
+                <th class="sticky top-0 bg-slate-100">Lançamento</th>
                 <th class="sticky top-0 bg-slate-100">Data</th>
                 <th class="sticky top-0 bg-slate-100">Informação</th>
                 <th class="sticky top-0 bg-slate-100 !text-right">Valor</th>
@@ -379,6 +381,7 @@ onMounted(() => {
           <table>
             <thead>
               <tr>
+                <th class="sticky top-0 bg-slate-100">Lançamento</th>
                 <th class="sticky top-0 bg-slate-100">Data</th>
                 <th class="sticky top-0 bg-slate-100">Informação</th>
                 <th class="sticky top-0 bg-slate-100">NF</th>
@@ -389,6 +392,7 @@ onMounted(() => {
             </thead>
             <tbody>
               <tr>
+                <td>{{ cobranca_selecionada.id }}</td>
                 <td>{{inputStrDate2PtBrDate(cobranca_selecionada.data)}}</td>
                 <td>{{cobranca_selecionada?.cobranca?.informacao }}</td>
                 <td>{{
