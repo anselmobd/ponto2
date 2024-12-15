@@ -31,6 +31,7 @@ const lancamentos_carregando = ref(1)
 // 2: carregando mais quantidade padrão
 // 3: carregando até último em aberto
 const lancamentos_error = ref(null)
+const tem_next_page = ref(null)
 const lancamentos_ultima_data = ref(null)
 const lancamentos_ultimo_id = ref(null)
 
@@ -196,6 +197,13 @@ function cbGetLancamentos(data, error) {
       lancamentos.value = data.results;
     } else if (lancamentos_carregando.value == 2) {
       lancamentos.value = lancamentos.value.concat(data.results);
+    }
+    if (lancamentos_carregando.value == 3) {
+      // se "carregando até último em aberto" não sabemos se tem próxima
+      // página, então assume que tem
+      tem_next_page.value = 2;
+    } else {
+      tem_next_page.value = data.next;
     }
     if (data.results.length) {
       const ultimoLancamento = data.results[data.results.length - 1];
@@ -777,6 +785,7 @@ onMounted(() => {
       <button
         v-if="!lancamentos_carregando"
         @click="handleMaisLancamentosClick"
+        :disabled="tem_next_page == null"
       >Mais lançamentos</button>
       <button
         v-if="!lancamentos_carregando"
