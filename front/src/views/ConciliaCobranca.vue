@@ -157,7 +157,7 @@ function handleConciliaClick(event) {
 function setValorConciliacao() {
   valor_conciliacao.value = Math.min(
     pagamento_selecionado.value?.valor,
-    cobranca_selecionada.value?.cobranca.valor -
+    - cobranca_selecionada.value?.valor -
       cobranca_selecionada.value?.valor_total_recebido
   );
 }
@@ -309,10 +309,10 @@ onMounted(() => {
                     cobranca?.n_parcelas > 1 ? cobranca.parcela+'/'+cobranca.n_parcelas : cobranca?.n_parcelas == 1 ? 'única' : '-'
                   }}</td>
                   <td class="!text-right">{{
-                    ptBrCurrencyFormat.format(cobranca.cobranca.valor)
+                    ptBrCurrencyFormat.format(-cobranca.valor)
                   }}</td>
                   <td class="!text-right">{{
-                    ptBrCurrencyFormat.format(cobranca.cobranca.valor - cobranca.valor_total_recebido)
+                    ptBrCurrencyFormat.format(-cobranca.valor - cobranca.valor_total_recebido)
                   }}</td>
                 </tr>
               </tbody>
