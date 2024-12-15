@@ -60,7 +60,7 @@ class PagamentoCobranca(models.Model):
 
     def __str__(self):
         return (
-            f"Pag.{self.pagamento} Cobr.{self.cobranca} {self.valor}"
+            f"Pag.{self.pagamento.id} Cobr.{self.cobranca.id} {self.valor}"
         )
 
     def save(self, *args, **kwargs):
