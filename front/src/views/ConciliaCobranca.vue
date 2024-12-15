@@ -180,9 +180,10 @@ function handleConciliaClick(event) {
 
 function setValorConciliacao() {
   valor_conciliacao.value = Math.min(
-    pagamento_selecionado.value?.valor,
-    - cobranca_selecionada.value?.valor -
-      cobranca_selecionada.value?.valor_total_recebido
+    pagamento_selecionado.value?.valor
+    - pagamento_selecionado.value?.valor_total_pago
+  , - cobranca_selecionada.value?.valor
+    - cobranca_selecionada.value?.valor_total_recebido
   );
 }
 
