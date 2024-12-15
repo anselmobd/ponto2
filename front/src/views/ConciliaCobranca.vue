@@ -25,6 +25,8 @@ const pagamento_selecionado = ref({})
 const pagamento_valores_para_soma = ref({})
 const pagamento_soma_auxiliar = ref(0)
 const cobranca_selecionada = ref({})
+const cobranca_valores_para_soma = ref({})
+const cobranca_soma_auxiliar = ref(0)
 const valor_conciliacao = ref(0)
 const conciliando = ref({})
 
@@ -56,6 +58,7 @@ function doGetPagamentos() {
 }
 
 function cbGetCobrancas(data, error) {
+  cobranca_valores_para_soma.value = {};
   if (data) {
     if (data?.results) {
       cobrancas.value = data.results
@@ -149,7 +152,20 @@ function handlePagamentoClick(pagamento, event) {
 
 }
 
-function handleCobrancaClick(cobranca) {
+function handleCobrancaCtrlClick(cobranca) {
+  if (cobranca.id in cobranca_valores_para_soma.value) {
+    delete cobranca_valores_para_soma.value[cobranca.id];
+  } else {
+    cobranca_valores_para_soma.value[cobranca.id] = (
+      -cobranca.valor - cobranca.valor_total_recebido
+    );
+  }
+}
+
+function handleCobrancaClick(cobranca, event) {
+  if (event.ctrlKey || event.metaKey) {
+    return
+  }
   console.log('handleCobrancaClick')
   console.log(pagamento_selecionado.value)
   if (Object.keys(pagamento_selecionado.value).length != 0) {
@@ -219,6 +235,11 @@ function doGetAll() {
 
 watch(pagamento_valores_para_soma, (newValue, oldValue) => {
   pagamento_soma_auxiliar.value = Object.values(newValue).reduce(
+    (total, valor) => total + valor, 0);
+}, { deep: true });
+
+watch(cobranca_valores_para_soma, (newValue, oldValue) => {
+  cobranca_soma_auxiliar.value = Object.values(newValue).reduce(
     (total, valor) => total + valor, 0);
 }, { deep: true });
 
@@ -340,7 +361,7 @@ onMounted(() => {
                   :key="cobranca.id"
                   :class="{'bg-yellow-300': cobranca.id == cobranca_selecionada.id}"
                   :id="'cobranca_' + cobranca.id"
-                  @click="handleCobrancaClick(cobranca)"
+                  @click="handleCobrancaClick(cobranca, $event)"
                 >
                   <td>{{ cobranca.id }}</td>
                   <td>{{inputStrDate2PtBrDate(cobranca.data)}}</td>
@@ -357,12 +378,23 @@ onMounted(() => {
                   <td class="!text-right">{{
                     ptBrCurrencyFormat.format(-cobranca.valor)
                   }}</td>
-                  <td class="!text-right">{{
-                    ptBrCurrencyFormat.format(-cobranca.valor - cobranca.valor_total_recebido)
+                  <td class="!text-right"
+                    @click.ctrl="handleCobrancaCtrlClick(cobranca)"
+                    :class="{'font-bold':
+                      cobranca.id in cobranca_valores_para_soma}"
+                  >{{
+                    ptBrCurrencyFormat.format(
+                      -cobranca.valor - cobranca.valor_total_recebido)
                   }}</td>
                 </tr>
               </tbody>
             </table>
+            <p
+              class="font-bold"
+              v-if="cobranca_soma_auxiliar"
+              @click.ctrl="cobranca_valores_para_soma = {}"
+            >Soma auxiliar = {{ ptBrCurrencyFormat.format(
+              cobranca_soma_auxiliar) }}</p>
           </section>
         </section>
 
