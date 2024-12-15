@@ -28,10 +28,11 @@ class PagamentoCobranca(models.Model):
         null=False,
     )
     cobranca = models.ForeignKey(
-        Cobranca,
+        Lancamento,
         on_delete=models.PROTECT,
         blank=False,
         null=False,
+        related_name='pagamentos'
     )
     valor = models.DecimalField(
         max_digits=9,
@@ -59,7 +60,7 @@ class PagamentoCobranca(models.Model):
 
     def __str__(self):
         return (
-            f"Pag.({self.pagamento}) Cobr.({self.cobranca}) {self.valor}"
+            f"Pag.{self.pagamento} Cobr.{self.cobranca} {self.valor}"
         )
 
     def save(self, *args, **kwargs):
