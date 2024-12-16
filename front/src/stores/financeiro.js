@@ -16,6 +16,17 @@ export const useFinanceiroVueStore = defineStore('financeiro_vue', {
       this.componentesRegistrados[id.name] = id.params;
       this.componentesRegistrados[id.name].concluido = false;
     },
+    montaComponenteId(name, params) {
+      const sufixo = Object.values(params).join('-');
+      if (sufixo) {
+        name = [name, sufixo].join('-');
+      }
+      return {
+        name: name,
+        params: params
+      }
+    
+    },
     removerRegistroComponente(id) {
       // Remove o registro do filho ao desmontar
       delete this.componentesRegistrados[id.name];
