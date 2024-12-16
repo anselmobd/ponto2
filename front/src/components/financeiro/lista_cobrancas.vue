@@ -16,10 +16,9 @@ const route = useRoute();
 
 const financeiroVueStore = useFinanceiroVueStore();
 // Cria Id de componente com nome e parâmetros (props), se houverem
-const financeiroVueStoreComponentId = ref({
-  name: 'financeiro/lista_cobrancas.vue',
-  params: {}
-})
+const financeiroVueStoreComponentId = ref(
+  financeiroVueStore.montaComponenteId(
+    'financeiro/lista_cobrancas.vue', {}))
 
 const cobrancas = ref([])
 const cobrancas_carregando = ref(null)
