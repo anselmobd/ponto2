@@ -1,6 +1,7 @@
 <script setup>
 import router from '@/router'
 import { useRoute } from "vue-router";
+import { useFinanceiroVueStore } from '../stores/financeiro.js';
 import { ref, onMounted, watch } from 'vue'
 import { getPedidoItens } from '../api/pedidoItem.js';
 import { getCobrancas, addCobranca } from '../api/cobranca.js';
@@ -12,6 +13,8 @@ import lista_cobrancas from '../components/financeiro/lista_cobrancas.vue';
 
 const route = useRoute();
 
+const financeiroVueStore = useFinanceiroVueStore();
+
 // valores recebidos de DB e seus controles de visualização
 
 const pedido_itens = ref([])
@@ -20,10 +23,6 @@ const pedido_itens_error = ref(null)
 
 const tipo_comunicacao = ref([])
 const tipo_comunicacao_error = ref(null)
-
-const cobrancas = ref([])
-const cobrancas_carregando = ref(null)
-const cobrancas_error = ref(null)
 
 const lancamentos = ref([])
 const lancamentos_carregando = ref(1)
@@ -126,39 +125,13 @@ function doGetTiposComunicacao() {
   });
 }
 
-function cbGetCobrancas(data, error) {
-  if (data) {
-    if (data?.results) cobrancas.value = data.results.map(cobranca => {
-      cobranca.pedidos_ids = cobranca.pedidoitemcobranca_set.map( ped_item_cobr => {
-        return ped_item_cobr.pedido_item.pedido.numero
-      }).join(", ");
-      return cobranca;
-    });
-    ;
-  }
-  if (error) {
-    cobrancas_error.value = error;
-  };
-  cobrancas_carregando.value = false;
-}
-
-function doGetCobrancas(callBack) {
-  cobrancas.value = [];
-  cobrancas_carregando.value = true;
-  cobrancas_error.value = null;
-  getCobrancas({
-    cliente_apelido: route.params.apelido,
-    callBack: cbGetCobrancas
-  });
-}
-
 function cbAddCobranca(data, error) {
   if (data) {
     status.value = 'b';
     pedidos_selecionados.value = [];
     clearComunicado();
     doGetPedidoItens();
-    doGetCobrancas();
+    financeiroVueStore.ativarRecarregar();
     doGetLancamentos(1);
   }
   if (error) {
@@ -339,7 +312,7 @@ function handleConciliaCobrancaClick(event) {
 onMounted(() => {
   doGetTiposComunicacao();
   doGetPedidoItens();
-  doGetCobrancas();
+  financeiroVueStore.ativarRecarregar();
   doGetLancamentos(1);
 })
 
@@ -547,11 +520,7 @@ onMounted(() => {
     <section id="lista_comunicados">
       <h3 class="my-4 font-bold text-lg text-center">Cobranças</h3>
 
-      <lista_cobrancas
-        :cobrancas_error="cobrancas_error"
-        :cobrancas_carregando="cobrancas_carregando"
-        :cobrancas="cobrancas"
-      />
+      <lista_cobrancas/>
 
     </section>
     
