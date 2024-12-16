@@ -1,10 +1,10 @@
 <script setup>
+import { ref, onMounted, onUnmounted, watch } from 'vue';
 import { useRoute } from "vue-router";
 import { useFinanceiroVueStore } from '../../stores/financeiro.js';
 import { inputStrDate2PtBrDate } from "../../utils/date.js";
 import { ptBrCurrencyFormat } from "../../utils/numStr.js";
 import { getCobrancas } from '../../api/cobranca.js';
-import { ref, onMounted, onUnmounted, watch } from 'vue';
 
 // defineProps({
 //   cobrancas_error: Object,
@@ -41,11 +41,11 @@ function cbGetCobrancas(data, error) {
   cobrancas_carregando.value = false;
 }
 
-async function doGetCobrancas(callBack) {
+function doGetCobrancas(callBack) {
   cobrancas.value = [];
   cobrancas_carregando.value = true;
   cobrancas_error.value = null;
-  await getCobrancas({
+  getCobrancas({
     cliente_apelido: route.params.apelido,
     callBack: cbGetCobrancas
   });

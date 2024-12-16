@@ -1,6 +1,6 @@
 import { axiosPrivate } from '../common/axiosPrivate.js';
 
-export async function getCobrancas({
+export function getCobrancas({
   page=1,
   cliente_apelido=null,
   callBack=()=>{}
@@ -13,7 +13,7 @@ export async function getCobrancas({
   if (cliente_apelido) {
     params.append('cliente__apelido', cliente_apelido);
   }
-  await axiosPrivate.get(
+  axiosPrivate.get(
     '/bordado/api/cobranca/',
     {params: params}
   )
