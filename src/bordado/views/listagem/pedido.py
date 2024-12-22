@@ -8,6 +8,7 @@ from django.db.models import F, ExpressionWrapper, DecimalField
 from o2lib.form.form_report import form_report
 from o2lib.models.row_field import PrepRows
 from o2lib.models.dictlist import queryset2dictlist
+from o2lib.number import decimal_proporcional
 from o2lib.table_defs import TableDefsHBpSD
 from o2lib.views.base.get_post import O2BaseGetPostView
 from o2lib.views.base.exception import StopStepsException
@@ -242,8 +243,6 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
         return self.prep_parcela_valor(row, 'r')
 
     def prep_parcela_valor(self, row, cobrada_receber=None):
-        if row[self.COBRANCA_VALOR] == 0:
-            return Decimal('0.00')
         if cobrada_receber and row[self.PARCELA_VENCIMENTO]:
             if cobrada_receber == 'c':
                 ok = row[self.PARCELA_VENCIMENTO] <= self._today
@@ -251,21 +250,17 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
                 ok = row[self.PARCELA_VENCIMENTO] > self._today
             if not ok:
                 return Decimal('0.00')
-        return round(
-            row[self.PARCELA_VALOR] *
-            row[self.COBRANCA_PEDIDO_VALOR] /
+        return decimal_proporcional(
+            row[self.PARCELA_VALOR],
+            row[self.COBRANCA_PEDIDO_VALOR],
             row[self.COBRANCA_VALOR],
-            2,
         )
 
     def prep_parcela_pagamento_valor(self, row):
-        if not row[self.PAGAMENTO_VALOR]:
-            return Decimal('0.00')
-        return round(
-            row[self.PAGAMENTO_VALOR] *
-            row[self.COBRANCA_PEDIDO_VALOR] /
+        return decimal_proporcional(
+            row[self.PAGAMENTO_VALOR],
+            row[self.COBRANCA_PEDIDO_VALOR],
             row[self.COBRANCA_VALOR],
-            2,
         )
 
     def pre_prep_table(self):
