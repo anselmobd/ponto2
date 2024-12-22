@@ -120,6 +120,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
         )
 
         self.mount_steps = [
+            self.prepare_form_inputs,
             self.init_query,
             (self.get_filtro_cliente__apelido, 'filtro'),
             (self.get_filtro_icontains, 'filtro',
@@ -373,14 +374,16 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
         self.total_geral = self.data.pop()
 
     def paginador(self):
-        self.por_pagina = int(self.por_pagina)
-        if not self.por_pagina:
-            self.data = paginator_basic(
-                self.data, 999_999, 1)
+        if self.por_pagina:
+            por_pagina = self.por_pagina
+            page = self.page
+            pag_neib = 4
         else:
-            self.data = paginator_basic(
-                self.data, self.por_pagina, self.page, pag_neib=4)
-        self.form.data['page'] = self.data.number
+            por_pagina = self._max_por_pagina
+            page = 1
+            pag_neib = None
+        self.data = paginator_basic(
+            self.data, por_pagina, page, pag_neib=pag_neib)
 
     def calcula_totalizador_pagina(self):
         if self.data.paginator.num_pages > 1:
@@ -402,6 +405,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
     def context_table(self):
         self.context['tabela']= {
             'data': self.data,
+            'page': self.data.number,
             'group': self.group,
             'thclass': 'sticky',
             'quantidade_pedidos': self.quantidade_pedidos,
