@@ -3,12 +3,20 @@ import { defineStore } from 'pinia';
 export const useFinanceiroVueStore = defineStore('financeiro_vue', {
   state: () => ({
     precisaRecarregar: false,
+    precisaRecarregarLancamento: false,
+    precisaRecarregarCobranca: false,
     componentesRegistrados: {},
     componentesRecarregados: new Set(),
   }),
   actions: {
-    ativarRecarregar() {
-      this.precisaRecarregar = true;
+    ativarRecarregar(qual) {
+      if ( qual == 'lancamento' ) {
+        this.precisaRecarregarLancamento = true;
+      } else if ( qual == 'cobranca' ) {
+        this.precisaRecarregarCobranca = true;
+      } else {
+        this.precisaRecarregar = true;
+      }
       this.componentesRecarregados.clear();
     },
     registrarComponente(id) {
