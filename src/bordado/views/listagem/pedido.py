@@ -156,6 +156,10 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
         ]
 
         self._today = datetime.date.today()
+        self._max_por_pagina = 999_999
+
+    def prepare_form_inputs(self):
+        self.por_pagina = int(self.por_pagina)
 
     def init_query(self):
         self.query = Pedido.objects
