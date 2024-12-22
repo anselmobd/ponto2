@@ -3,7 +3,7 @@ from decimal import Decimal
 from pprint import pprint
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import F, Q
+from django.db.models import F, ExpressionWrapper, DecimalField
 
 from o2lib.form.form_report import form_report
 from o2lib.models.row_field import PrepRows
@@ -208,10 +208,11 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
 
     def annotate_query(self):
         self.query = self.query.annotate(
-            valor=(
-                F(self.QUANTIDADE) * F(self.PRECO) +
-                F(self.PROGRAMACAO) +
-                F(self.AJUSTE)
+            valor=ExpressionWrapper(
+                (F(self.QUANTIDADE) * F(self.PRECO))
+                + F(self.PROGRAMACAO)
+                + F(self.AJUSTE),
+                output_field=DecimalField(decimal_places=2)
             )
         )
             
