@@ -391,17 +391,15 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
         self.data.object_list.insert(0, self.total_geral)
 
     def filter_report_excludes(self):
-        if self.fechamento == '':
-            self.form_report_excludes.append('fechamento')
-        if self.cortesia == '':
-            self.form_report_excludes.append('cortesia')
-        if self.cobranca == '':
-            self.form_report_excludes.append('cobranca')
-        self.form_report_excludes.append('apresentacao')
+        self.form_report_excludes.extend(['apresentacao', 'page'])
+
+        for form_var in ['fechamento', 'cortesia', 'cobranca']:
+            if getattr(self, form_var, '') == '':
+                self.form_report_excludes.append(form_var)
+
         if (not self.por_pagina) or (self.data.paginator.num_pages == 1):
             self.form_report_excludes.append('por_pagina')
-        self.form_report_excludes.append('page')
-
+        
     def context_table(self):
         self.context['tabela']= {
             'data': self.data,
