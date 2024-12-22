@@ -115,11 +115,17 @@ onUnmounted(() => {
 });
 
 watch(
-  () => financeiroVueStore.precisaRecarregar,
-  async (novoValor) => {
-    if (novoValor) {
-      console.log('precisaRecarregar', novoValor);
-      await doGetLancamentos(1);
+  () => [
+    financeiroVueStore.precisaRecarregar,
+    financeiroVueStore.precisaRecarregarLancamento
+  ],
+  ([novoValorPrecisaRecarregar, novoValorPrecisaRecarregarLancamento]) => {
+    if (novoValorPrecisaRecarregar || novoValorPrecisaRecarregarLancamento) {
+      console.log('Recarregar necessário', {
+        precisaRecarregar: novoValorPrecisaRecarregar,
+        precisaRecarregarLancamento: novoValorPrecisaRecarregarLancamento
+      });
+      doGetLancamentos(1);
       financeiroVueStore.componenteConcluiuRecarregar(
         financeiroVueStoreComponentId.value);
     }
