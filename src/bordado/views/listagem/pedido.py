@@ -154,6 +154,8 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             self.form_report,
         ]
 
+        self._today = datetime.date.today()
+
     def init_query(self):
         self.query = Pedido.objects
         self.filtro = {}
@@ -244,9 +246,9 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             return Decimal('0.00')
         if cobrada_receber and row[self.PARCELA_VENCIMENTO]:
             if cobrada_receber == 'c':
-                ok = row[self.PARCELA_VENCIMENTO] <= datetime.date.today()
+                ok = row[self.PARCELA_VENCIMENTO] <= self._today
             else:
-                ok = row[self.PARCELA_VENCIMENTO] > datetime.date.today()
+                ok = row[self.PARCELA_VENCIMENTO] > self._today
             if not ok:
                 return Decimal('0.00')
         return round(
