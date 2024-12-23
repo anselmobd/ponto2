@@ -361,6 +361,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
                     self.PARCELA_PEDIDO_VALOR,
                     self.PARCELA_COBRADA_VALOR,
                     self.PARCELA_RECEBER_VALOR,
+                    self.PAGAMENTO_VALOR,
                 ],
                 'descr': {self.CLIENTE: descr},
                 'row_if': {
