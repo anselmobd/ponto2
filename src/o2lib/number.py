@@ -41,6 +41,6 @@ def decimal_proporcional(valor, proporcao, total, decimais=2):
     return Decimal(
         valor_proporcional(valor, proporcao, total, decimais)
     ).quantize(
-        Decimal(f'0.{"0" * decimais}1'),
+        Decimal(f'0.{"0" * decimais}'),
         rounding='ROUND_HALF_UP'
     )
