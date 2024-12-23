@@ -36,9 +36,7 @@ function setNenhumLancamento(tipo_carregamento) {
 }
 
 function cbGetLancamentos(data, error) {
-  console.log('lista_lancementos cbGetLancamentos')
   if (data?.results) {
-    console.log('lista_lancementos cbGetLancamentos', data.results)
     if ([1, 3].includes(lancamentos_carregando.value)) {
       lancamentos.value = data.results;
     } else if (lancamentos_carregando.value == 2) {
@@ -64,7 +62,6 @@ function cbGetLancamentos(data, error) {
 }
 
 function doGetLancamentos(carregando) {
-  console.log('lista_lancementos doGetLancamentos')
   setNenhumLancamento(carregando);
   lancamentos_carregando.value = carregando;
   if ([1, 3].includes(lancamentos_carregando.value)) {
@@ -121,10 +118,6 @@ watch(
   ],
   ([novoValorPrecisaRecarregar, novoValorPrecisaRecarregarLancamento]) => {
     if (novoValorPrecisaRecarregar || novoValorPrecisaRecarregarLancamento) {
-      console.log('Recarregar necessário', {
-        precisaRecarregar: novoValorPrecisaRecarregar,
-        precisaRecarregarLancamento: novoValorPrecisaRecarregarLancamento
-      });
       doGetLancamentos(1);
       financeiroVueStore.componenteConcluiuRecarregar(
         financeiroVueStoreComponentId.value);
@@ -210,24 +203,15 @@ watch(
             ),
         }"
       >
-      <!-- rec {{ lancamento.valor_total_recebido }}|
-      pag {{ lancamento.valor_total_pago }}|
-      val {{ lancamento.valor }}|
-      val+rec {{ lancamento.valor + lancamento.valor_total_recebido }}|
-      val-pag {{ lancamento.valor - lancamento.valor_total_pago }}|
-      rec_0{{( lancamento.valor_total_recebido == 0 )}}
-      rec_full{{( lancamento.valor_total_recebido == -lancamento.valor )}}
-      rec_parc{{( ( lancamento.valor_total_recebido > 0 ) &&
-                ( lancamento.valor_total_recebido < -lancamento.valor ) )}} -->
       {{ lancamento.cobranca ?
-        ( lancamento.valor_total_recebido != 0 ? (
-            lancamento.valor_total_recebido - lancamento.cobranca?.valor == 0
+        ( Number(lancamento.valor_total_recebido) != 0 ? (
+            Number(lancamento.valor_total_recebido) + Number(lancamento.valor) == 0
             ? 'Recebido'
             : 'Parcial'
           ) : 'Aberto'
         ) :
-        ( lancamento.valor_total_pago != 0 ? (
-            lancamento.valor_total_pago - lancamento.valor == 0
+        ( Number(lancamento.valor_total_pago) != 0 ? (
+            Number(lancamento.valor_total_pago) - Number(lancamento.valor) == 0
             ? 'Conciliado'
             : 'Parcial'
           ) : 'Aberto'
