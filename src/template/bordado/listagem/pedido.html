@@ -39,13 +39,13 @@
         {% endfor %}
       </ul>
     {% endif %}
-    {% include "layout/paginator.html" with data=tabela.data url_name='cd:novo_estoque' only %}
-    {% if tabela.quantidade_pedidos %}
-    Quantidade de pedidos encontrados: {{tabela.quantidade_pedidos}}
+    {% include "layout/paginator.html" with data=tabela.pedidos url_name='cd:novo_estoque' only %}
+    {% if tabela.pedidos.paginator.count %}
+    Quantidade de pedidos encontrados: {{tabela.pedidos.paginator.count}}
     {% endif %}
     {% include "layout/generic/table.html" with table=tabela only %}
 
-    {% include "layout/paginator.html" with data=tabela.data url_name='cd:novo_estoque' noprint=1 only %}
+    {% include "layout/paginator.html" with data=tabela.pedidos url_name='cd:novo_estoque' noprint=1 only %}
   {% endif %}
 {% endblock %}
 

@@ -14,7 +14,7 @@ from o2lib.views.base.get_post import O2BaseGetPostView
 from o2lib.views.base.exception import StopStepsException
 from o2lib.views.group import group_rowspan
 from o2lib.views.totalize import totalize_data
-from o2lib.views.paginator import paginator_basic
+from o2lib.views.paginator import list_paginator_basic
 
 from bordado.forms.listagem.pedido import ListagemPedidoForm
 from bordado.models import Pedido
@@ -143,11 +143,12 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             self.order_query,
             self.annotate_query,
             self.exec_query,
-            self.conta_registros,
+            self.mount_pedidos_list,
             self.pre_prep_table,
             self.group_table,
             self.calcula_totalizador_geral,
             self.paginador,
+            self.filtra_por_pedidos_pagina,            
             self.prep_table,
             self.calcula_totalizador_pagina,
             self.append_totalizador_geral,
@@ -235,8 +236,11 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             raise StopStepsException(
                 "Filtro definido não seleciona nenhum pedido")
 
-    def conta_registros(self):
-        self.quantidade_pedidos = len(self.data)
+    def mount_pedidos_list(self):
+        self.pedidos_list = []
+        for row in self.data:
+            if row[self.NUMERO] not in self.pedidos_list:
+                self.pedidos_list.append(row[self.NUMERO])
 
     def prep_parcela_pedido_valor(self, row):
         return self.prep_parcela_valor(row)
@@ -301,7 +305,7 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
 
     def prep_table(self):
         PrepRows(
-            self.data.object_list,
+            self.data,
         ).str_dash(
             (
                 self.BORDADO_CODIGO,
@@ -382,15 +386,22 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             por_pagina = self._max_por_pagina
             page = 1
             pag_neib = None
-        self.data = paginator_basic(
-            self.data, por_pagina, page, pag_neib=pag_neib)
+        self.pedidos_data, self.pedidos_pagina = list_paginator_basic(
+            self.pedidos_list, por_pagina, page, pag_neib=pag_neib)
+
+    def filtra_por_pedidos_pagina(self):
+        self.data = [
+            row
+            for row in self.data
+            if row[self.NUMERO] in self.pedidos_pagina
+        ]
 
     def calcula_totalizador_pagina(self):
-        if self.data.paginator.num_pages > 1:
-            self.calcula_totalizador(self.data.object_list, "Total da página:")
+        if self.pedidos_data.paginator.num_pages > 1:
+            self.calcula_totalizador(self.data, "Total da página:")
 
     def append_totalizador_geral(self):
-        self.data.object_list.insert(0, self.total_geral)
+        self.data.insert(0, self.total_geral)
 
     def filter_report_excludes(self):
         self.form_report_excludes.extend(['apresentacao', 'page'])
@@ -399,16 +410,18 @@ class ListagemPedidoView(LoginRequiredMixin, O2BaseGetPostView, FiltroParaView):
             if getattr(self, form_var, '') == '':
                 self.form_report_excludes.append(form_var)
 
-        if (not self.por_pagina) or (self.data.paginator.num_pages == 1):
+        if (
+            (not self.por_pagina) or
+            (self.pedidos_data.paginator.num_pages == 1)
+        ):
             self.form_report_excludes.append('por_pagina')
         
     def context_table(self):
         self.context['tabela']= {
             'data': self.data,
-            'page': self.data.number,
+            'pedidos': self.pedidos_data,
             'group': self.group,
             'thclass': 'sticky',
-            'quantidade_pedidos': self.quantidade_pedidos,
         }
         self.table_defs.hfs_dict_context(
             self.context['tabela'],
