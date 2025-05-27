@@ -1,0 +1,9 @@
+{
+  "product": "Ponto2",
+  "version": "1.0.0",
+  "license": "Business Source License 1.1",
+  "change_date": "2035-01-01",
+  "change_license": "Apache 2.0",
+  "maintainer": "Anselmo Blanco Dominguez",
+  "contact": "anselmo@oxigenai.com.br"
+}

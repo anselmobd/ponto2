@@ -1,31 +1,26 @@
-# ponto2
+# Ponto2
 
-## Ponto2 . Bordado industrial
+## Bordado industrial
 
-### © 2023 RPR & Oxigenai
+/front - Front em Vue.js com Tailwindcss
 
----
+/src - Back em Django e API em Django REST framework
 
-/src - Projeto Django back e front
+### © 2025 RPR & Oxigenai
 
-- front
-  - inicialmente em HTML / CSS(Bootstrap) / Javascript
-  - passando para Vue.js 
-  - iniciando a troca de Bootstrap por Tailwindcss
-- back
-  - inicialmente apenas Django
-  - API em Django REST framework
-  - adicionando Swagger com drf-yasg
+## License
 
-#### Projeto interrompido para separar back
+Ponto2 is made available under the Business Source License 1.1 (BUSL).
 
-/front - Novo projeto de front em Vue.js com Tailwindcss
+## License Summary
 
-/src - Projeto Django agora só back
+This project is licensed under the Business Source License 1.1. You are free to view, clone, and modify this code for **non-commercial and non-production** use.
 
-- back
-  - ...
-  - JWT com djangorestframework-simplejwt 
-  - troca drf-yasg por drf-spectacular
+The license will convert to the Apache 2.0 on 2035-01-01.
 
-#### Projeto terá código fechado a partir de 06/12/2023, mantendo um clone aberto com tudo feito até a data
+For commercial use or redistribution before this date, please contact: [anselmo@oxigenai.com.br](mailto:anselmo@oxigenai.com.br)
+
+## License Files
+
+- LICENSE – BUSL 1.1 terms and parameters
+- LICENSE_METADATA – license metadata in JSON format
